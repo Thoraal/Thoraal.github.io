@@ -105,11 +105,9 @@ let swiper = new Swiper(".portfolio__container", {
         el: ".swiper-pagination-portfolio",
         clickable: true,
     },
+    slidesPerView: 1, // Muestra 1 slide por vista en pantallas pequeñas
+    spaceBetween: 10, // Espacio entre slides
     breakpoints: {
-        320: {
-            slidesPerView: 1, // Muestra 1 slide por vista en pantallas pequeñas
-            spaceBetween: 10, // Espacio entre slides
-        },
         768: {
             slidesPerView: 2, // Muestra 2 slides por vista en pantallas medianas
             spaceBetween: 20, // Espacio entre slides
@@ -119,13 +117,7 @@ let swiper = new Swiper(".portfolio__container", {
             spaceBetween: 30, // Espacio entre slides
         },
     },
-    a11y: {
-        prevSlideMessage: 'Slide anterior',
-        nextSlideMessage: 'Slide siguiente',
-    }
 });
-
-
 
 /*==================== ARTICLES ====================*/
 let swiperarticles = new Swiper(".articles__container", {

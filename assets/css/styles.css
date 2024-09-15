@@ -770,23 +770,24 @@ img{
     display: flex;
     flex-wrap: nowrap; /* Evita que las tarjetas se envuelvan en pantallas pequeñas */
     gap: 1rem; /* Espacio entre tarjetas */
-    justify-content: center;
+    overflow: hidden; /* Oculta el contenido desbordante */
+    position: relative;
 }
 
 .portfolio__card {
-    position: relative;
-    width: 100%; /* Ancho completo en pantallas pequeñas */
-    height: 300px; /* Ajusta la altura según sea necesario */
+    flex: 0 0 auto; /* Evita que las tarjetas se estiren */
+    width: 300px; /* Ajusta el ancho de la carta según sea necesario */
+    height: 350px; /* Ajusta la altura de la carta según sea necesario */
     border-radius: 1rem; /* Borde redondeado */
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Sombra suave para un efecto más sutil */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Sombra suave */
     background-color: #fff; /* Fondo blanco para la carta */
 }
 
 .portfolio__card:hover {
     transform: scale(1.05); /* Ampliación al pasar el ratón */
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3); /* Sombra más pronunciada */
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4); /* Sombra más pronunciada */
 }
 
 .portfolio__img {
@@ -803,7 +804,7 @@ img{
     background: rgba(0, 0, 0, 0.7); /* Fondo oscuro con transparencia */
     color: #fff;
     padding: 1rem;
-    transition: opacity 0.3s ease, background 0.3s ease;
+    transition: opacity 0.3s ease;
     opacity: 0; /* Ocultar por defecto */
     display: flex;
     flex-direction: column;
@@ -812,19 +813,16 @@ img{
 
 .portfolio__card:hover .portfolio__info {
     opacity: 1; /* Mostrar información al pasar el ratón */
-    background: rgba(0, 0, 0, 0.85); /* Fondo más oscuro al pasar el ratón */
 }
 
 .portfolio__title {
     font-size: 1.5rem; /* Tamaño del título */
     margin-bottom: 0.5rem;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); /* Sombra sutil para mejorar la legibilidad */
 }
 
 .portfolio__description {
     font-size: 1rem; /* Tamaño de la descripción */
     margin-bottom: 1rem;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); /* Sombra sutil para mejorar la legibilidad */
 }
 
 .portfolio__button {
@@ -840,6 +838,21 @@ img{
 
 .portfolio__button:hover {
     background-color: darken(var(--first-color), 10%); /* Ajusta el color al pasar el ratón */
+}
+
+/* Estilo para los botones de navegación */
+.swiper-button-prev, .swiper-button-next {
+    color: var(--first-color);
+}
+
+@media (max-width: 768px) {
+    .portfolio__container {
+        overflow: auto; /* Permite el deslizamiento en pantallas pequeñas */
+    }
+
+    .swiper-slide {
+        flex: 0 0 auto; /* Asegura que cada slide no se estire */
+    }
 }
 
 
