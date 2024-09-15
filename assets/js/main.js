@@ -92,29 +92,25 @@ modalCloses.forEach(modalClose => {
 });
 
 /*==================== PORTFOLIO SWIPER  ====================*/
-let swiper = new Swiper(".portfolio__container", {
-    cssMode: true,
-    loop: true,
-    speed: 600, // Velocidad de la transición en milisegundos
-    effect: 'slide', // Efecto de transición entre slides
-    navigation: {
-        nextEl: ".swiper-button-next",
-        prevEl: ".swiper-button-prev",
-    },
+let swiper = new Swiper(".portfolio__swiper-container", {
+    cssMode: true,  // Utiliza el modo CSS para desplazamiento suave
+    loop: true,     // Habilita el bucle para que el carrusel se reinicie al final
+    speed: 600,     // Velocidad de la transición en milisegundos
+    effect: 'slide',// Efecto de transición entre slides
     pagination: {
-        el: ".swiper-pagination-portfolio",
-        clickable: true,
+        el: ".swiper-pagination-portfolio",  // Selector para la paginación
+        clickable: true,  // Permite hacer clic en los bullets de paginación
     },
-    slidesPerView: 1, // Muestra 1 slide por vista en pantallas pequeñas
-    spaceBetween: 10, // Espacio entre slides
+    slidesPerView: 1,  // Muestra 1 slide por vista en pantallas pequeñas
+    spaceBetween: 10, // Espacio entre slides en pantallas pequeñas
     breakpoints: {
         768: {
-            slidesPerView: 2, // Muestra 2 slides por vista en pantallas medianas
-            spaceBetween: 20, // Espacio entre slides
+            slidesPerView: 2,  // Muestra 2 slides por vista en pantallas medianas
+            spaceBetween: 20, // Espacio entre slides en pantallas medianas
         },
         1024: {
-            slidesPerView: 3, // Muestra 3 slides por vista en pantallas grandes
-            spaceBetween: 30, // Espacio entre slides
+            slidesPerView: 3,  // Muestra 3 slides por vista en pantallas grandes
+            spaceBetween: 30, // Espacio entre slides en pantallas grandes
         },
     },
 });
