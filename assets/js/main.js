@@ -96,7 +96,7 @@ let swiper = new Swiper(".portfolio__container", {
     cssMode: true,
     loop: true,
     speed: 600, // Velocidad de la transición en milisegundos
-    effect: 'fade', // Efecto de transición entre slides, puede ser 'slide', 'fade', etc.
+    effect: 'slide', // Efecto de transición entre slides
     navigation: {
         nextEl: ".swiper-button-next",
         prevEl: ".swiper-button-prev",
@@ -108,12 +108,15 @@ let swiper = new Swiper(".portfolio__container", {
     breakpoints: {
         320: {
             slidesPerView: 1, // Muestra 1 slide por vista en pantallas pequeñas
+            spaceBetween: 10, // Espacio entre slides
         },
         768: {
             slidesPerView: 2, // Muestra 2 slides por vista en pantallas medianas
+            spaceBetween: 20, // Espacio entre slides
         },
         1024: {
             slidesPerView: 3, // Muestra 3 slides por vista en pantallas grandes
+            spaceBetween: 30, // Espacio entre slides
         },
     },
     a11y: {
@@ -121,6 +124,7 @@ let swiper = new Swiper(".portfolio__container", {
         nextSlideMessage: 'Slide siguiente',
     }
 });
+
 
 
 /*==================== ARTICLES ====================*/

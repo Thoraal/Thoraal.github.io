@@ -768,15 +768,15 @@ img{
 /*==================== PORTFOLIO ====================*/
 .portfolio__container {
     display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem; /* Espacio entre tarjetas */
+    flex-wrap: nowrap; /* Evita que las tarjetas se envuelvan en pantallas pequeñas */
+    gap: 1rem; /* Espacio entre tarjetas */
     justify-content: center;
 }
 
 .portfolio__card {
     position: relative;
-    width: 300px; /* Ajusta el ancho de la carta según sea necesario */
-    height: 350px; /* Ajusta la altura de la carta según sea necesario */
+    width: 100%; /* Ancho completo en pantallas pequeñas */
+    height: 300px; /* Ajusta la altura según sea necesario */
     border-radius: 1rem; /* Borde redondeado */
     overflow: hidden;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -841,6 +841,7 @@ img{
 .portfolio__button:hover {
     background-color: darken(var(--first-color), 10%); /* Ajusta el color al pasar el ratón */
 }
+
 
 /*==================== PROJECT IN MIND ====================*/
 .project{
