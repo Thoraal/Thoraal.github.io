@@ -1,16 +1,21 @@
-# Responsive Portfolio Website Tailor
-## [Watch it on youtube](https://youtu.be/sF0vW0GgL3U)
-### Responsive Portfolio Website Tailor
+# My Portfolio Website
 
-- Responsive Portfolio Website Using HTML CSS And JavaScript
-- Contains animations when scrolling.
-- Smooth scrolling in each section.
-- Contains a beautiful dark theme.
-- The color of the project can be customized.
-- Sending emails in the contact section.
-- Developed first with the Mobile First methodology, then for desktop.
-- Compatible with all mobile devices and with a beautiful and pleasant user interface.
+Welcome to my portfolio website! This repository contains the source code of my personal site, which is hosted on GitHub Pages.
 
-💙 Join the channel to see more videos like this. [Bedimcode](https://www.youtube.com/@Bedimcode)
+## Forking and Customization
 
-![preview img](/preview.png)
+On my site, I've included a contacts section that uses a Formspree form to handle emails sent by users. 
+
+Please follow these steps after forking the repository:
+
+1. Go to [Formspree](https://formspree.io/) and create a free account if you haven't already.
+2. After logging in, create a new form and obtain the unique token.
+3. In the `index.html` file, find the following code:
+
+```html
+<form action="https://formspree.io/f/xbjwkqok" method="POST" class="contact__form grid" id="submit_form">
+```
+
+Replace the token `xbjwkqok` with your newly obtained Formspree token.
+
+Thank you for your interest in my work and for collaborating to keep my inbox clean!
