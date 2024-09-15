@@ -10,7 +10,7 @@
     --hue-color: 224; /*Blue 224 - Green 142 - Purple 250 - Pink 340*/
 
     /* HSL color mode */
-    --first-color: hsl(var(--hue-color), 89%, 60%);
+    --first-color: hsl(var(--hue-color), 75%, 65%);
     --first-color-second: hsl(var(--hue-color), 89%, 60%);
     --first-color-alt: hsl(var(--hue-color), 77%, 52%);
     --first-color-lighter: hsl(var(--hue-color), 92%, 85%);
