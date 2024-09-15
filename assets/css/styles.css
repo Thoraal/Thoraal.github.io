@@ -306,7 +306,7 @@ img{
 }
 
 .home__blob-img{
-    width: 170px;
+    width: 110px;
 }
 
 .home__data{
@@ -1327,3 +1327,4 @@ img{
     z-index: -999999;
     opacity: 0;
     }
+    
