@@ -1,15 +1,16 @@
-# Portfolio
+# Responsive Portfolio Website Tailor
+## [Watch it on youtube](https://youtu.be/sF0vW0GgL3U)
+### Responsive Portfolio Website Tailor
 
-Trying to get better with chakra UI by making a portfolio kind of website with aos.
+- Responsive Portfolio Website Using HTML CSS And JavaScript
+- Contains animations when scrolling.
+- Smooth scrolling in each section.
+- Contains a beautiful dark theme.
+- The color of the project can be customized.
+- Sending emails in the contact section.
+- Developed first with the Mobile First methodology, then for desktop.
+- Compatible with all mobile devices and with a beautiful and pleasant user interface.
 
-## Devicons
+💙 Join the channel to see more videos like this. [Bedimcode](https://www.youtube.com/@Bedimcode)
 
-Add more devicons from [here](https://www.npmjs.com/package/devicon-react-svg).
-
-## Screenshots
-
-![Image 1](screenshots/s1.png)
-![Image 2](screenshots/s2.png)
-![Image 3](screenshots/s3.png)
-![Image 4](screenshots/s4.png)
-![Image 5](screenshots/s5.png)
+![preview img](/preview.png)
