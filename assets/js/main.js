@@ -95,15 +95,34 @@ modalCloses.forEach(modalClose => {
 let swiper = new Swiper(".portfolio__container", {
     cssMode: true,
     loop: true,
+    speed: 600, // Velocidad de la transición en milisegundos
+    effect: 'fade', // Efecto de transición entre slides, puede ser 'slide', 'fade', etc.
     navigation: {
         nextEl: ".swiper-button-next",
         prevEl: ".swiper-button-prev",
     },
     pagination: {
-        el: ".swiper-pagination",
+        el: ".swiper-pagination-portfolio",
         clickable: true,
     },
+    breakpoints: {
+        320: {
+            slidesPerView: 1, // Muestra 1 slide por vista en pantallas pequeñas
+        },
+        768: {
+            slidesPerView: 2, // Muestra 2 slides por vista en pantallas medianas
+        },
+        1024: {
+            slidesPerView: 3, // Muestra 3 slides por vista en pantallas grandes
+        },
+    },
+    a11y: {
+        prevSlideMessage: 'Slide anterior',
+        nextSlideMessage: 'Slide siguiente',
+    }
 });
+
+
 /*==================== ARTICLES ====================*/
 let swiperarticles = new Swiper(".articles__container", {
     loop: true,

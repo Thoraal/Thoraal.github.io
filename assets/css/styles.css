@@ -766,70 +766,80 @@ img{
 }
 
 /*==================== PORTFOLIO ====================*/
-.portfolio__container{
-    overflow: initial;
+.portfolio__container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem; /* Espacio entre tarjetas */
+    justify-content: center;
 }
 
-.portfolio__content{
-    padding: 0 1.5rem;
+.portfolio__card {
+    position: relative;
+    width: 300px; /* Ajusta el ancho de la carta según sea necesario */
+    height: 350px; /* Ajusta la altura de la carta según sea necesario */
+    border-radius: 1rem; /* Borde redondeado */
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Sombra suave para un efecto más sutil */
+    background-color: #fff; /* Fondo blanco para la carta */
 }
 
-.portfolio__img{
-    width: 265px;
-    height: 200px; 
-    border-radius: .5rem;
-    justify-self: center;
-    object-fit: contain;
+.portfolio__card:hover {
+    transform: scale(1.05); /* Ampliación al pasar el ratón */
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3); /* Sombra más pronunciada */
 }
 
-.portfolio__title{
-    font-size: var(--h3-font-size);
-    margin-bottom: var(--mb-0-5);
+.portfolio__img {
+    width: 100%;
+    height: 60%; /* Ajusta la altura de la imagen */
+    object-fit: cover; /* Ajusta la imagen para cubrir el contenedor */
 }
 
-.portfolio__description{
-    margin-bottom: var(--mb-0-75);
+.portfolio__info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.7); /* Fondo oscuro con transparencia */
+    color: #fff;
+    padding: 1rem;
+    transition: opacity 0.3s ease, background 0.3s ease;
+    opacity: 0; /* Ocultar por defecto */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
 }
 
-.portfolio__button:hover .button__icon{
-    transform: translateX(.25rem);
+.portfolio__card:hover .portfolio__info {
+    opacity: 1; /* Mostrar información al pasar el ratón */
+    background: rgba(0, 0, 0, 0.85); /* Fondo más oscuro al pasar el ratón */
 }
 
-.swiper-button-prev::after,
-.swiper-button-next::after{
-    content: "";
+.portfolio__title {
+    font-size: 1.5rem; /* Tamaño del título */
+    margin-bottom: 0.5rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); /* Sombra sutil para mejorar la legibilidad */
 }
 
-.swiper-portfolio-icon{
-    font-size: 2rem;
-    color: var(--first-color);
+.portfolio__description {
+    font-size: 1rem; /* Tamaño de la descripción */
+    margin-bottom: 1rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); /* Sombra sutil para mejorar la legibilidad */
 }
 
-.swiper-button-prev{
-    left: -.5rem;
-}
-
-.swiper-button-next{
-    right: -.5rem;
-}
-
-.swiper-container-horizontal > .swiper-pagination-bullets{
-    bottom: -2.5rem;
-}
-
-.swiper-pagination-bullet-active{
+.portfolio__button {
+    display: flex;
+    align-items: center;
+    color: #fff;
+    text-decoration: none;
     background-color: var(--first-color);
+    border-radius: .25rem;
+    padding: .5rem 1rem;
+    transition: background-color 0.3s ease;
 }
 
-.swiper-pagination-portfolio {
-    height: 1px; 
-    margin-top: -2px ;
-}
-
-.swiper-button-prev,
-.swiper-button-next,
-.swiper-pagination-bullet{
-    outline: none;
+.portfolio__button:hover {
+    background-color: darken(var(--first-color), 10%); /* Ajusta el color al pasar el ratón */
 }
 
 /*==================== PROJECT IN MIND ====================*/
