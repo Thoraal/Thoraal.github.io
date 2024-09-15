@@ -97,6 +97,10 @@ let swiper = new Swiper(".portfolio__swiper-container", {
     loop: true,     // Habilita el bucle para que el carrusel se reinicie al final
     speed: 600,     // Velocidad de la transición en milisegundos
     effect: 'slide',// Efecto de transición entre slides
+    navigation: {
+        nextEl: ".swiper-button-next",  // Selector para el botón siguiente
+        prevEl: ".swiper-button-prev",  // Selector para el botón anterior
+    },
     pagination: {
         el: ".swiper-pagination-portfolio",  // Selector para la paginación
         clickable: true,  // Permite hacer clic en los bullets de paginación
@@ -114,6 +118,7 @@ let swiper = new Swiper(".portfolio__swiper-container", {
         },
     },
 });
+
 
 /*==================== ARTICLES ====================*/
 let swiperarticles = new Swiper(".articles__container", {
