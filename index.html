@@ -1,600 +1,206 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Alejandro Toral">
-    <!--==================== UNICONS ====================-->
-    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <!--==================== SWIPER CSS ====================-->
-    <link rel="stylesheet" href="assets/css/swiper-bundle.min.css">
+        <link rel="stylesheet" href="assets/css/styles.css">
 
-    <!--==================== CSS ====================-->
-    <link rel="stylesheet" href="assets/css/styles.css">
+        <!-- =====BOX ICONS===== -->
+        <link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
 
-    <title>Alejandro Toral</title>
-    <meta name="keywords" content="data scientist, bioinformatician, data science, bioinformatics, Alejandro Toral">
-    <meta name="author" content="Alejandro Toral">
-    <meta name="robots" content="index, follow">
-    <meta name="google-site-verification" content="KYe6GsSYjjdW_70JlJh1PmUMcjtCYCgVxAILWMEkWSw" />
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-</head>
-
-<body>
-    <!--==================== HEADER ====================-->
-    <header class="header" id="header">
-        <nav class="nav container">
-            <a href="#" class="nav__logo">Alejandro Toral</a>
-            <div class="nav__menu" id="nav-menu">
-                <ul class="nav__list grid">
-                    <li class="nav__item">
-                        <a href="#home" class="nav__link active-link">
-                            <i class="uil uil-estate nav__icon"></i> Inicio
-                        </a>
-                    </li>
-                    <li class="nav__item">
-                        <a href="#about" class="nav__link">
-                            <i class="uil uil-user nav__icon"></i> Sobre mí
-                        </a>
-                    </li>
-                    <li class="nav__item">
-                        <a href="#qualifications" class="nav__link">
-                            <i class="uil uil-graduation-cap nav__icon"></i> Educación
-                        </a>
-                    </li>
-                    <li class="nav__item">
-                        <a href="#expertise" class="nav__link">
-                            <i class="uil uil-briefcase-alt nav__icon"></i> Experiencia
-                        </a>
-                    </li>
-                    <li class="nav__item">
-                        <a href="#portfolio" class="nav__link">
-                            <i class="uil uil-scenery nav__icon"></i> Proyectos
-                        </a>
-                    </li>
-                    <li class="nav__item">
-                        <a href="#contact" class="nav__link">
-                            <i class="uil uil-estate nav__icon"></i> Contacto
-                        </a>
-                    </li>
-                </ul>
-                <i class="uil uil-times nav__close" id="nav-close"></i>
-            </div>
-            
-            <div class="nav__btns">
-                <!--Theme change button-->
-                <i class="uil uil-moon change-theme" id="theme-button"></i>
-                <div class="nav__toggle" id="nav-toggle">
-                    <i class="uil uil-apps"></i>
-                </div>
-            </div>
-
-        </nav>
-    </header>
-
-    <!--==================== MAIN ====================-->
-    <main class="main">
-        <!--==================== HOME ====================-->
-        <section class="home section" id="home">
-            <div class="home__container container grid">
-                <div class="home__content grid">
-                    <div class="home__social">
-                        <a href="https://wa.me/+52998358520/" target="_blank" class="home__social-icon">
-                            <i class="uil uil-whatsapp-alt"></i>
-                        </a>
-                        <a href="https://github.com/GuglielmoCerri" target="_blank" class="home__social-icon">
-                            <i class="uil uil-github-alt"></i>
-                        </a>
-                        <a href="https://medium.com/@cerriguglielmo" target="_blank" class="home__social-icon">
-                            <i class="uil uil-telegram-alt"></i>
-                        </a>
-                    </div>
-
-                    <div class="home__img">
-                        <svg class="home__blob" viewBox="0 0 200 187" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                            <mask id="mask0" mask-type="alpha">
-                                <path id="blobPath" d="M190.312 36.4879C206.582 62.1187 201.309 102.826 182.328 134.186C163.346 165.547
-                                130.807 187.559 100.226 186.353C69.6454 185.297 41.0228 161.023 21.7403 129.362C2.45775
-                                97.8511 -7.48481 59.1033 6.67581 34.5279C20.9871 10.1032 59.7028 -0.149132 97.9666
-                                0.00163737C136.23 0.303176 174.193 10.857 190.312 36.4879Z" />
-                                <animate 
-                                    xlink:href="#blobPath" 
-                                    attributeName="d" 
-                                    dur="5s" <!-- Duración más lenta para suavizar -->
-                                    repeatCount="indefinite" 
-                                    values="
-                                    M190.312 36.4879C206.582 62.1187 201.309 102.826 182.328 134.186C163.346 165.547
-                                    130.807 187.559 100.226 186.353C69.6454 185.297 41.0228 161.023 21.7403 129.362C2.45775
-                                    97.8511 -7.48481 59.1033 6.67581 34.5279C20.9871 10.1032 59.7028 -0.149132 97.9666
-                                    0.00163737C136.23 0.303176 174.193 10.857 190.312 36.4879Z;
-                                    
-                                    M180.312 46.4879C202.582 60.1187 211.309 108.826 175.328 145.186C160.346 175.547
-                                    140.807 190.559 90.226 176.353C65.6454 170.297 35.0228 140.023 25.7403 120.362C5.45775
-                                    87.8511 -3.48481 55.1033 15.67581 22.5279C35.9871 12.1032 55.7028 5.149132 85.9666
-                                    5.00163737C125.23 2.303176 154.193 30.857 180.312 46.4879Z;
-                                    
-                                    M200.312 50.4879C190.582 72.1187 211.309 105.826 172.328 154.186C160.346 190.547
-                                    130.807 187.559 95.226 186.353C55.6454 180.297 45.0228 140.023 15.7403 110.362C-5.45775
-                                    85.8511 -10.48481 55.1033 25.67581 35.5279C50.9871 10.1032 85.7028 -5.149132 110.9666
-                                    3.00163737C140.23 3.303176 165.193 20.857 200.312 50.4879Z;
-                                    
-                                    M185.312 40.4879C200.582 65.1187 195.309 115.826 172.328 130.186C150.346 175.547
-                                    125.807 180.559 105.226 166.353C60.6454 165.297 45.0228 130.023 25.7403 120.362C10.45775
-                                    85.8511 -5.48481 55.1033 20.67581 30.5279C35.9871 10.1032 75.7028 0.149132 105.9666
-                                    5.00163737C130.23 10.303176 160.193 25.857 185.312 40.4879Z;
-                                    
-                                    M190.312 36.4879C206.582 62.1187 201.309 102.826 182.328 134.186C163.346 165.547
-                                    130.807 187.559 100.226 186.353C69.6454 185.297 41.0228 161.023 21.7403 129.362C2.45775
-                                    97.8511 -7.48481 59.1033 6.67581 34.5279C20.9871 10.1032 59.7028 -0.149132 97.9666
-                                    0.00163737C136.23 0.303176 174.193 10.857 190.312 36.4879Z;" 
-                                    keyTimes="0; 0.25; 0.5; 0.75; 1" <!-- Distribución uniforme para suavizar el cambio de formas -->
-                                    calcMode="linear" <!-- Transiciones más fluidas -->
-                                />
-                            </mask>
-                            <g mask="url(#mask0)">
-                                <path d="M190.312 36.4879C206.582 62.1187 201.309 102.826 182.328 134.186C163.346 165.547
-                                130.807 187.559 100.226 186.353C69.6454 185.297 41.0228 161.023 21.7403 129.362C2.45775
-                                97.8511 -7.48481 59.1033 6.67581 34.5279C20.9871 10.1032 59.7028 -0.149132 97.9666
-                                0.00163737C136.23 0.303176 174.193 10.857 190.312 36.4879Z" />
-                                <image class="home__blob-img" x="45" y="18" xlink:href="assets/img/perfil.png" />
-                            </g>
-                        </svg>
-                    </div>
-                    
-                    
-                    
-                    </div>
-                    <div class="home__data">
-                        <h1 class="home__title">Hola, soy Alejandro</h1>
-                        <h3 class="home__subtitle">Desarrollador</h3>
-                        <p class="home__description">Soluciones en Python</p>
-                        <a href="#contact" class="button button--flex">
-                            Contactame <i class="uil uil-message button__icon"></i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="home_scroll">
-                    <a href="#about" class="home__scroll-button button--flex">
-                        <i class="uil uil-mouse-alt home__scroll-mouse"></i>
-                        <span class="home__scroll-name">Desliza hacia abajo</span>
-                        <i class="uil uil-arrow-down homw__scroll-arrow"></i>
-                    </a>
-                </div>
-            </div>
-        </section>
-        
-        <!--==================== ABOUT ====================-->
-        <section class="about section" id="about">
-            <h2 class="section__title">Sobre mí</h2>
-            <span class="section__subtitle">Lo que hago</span>
-
-            <div class="about__container container grid">
-                <img src="assets/img/perfil.png" alt="" class="about__img">
-
-                <div class="about__data">
-                    <p class="about__description">
-                        Creo automaticaciones en python
-                    </p>
-                    <div class="about__buttons">
-                        <a download="" href="assets/pdf/Guglielmo_Cerri_CV.pdf" class="button button--flex">
-                            Descargar CV <i class="uil uil-download-alt button__icon"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-        </section>
-
-        <!--==================== QUALIFICATION ====================-->
-        <section class="qualification section" id="qualifications">
-            <h2 class="section__title">Estudios</h2>
-            <div class="section__subtitle">Conocimiento</div>
-
-            <div class="qualification__container container">
-                <div class="qualification__tabs">
-                    <div class="qualification__button button--flex qualification__active" data-target="#education">
-                        <i class="uil uil-graduation-cap qualification__icon"></i>
-                        Educación
-                    </div>
-
-                    <div class="qualification__button button--flex" data-target="#work">
-                        <i class="uil uil-briefcase-alt qualification__icon"></i>
-                        Trabajo
-                    </div>
-                </div>
-
-                <div class="qualification__sections">
-                    <!--===============================QUALIFICATION CONTENT 1 ===========================-->
-                    <div class="qualification__content qualification__active" data-content id="education">
-                        <!--===============================QUALIFICATION 1 ===========================-->
-                        <div class="qualification__data">
-                            <div>
-                                <h3 class="qualification__title">M.Sc. in Medical Bioinformatics</h3>
-                                <span class="qualification__subtitle">
-                                    <a href="https://www.corsi.univr.it/?ent=cs&id=769" target="_blank">University of
-                                        Verona, IT</a>
-                                        <br>
-                                        <h5>110/110 wiht honors</h5>
-                                </span>
-                                <div class="qualification__calendar">
-                                    <i class="uil uil-calendar-alt"></i>
-                                    2018 - 2020
-                                </div>
-                            </div>
-
-                            <div>
-                                <span class="qualification__rounder"></span>
-                                <span class="qualification__line"></span>
-                            </div>
-                        </div>
-
-                        <!--===============================QUALIFICATION 2 ===========================-->
-                        <div class="qualification__data">
-                            <div></div>
-                            <div>
-                                <span class="qualification__rounder"></span>
-                            </div>
-
-                            <div>
-                                <h3 class="qualification__title">B.Sc. in Computer Science</h3>
-                                <span class="qualification__subtitle">
-                                    <a href="https://web.dmi.unict.it/corsi/l-31" target="_blank">Univerity of
-                                        Catania, IT</a>
-                                        <br>
-                                        <h5>110/110 wiht honors</h5>
-                                </span>
-                                <div class="qualification__calendar">
-                                    <i class="uil uil-calendar-alt"></i>
-                                    2015 - 2018
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!--===============================QUALIFICATION CONTENT 2 ===========================-->
-                    <div class="qualification__content" data-content id="work">
-                        <!--===============================QUALIFICATION 1 ===========================-->
-                        <div class="qualification__data">
-                            <div>
-                                <h3 class="qualification__title">Bioinformatician</h3>
-                                <span class="qualification__subtitle">
-                                    <a href="https://www.cogentech.it" target="_blank">Cogentech s.r.l.</a>
-                                </span>
-                                <div class="qualification__calendar">
-                                    <i class="uil uil-calendar-alt"></i>
-                                    June 2022 - Present
-                                </div>
-                            </div>
-
-                            <div>
-                                <span class="qualification__rounder"></span>
-                                <span class="qualification__line"></span>
-                            </div>
-                        </div>
-
-                        <!--===============================QUALIFICATION 2 ===========================-->
-                        <div class="qualification__data">
-                            <div></div>
-                            <div>
-                                <span class="qualification__rounder"></span>
-                                <span class="qualification__line"></span>
-                            </div>
-
-                            <div>
-                                <h3 class="qualification__title">Artificial Intelligence Specialist</h3>
-                                <span class="qualification__subtitle">
-                                    <a href="https://www.fire.eu" target="_blank">Fire Group s.p.a.</a>
-                                </span>
-                                <div class="qualification__calendar">
-                                    <i class="uil uil-calendar-alt"></i>
-                                    Sep 2021 - Jun 2022
-                                </div>
-                            </div>
-                        </div>
-
-                        <!--===============================QUALIFICATION 3 ===========================-->
-                        <div class="qualification__data">
-                            <div>
-                                <h3 class="qualification__title">Research Fellow</h3>
-                                <span class="qualification__subtitle">
-                                    <a href="https://www.univr.it/it/" target="_blank">University of Verona</a>
-                                </span>
-                                <div class="qualification__calendar">
-                                    <i class="uil uil-calendar-alt"></i>
-                                    Nov 2020 - Aug 2021
-                                </div>
-                            </div>
-
-                            <div>
-                                <span class="qualification__rounder"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!--==================== Expertise ====================-->
-        <section class="expertise section" id="expertise">
-            <h2 class="section__title">Experiencia</h2>
-            <span class="section__subtitle">Areas de interes</span>
-
-            <div class="Expertise__container container grid">
-                <!--===================== Expertise 1 ====================-->
-                <div class="Expertise__content">
-                    <div>
-                        <i class="uil uil-chart-line Expertise__icon"></i>
-                        <h3 class="Expertise__title">Data Science</h3>
-                        <span class="button button--flex button--small button--link Expertise__button">
-                            View More
-                            <i class="uil uil-arrow-right button__icon"></i>
-                        </span>
-
-                        <div class="Expertise__modal">
-                            <div class="Expertise__modal-content">
-                                <h3 class="Expertise__modal-title">Data Science</h3>
-                                <i class="uil uil-times Expertise__modal-close"></i>
-                                
-                                <ul class="Expertise__modal-expertise grid">
-                                    <li class="Expertise__modal-service">
-                                        <i class="uil uil-check-circle Expertise__modal-icon"></i>
-                                        <p>I perform extensive data analysis and interpretation to understand patterns
-                                            and trends.</p>
-                                    </li>
-
-                                    <li class="Expertise__modal-service">
-                                        <i class="uil uil-check-circle Expertise__modal-icon"></i>
-                                        <p>I manage and optimize data systems, and design algorithms for data mining and
-                                            research purposes.</p>
-                                    </li>
-
-                                    <li class="Expertise__modal-service">
-                                        <i class="uil uil-check-circle Expertise__modal-icon"></i>
-                                        <p>I provide actionable insights based on data analysis.</p>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!--===================== Expertise 2 ====================-->
-                <div class="Expertise__content">
-                    <div>
-                        <i class="uil uil-brain Expertise__icon"></i>
-                        <h3 class="Expertise__title">Artificial Intelligence</h3>
-
-                        <span class="button button--flex button--small button--link Expertise__button">
-                            View More
-                            <i class="uil uil-arrow-right button__icon"></i>
-                        </span>
-
-                        <div class="Expertise__modal">
-                            <div class="Expertise__modal-content">
-                                <h4 class="Expertise__modal-title">Artificial Intelligence</h4>
-                                <i class="uil uil-times Expertise__modal-close"></i>
-
-                                <ul class="Expertise__modal-expertise grid">
-                                    <li class="Expertise__modal-service">
-                                        <i class="uil uil-check-circle Expertise__modal-icon"></i>
-                                        <p>I develop and implement advanced AI models, including deep learning and
-                                            neural networks.</p>
-                                    </li>
-
-                                    <li class="Expertise__modal-service">
-                                        <i class="uil uil-check-circle Expertise__modal-icon"></i>
-                                        <p>I specialize in creating intelligent chatbots for a variety of applications,
-                                            enhancing customer service and engagement.</p>
-                                    </li>
-
-                                    <li class="Expertise__modal-service">
-                                        <i class="uil uil-check-circle Expertise__modal-icon"></i>
-                                        <p>I build and maintain scalable AI solutions in production.</p>
-                                    </li>
-
-                                    <li class="Expertise__modal-service">
-                                        <i class="uil uil-check-circle Expertise__modal-icon"></i>
-                                        <p>I collaborate with cross-functional teams to understand business
-                                            requirements and design effective AI systems.</p>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!--===================== Expertise 3 ====================-->
-                <div class="Expertise__content">
-                    <div>
-                        <i class="uil uil-robot Expertise__icon"></i>
-                        <h3 class="Expertise__title">Python & Automation</h3>
-
-                        <span class="button button--flex button--small button--link Expertise__button">
-                            View More
-                            <i class="uil uil-arrow-right button__icon"></i>
-                        </span>
-
-                        <div class="Expertise__modal">
-                            <div class="Expertise__modal-content">
-                                <h4 class="Expertise__modal-title">Python & Automation</h4>
-                                <i class="uil uil-times Expertise__modal-close"></i>
-
-                                <ul class="Expertise__modal-expertise grid">
-                                    <li class="Expertise__modal-service">
-                                        <i class="uil uil-check-circle Expertise__modal-icon"></i>
-                                        <p>I develop efficient and robust Python applications, optimized for performance
-                                            and scalability.</p>
-                                    </li>
-
-                                    <li class="Expertise__modal-service">
-                                        <i class="uil uil-check-circle Expertise__modal-icon"></i>
-                                        <p>I design and implement automated processes, including the creation of bots,
-                                            to streamline operations of all types, including business processes, thereby
-                                            improving productivity and accuracy.</p>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-<!--==================== PORTFOLIO SWIPER ====================-->
-<section class="portfolio section" id="portfolio">
-    <h2 class="section__title">Proyectos</h2>
-    <span class="section__subtitle">Trabajos más recientes</span>
-
-    <div class="portfolio__swiper-container swiper">
-        <div class="swiper-wrapper">
-            <!--======================== SLIDE 1 =============-->
-            <div class="swiper-slide portfolio__card">
-                <img src="assets/img/portfolio1.gif" alt="Captura de pantalla del juego AI Dino usando PyTorch" class="portfolio__img" loading="lazy">
-                <div class="portfolio__info">
-                    <h3 class="portfolio__title">PyTorch Dino AI Game</h3>
-                    <p class="portfolio__description">
-                        Entrenamiento de un modelo de IA para jugar al juego Chrome Dino utilizando PyTorch y EfficientNet.
-                    </p>
-                    <a href="https://github.com/GuglielmoCerri/pytorch-dino-ai-game" class="button button--flex button--small portfolio__button" target="_blank" rel="noopener noreferrer">
-                        Ver
-                        <i class="uil uil-arrow-right button__icon"></i>
-                    </a>
-                </div>
-            </div>
-            <!--======================== SLIDE 2 =============-->
-            <div class="swiper-slide portfolio__card">
-                <img src="assets/img/portfolio2.gif" alt="Soluciones a los problemas del calendario AoC 2021 y 2022 con Python" class="portfolio__img" loading="lazy">
-                <div class="portfolio__info">
-                    <h3 class="portfolio__title">Advent of Code 2021-2022</h3>
-                    <p class="portfolio__description">
-                        Soluciones a los problemas del calendario AoC para 2021 y 2022 con Python.
-                    </p>
-                    <a href="https://github.com/TuUsuario/advent-of-code" class="button button--flex button--small portfolio__button" target="_blank" rel="noopener noreferrer">
-                        Ver
-                        <i class="uil uil-arrow-right button__icon"></i>
-                    </a>
-                </div>
-            </div>
-            <!--======================== SLIDE 3 =============-->
-            <div class="swiper-slide portfolio__card">
-                <img src="assets/img/portfolio3.gif" alt="Otro proyecto interesante" class="portfolio__img" loading="lazy">
-                <div class="portfolio__info">
-                    <h3 class="portfolio__title">Otro Proyecto</h3>
-                    <p class="portfolio__description">
-                        Descripción breve del tercer proyecto. Asegúrate de que esta información sea relevante y única.
-                    </p>
-                    <a href="https://github.com/TuUsuario/otro-proyecto" class="button button--flex button--small portfolio__button" target="_blank" rel="noopener noreferrer">
-                        Ver
-                        <i class="uil uil-arrow-right button__icon"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="swiper-pagination-portfolio"></div>
-    </div>
-</section>
-
-
-
-
-        <!--==================== CONTACT ME ====================-->
-        <section class="contact section" id="contact">
-            <h2 class="section__title">Contactame</h2>
-            <span class="section__subtitle">Ponte en contacto</span>
-
-            <div class="contact__container container grid">
+        <title>Alejandro Toral</title>
+    </head>
+    <body>
+        <!--===== HEADER =====-->
+        <header class="l-header">
+            <nav class="nav bd-grid">
                 <div>
-                    <div class="contact__information">
-                        <i class="uil uil-telegram-alt contact__icon"></i>
-
-                        <div>
-                            <h3 class="contact__title">Telegram</h3>
-                            <span class="contact__subtitle">@GuglielmoCerri</span>
-                        </div>
-                    </div>
-
-                    <div class="contact__information">
-                        <i class="uil uil-envelope contact__icon"></i>
-
-                        <div>
-                            <h3 class="contact__title">Email</h3>
-                            <span class="contact__subtitle">cerriguglielmo@gmail.com</span>
-                        </div>
-                    </div>
-
-                    <div class="contact__information">
-                        <i class="uil uil-map-marker contact__icon"></i>
-
-                        <div>
-                            <h3 class="contact__title">Location</h3>
-                            <span class="contact__subtitle">Italy, IT</span>
-                        </div>
-                    </div>
-    
-    </main>
-    
-    <!--==================== FOOTER ====================-->
-    <footer class="footer" id="footer">
-        <div class="footer__bg">
-            <div class="footer__container container grid">
-                <div style="display: flex; flex-direction: column; align-items: center;">
-                    <h2 class="footer__title">Alejandro Toral</h2>
-                    <span class="footer__subtitle">Analista de Datos</span>
+                    <a href="#" class="nav__logo">Alejandro</a>
                 </div>
 
-                <ul class="footer__links" style="align-self: center;">
-                    <li>
-                        <a href="#expertise" class="footer__link">Experiencia</a>
-                    </li>
+                <div class="nav__menu" id="nav-menu">
+                    <ul class="nav__list">
+                        <li class="nav__item"><a href="#home" class="nav__link active-link">Inicio</a></li>
+                        <li class="nav__item"><a href="#about" class="nav__link">Sobre mí</a></li>
+                        <li class="nav__item"><a href="#skills" class="nav__link">Educación</a></li>
+                        <li class="nav__item"><a href="#work" class="nav__link">Proyectos</a></li>
+                        <li class="nav__item"><a href="#contact" class="nav__link">Contacto</a></li>
+                    </ul>
+                </div>
 
-                    <li>
-                        <a href="#portfolio" class="footer__link">Proyectos</a>
-                    </li>
+                <div class="nav__toggle" id="nav-toggle">
+                    <i class='bx bx-menu'></i>
+                </div>
+            </nav>
+        </header>
 
-                    <li>
-                        <a href="#contact" class="footer__link">Contactame</a>
-                    </li>
-                </ul>
+        <main class="l-main">
+            <!--===== HOME =====-->
+            <section class="home bd-grid" id="home">
+                <div class="home__data">
+                    <h1 class="home__title">Hola,<br>Soy <span class="home__title-color">Alejandro Toral</span><br>Desarrollador</h1>
 
-                <div class="footer__socials" style="align-self: center;">
-                    <a href="https://twitter.com/GuglielmoCerri" class="footer__social" target="_blank">
-                        <i class="uil uil-twitter-alt"></i>
+                    <a href="#" class="button">Contacto</a>
+                </div>
+
+                <div class="home__social">
+                    <a href="" class="home__social-icon"><i class='bx bxl-whatsapp'></i></a>
+                    <a href="" class="home__social-icon"><i class='bx bxl-telegram' ></i></a>
+                    <a href="" class="home__social-icon"><i class='bx bxl-github' ></i></a>
+                </div>
+
+                <div class="home__img">
+                    <svg class="home__blob" viewBox="0 0 479 467" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <mask id="mask0" mask-type="alpha">
+                            <path d="M9.19024 145.964C34.0253 76.5814 114.865 54.7299 184.111 29.4823C245.804 6.98884 311.86 -14.9503 370.735 14.143C431.207 44.026 467.948 107.508 477.191 174.311C485.897 237.229 454.931 294.377 416.506 344.954C373.74 401.245 326.068 462.801 255.442 466.189C179.416 469.835 111.552 422.137 65.1576 361.805C17.4835 299.81 -17.1617 219.583 9.19024 145.964Z"/>
+                        </mask>
+                        <g mask="url(#mask0)">
+                            <path d="M9.19024 145.964C34.0253 76.5814 114.865 54.7299 184.111 29.4823C245.804 6.98884 311.86 -14.9503 370.735 14.143C431.207 44.026 467.948 107.508 477.191 174.311C485.897 237.229 454.931 294.377 416.506 344.954C373.74 401.245 326.068 462.801 255.442 466.189C179.416 469.835 111.552 422.137 65.1576 361.805C17.4835 299.81 -17.1617 219.583 9.19024 145.964Z"/>
+                            
+                            <image class="home__blob-img" x="120" y="60" href="assets/img/perfil.png"/>
+                        </g>
+                    </svg>
+                </div>
+            </section>
+
+            <!--===== ABOUT =====-->
+            <section class="about section " id="about">
+                <h2 class="section-title">Sobre mí</h2>
+
+                <div class="about__container bd-grid">
+                    <div class="about__img">
+                        <img src="assets/img/perfil.png" alt="">
+                    </div>
+                    
+                    <div>
+                        <h2 class="about__subtitle">Me llamo Alejandro Toral</h2>
+                        <p class="about__text">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptate cum expedita quo culpa tempora, assumenda, quis fugiat ut voluptates soluta, aut earum nemo recusandae cumque perferendis! Recusandae alias accusamus atque.</p>           
+                    </div>                                   
+                </div>
+            </section>
+
+            <!--===== SKILLS =====-->
+            <section class="skills section" id="skills">
+                <h2 class="section-title">Conocimiento</h2>
+
+                <div class="skills__container bd-grid">          
+                    <div>
+                        <h2 class="skills__subtitle">Tecnologias</h2>
+                        <p class="skills__text">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit optio id vero amet, alias architecto consectetur error eum eaque sit.</p>
+                        <div class="skills__data">
+                            <div class="skills__names">
+                                <i class='bx bxl-html5 skills__icon'></i>
+                                <span class="skills__name">HTML5</span>
+                            </div>
+                            <div class="skills__bar skills__html">
+
+                            </div>
+                            <div>
+                                <span class="skills__percentage">95%</span>
+                            </div>
+                        </div>
+                        <div class="skills__data">
+                            <div class="skills__names">
+                                <i class='bx bxl-css3 skills__icon'></i>
+                                <span class="skills__name">CSS3</span>
+                            </div>
+                            <div class="skills__bar skills__css">
+                                
+                            </div>
+                            <div>
+                                <span class="skills__percentage">85%</span>
+                            </div>
+                        </div>
+                        <div class="skills__data">
+                            <div class="skills__names">
+                                <i class='bx bxl-javascript skills__icon' ></i>
+                                <span class="skills__name">JAVASCRIPT</span>
+                            </div>
+                            <div class="skills__bar skills__js">
+                                
+                            </div>
+                            <div>
+                                <span class="skills__percentage">65%</span>
+                            </div>
+                        </div>
+                        <div class="skills__data">
+                            <div class="skills__names">
+                                <i class='bx bxs-paint skills__icon'></i>
+                                <span class="skills__name">UX/UI</span>
+                            </div>
+                            <div class="skills__bar skills__ux">
+                                
+                            </div>
+                            <div>
+                                <span class="skills__percentage">85%</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>              
+                        <img src="assets/img/work3.jpg" alt="" class="skills__img">
+                    </div>
+                </div>
+            </section>
+
+            <!--===== WORK =====-->
+            <section class="work section" id="work">
+                <h2 class="section-title">Proyectos</h2>
+
+                <div class="work__container bd-grid">
+                    <a href="" class="work__img">
+                        <img src="assets/img/work1.jpg" alt="">
                     </a>
-
-                    <a href="https://medium.com/@cerriguglielmo" target="_blank"
-                        class="footer__social">
-                        <i class="uil uil-medium-m"></i>
+                    <a href="" class="work__img">
+                        <img src="assets/img/work2.jpg" alt="">
                     </a>
-
-                    <a href="https://www.linkedin.com/in/guglielmocerri/" target="_blank" class="footer__social">
-                        <i class="uil uil-linkedin-alt"></i>
+                    <a href="" class="work__img">
+                        <img src="assets/img/work3.jpg" alt="">
+                    </a>
+                    <a href="" class="work__img">
+                        <img src="assets/img/work4.jpg" alt="">
+                    </a>
+                    <a href="" class="work__img">
+                        <img src="assets/img/work5.jpg" alt="">
+                    </a>
+                    <a href="" class="work__img">
+                        <img src="assets/img/work6.jpg" alt="">
                     </a>
                 </div>
+            </section>
+
+            <!--===== CONTACT =====-->
+            <section class="contact section" id="contact">
+                <h2 class="section-title">Contacto</h2>
+
+                <div class="contact__container bd-grid">
+                    <form action="" class="contact__form">
+                        <input type="text" placeholder="Name" class="contact__input">
+                        <input type="mail" placeholder="Email" class="contact__input">
+                        <textarea name="" id="" cols="0" rows="10" class="contact__input"></textarea>
+                        <input type="button" value="Enviar" class="contact__button button">
+                    </form>
+                </div>
+            </section>
+        </main>
+
+        <!--===== FOOTER =====-->
+        <footer class="footer">
+            <p class="footer__title">Alejandro</p>
+            <div class="footer__social">
+                <a href="#" class="footer__icon"><i class='bx bxl-facebook' ></i></a>
+                <a href="#" class="footer__icon"><i class='bx bxl-instagram' ></i></a>
+                <a href="#" class="footer__icon"><i class='bx bxl-twitter' ></i></a>
             </div>
-
-            <p class="footer__copy" style="margin-top: 10px;">&#169; Guglielmo Cerri. All rights reserved.</p>
-        </div>
-    </footer>
+            <p class="footer__copy">&#169; Tdev. All rigths reserved</p>
+        </footer>
 
 
-    <!--==================== SCROLL TOP ====================-->
-    <a href="" class="scrollup" id="scroll-up">
-        <i class="uil uil-arrow-up scroll__icon"></i>
-    </a>
+        <!--===== SCROLL REVEAL =====-->
+        <script src="https://unpkg.com/scrollreveal"></script>
 
-    <!--==================== SWIPER JS ====================-->
-    <script src="assets/js/swiper-bundle.min.js"></script>
-
-    <!--==================== MAIN JS ====================-->
-    <script src="assets/js/main.js"></script>
-
-</body>
-
-</html>
-
-</body>
-
+        <!--===== MAIN JS =====-->
+        <script src="assets/js/main.js"></script>
+    </body>
 </html>
