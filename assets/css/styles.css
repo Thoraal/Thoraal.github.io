@@ -342,21 +342,32 @@ img {
   border-radius: 1.5rem;
 }
 
-/* ===== WORK =====*/
 .work__container {
   row-gap: 2rem;
 }
+
 .work__img {
   box-shadow: 0px 4px 25px rgba(14, 36, 49, 0.15);
   border-radius: 0.5rem;
   overflow: hidden;
+  position: relative;
+  width: 100%; /* Ajusta según el diseño */
+  max-width: 300px; /* Ajusta el tamaño máximo según tus necesidades */
+  height: auto; /* Permite que la altura se adapte según la imagen */
 }
+
 .work__img img {
-  transition: 2s;
+  transition: 1s;
+  width: 100%;
+  height: auto; /* Permite que la imagen mantenga su proporción */
+  object-fit: contain; /* Hace que la imagen se reduzca para caber dentro del contenedor */
 }
+
 .work__img img:hover {
-  transform: scale(1.5);
+  transform: scale(1.1);
 }
+
+
 
 /* ===== CONTACT =====*/
 .contact__input {
