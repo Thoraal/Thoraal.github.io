@@ -358,7 +358,7 @@ img {
 
 .work__img img {
   transition: 1s;
-  width: 100%;
+  width: 110%;
   height: auto; /* Permite que la imagen mantenga su proporción */
   object-fit: contain; /* Hace que la imagen se reduzca para caber dentro del contenedor */
 }
