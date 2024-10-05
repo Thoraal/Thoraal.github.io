@@ -343,7 +343,6 @@ img {
 }
 
 
-<!--===== WORK =====-->
 .work__container {
   row-gap: 2rem;
 }
@@ -366,10 +365,27 @@ img {
   object-fit: contain; /* Hace que la imagen se reduzca para caber dentro del contenedor */
 }
 
-.work__img img:hover {
+.work__img:hover img {
   transform: scale(1.1);
+  filter: blur(3.5px); /* Añade el desenfoque al hacer hover */
 }
 
+/* Estilo para el ícono de descarga */
+.download-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3rem;
+  color: rgba(55, 165, 216, 0.623);
+  opacity: 0;
+  transition: opacity 0.1s ease;
+  pointer-events: none; /* Evita que el icono interfiera con el enlace */
+}
+
+.work__img:hover .download-icon {
+  opacity: 1;
+}
 
 
 /* ===== CONTACT =====*/
