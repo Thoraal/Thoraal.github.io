@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Códigos QR</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: #fff;
+            color: #000;
+            transition: background-color 0.5s, color 0.5s;
+        }
+        input, select {
+            margin: 10px;
+            padding: 15px;
+            width: 90%;
+            max-width: 400px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+        input:focus, select:focus {
+            border-color: #7ba5ff;
+            box-shadow: 0 0 10px rgba(123, 165, 255, 0.5);
+        }
+        canvas {
+            margin-top: 20px;
+            transform: scale(0);
+            transition: transform 0.5s ease;
+        }
+        .qr-container {
+            display: inline-block;
+            position: relative;
+            animation: fadeIn 1s ease-in-out;
+        }
+        .watermark {
+            font-size: 14px;
+            color: #555;
+            font-family: Arial, sans-serif;
+            margin-top: 10px;
+        }
+        #colorBtn, #descargarBtn {
+            padding: 10px;
+            margin: 10px;
+            border: 2px solid #000;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #fff;
+            width: auto;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        #colorBtn:hover, #descargarBtn:hover {
+            background-color: #7ba5ff;
+            transform: scale(1.05);
+        }
+        /* Navbar flotante */
+        .navbar {
+            position: fixed;
+            top: 20px;
+            left: 100px;
+            right: 100px;
+            background-color: #333;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            border-radius: 100px;
+            transition: background-color 0.6s;
+        }
+        .navbar h1 {
+            font-size: 15px;
+            margin: 0;
+        }
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 25px;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 25px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 3.5px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #7ba5ff;
+        }
+        input:checked + .slider:before {
+            transform: translateX(24px);
+        }
+        /* Estilo del modo oscuro */
+        body.dark {
+            background-color: #121212;
+            color: #ffffff;
+        }
+        body.dark input, body.dark select {
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #555;
+        }
+        body.dark #colorBtn, body.dark #descargarBtn {
+            background-color: #333;
+            color: #fff;
+            border: 2px solid #fff;
+        }
+
+        /* Animaciones */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>Generador de códigos QR</h1>
+        <label class="toggle-switch">
+            <input type="checkbox" id="toggleTheme" onclick="toggleTheme()">
+            <span class="slider"></span>
+        </label>
+    </div>
+    <div style="margin-top: 120px;">
+        
+        <select id="tipo">
+            <option value="link">Enlace</option>
+            <option value="wifi">WiFi</option>
+            <option value="texto">Texto</option>
+            <option value="vcard">vCard</option>
+        </select>
+        <div id="inputs">
+            <input type="text" id="contenido" placeholder="Ingresa el enlace">
+        </div>
+        <div class="qr-container">
+            <canvas id="qr"></canvas>
+        </div>
+        <div>
+            <button id="colorBtn" onclick="seleccionarColor()">Elige el color del QR</button>
+            <input type="color" id="color" value="#000000" style="display:none;" title="Seleccionar color">
+            <button id="descargarBtn" onclick="descargarQR()">Descargar Código QR</button>
+        </div>
+        <div class="watermark"><a href="https://thoraal.github.io/" target="_blank">Developed by Toral</a></div>
+    </div>
+
+    <script>
+        function generarQR() {
+            const tipo = document.getElementById('tipo').value;
+            let contenido = '';
+
+            if (tipo === 'link') {
+                contenido = document.getElementById('contenido').value.trim();
+            } else if (tipo === 'wifi') {
+                const ssid = document.getElementById('ssid').value.trim();
+                const password = document.getElementById('password').value.trim();
+                const security = document.getElementById('security').value;
+                contenido = `WIFI:T:${security};S:${ssid};P:${password};;`;
+            } else if (tipo === 'texto') {
+                contenido = document.getElementById('contenidoTexto').value.trim();
+            } else if (tipo === 'vcard') {
+                const nombre = document.getElementById('nombre').value.trim();
+                const telefono = document.getElementById('telefono').value.trim();
+                const email = document.getElementById('email').value.trim();
+                contenido = `BEGIN:VCARD\nVERSION:3.0\nFN:${nombre}\nTEL:${telefono}\nEMAIL:${email}\nEND:VCARD`;
+            }
+
+            if (contenido) {
+                const color = document.getElementById('color').value;
+                new QRious({
+                    element: document.getElementById('qr'),
+                    value: contenido,
+                    size: 250,
+                    level: 'H',
+                    background: 'white',
+                    foreground: color
+                });
+                document.getElementById('qr').style.transform = 'scale(1)';
+            } else {
+                document.getElementById('qr').style.transform = 'scale(0)';
+            }
+        }
+
+        function seleccionarColor() {
+            document.getElementById('color').click();
+        }
+
+        document.getElementById('color').addEventListener('input', function() {
+            generarQR();
+            document.getElementById('colorBtn').style.borderColor = this.value;
+        });
+
+        function descargarQR() {
+            const canvas = document.getElementById('qr');
+            if (canvas.style.transform !== 'scale(1)') return;
+            const newCanvas = document.createElement('canvas');
+            newCanvas.width = canvas.width;
+            newCanvas.height = canvas.height + 30;
+            const contexto = newCanvas.getContext('2d');
+            contexto.fillStyle = '#fff';
+            contexto.fillRect(0, 0, newCanvas.width, newCanvas.height);
+            contexto.drawImage(canvas, 0, 0);
+            contexto.font = '14px Consolas';
+            contexto.fillStyle = '#555';
+            contexto.textAlign = 'center';
+            contexto.fillText('Developed by Alejandro Toral', newCanvas.width / 2, newCanvas.height - 10);
+            const enlace = document.createElement('a');
+            enlace.href = newCanvas.toDataURL();
+            enlace.download = 'codigo_qr.png';
+            enlace.click();
+        }
+
+        document.getElementById('tipo').addEventListener('change', function() {
+            const inputsDiv = document.getElementById('inputs');
+            inputsDiv.innerHTML = '';
+            if (this.value === 'link') {
+                inputsDiv.innerHTML = '<input type="text" id="contenido" placeholder="Ingresa el enlace">';
+            } else if (this.value === 'wifi') {
+                inputsDiv.innerHTML = `
+                    <input type="text" id="ssid" placeholder="Nombre de la red (SSID)">
+                    <input type="text" id="password" placeholder="Contraseña">
+                    <select id="security">
+                        <option value="WPA">WPA/WPA2</option>
+                        <option value="WEP">WEP</option>
+                        <option value="">Sin seguridad</option>
+                    </select>
+                `;
+            } else if (this.value === 'texto') {
+                inputsDiv.innerHTML = '<input type="text" id="contenidoTexto" placeholder="Ingresa el texto">';
+            } else if (this.value === 'vcard') {
+                inputsDiv.innerHTML = `
+                    <input type="text" id="nombre" placeholder="Nombre">
+                    <input type="text" id="telefono" placeholder="Teléfono">
+                    <input type="text" id="email" placeholder="Correo electrónico">
+                `;
+            }
+            generarQR();
+        });
+
+        document.getElementById('inputs').addEventListener('input', generarQR);
+
+        // Modo oscuro adaptativo
+        function setThemeBasedOnSystemPreference() {
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                document.body.classList.add('dark');
+                document.getElementById('toggleTheme').checked = true;
+            } else {
+                document.body.classList.remove('dark');
+                document.getElementById('toggleTheme').checked = false;
+            }
+        }
+
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', setThemeBasedOnSystemPreference);
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+            localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+        }
+
+        // Inicializar el tema basado en las preferencias del sistema
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme) {
+                if (savedTheme === 'dark') {
+                    document.body.classList.add('dark');
+                    document.getElementById('toggleTheme').checked = true;
+                }
+            } else {
+                setThemeBasedOnSystemPreference();
+            }
+        });
+    </script>
+</body>
+</html>
