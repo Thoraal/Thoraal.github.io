@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador de Códigos QR</title>
+    <title>Generador de Códigos QR 🤟</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet">
     <style>
@@ -60,10 +60,6 @@
         #colorBtn:hover, #descargarBtn:hover {
             background-color: #7ba5ff;
             transform: scale(1.05);
-        }
-        #descargarBtn:disabled {
-            cursor: not-allowed;
-            opacity: 0.5;
         }
         /* Navbar flotante */
         .navbar {
@@ -157,6 +153,7 @@
         </label>
     </div>
     <div style="margin-top: 120px;">
+        
         <select id="tipo">
             <option value="link">Enlace</option>
             <option value="wifi">WiFi</option>
@@ -172,25 +169,12 @@
         <div>
             <button id="colorBtn" onclick="seleccionarColor()">Elige el color del QR</button>
             <input type="color" id="color" value="#000000" style="display:none;" title="Seleccionar color">
-            <button id="descargarBtn" onclick="descargarQR()" disabled>Descargar Código QR</button>
+            <button id="descargarBtn" onclick="descargarQR()">Descargar Código QR</button>
         </div>
-        <div id="contador" style="margin-top: 20px; font-size: 18px;">Generado: 0 veces</div>
         <div class="watermark"><a href="https://thoraal.github.io/" target="_blank">Developed by Toral</a></div>
     </div>
 
     <script>
-        function actualizarContador() {
-            let contador = parseInt(localStorage.getItem('contadorDescargas')) || 0;
-            document.getElementById('contador').innerText = `Generado: ${contador} veces`;
-        }
-
-        function incrementarContador() {
-            let contador = parseInt(localStorage.getItem('contadorDescargas')) || 0;
-            contador++;
-            localStorage.setItem('contadorDescargas', contador);
-            actualizarContador();
-        }
-
         function generarQR() {
             const tipo = document.getElementById('tipo').value;
             let contenido = '';
@@ -222,10 +206,8 @@
                     foreground: color
                 });
                 document.getElementById('qr').style.transform = 'scale(1)';
-                document.getElementById('descargarBtn').disabled = false;
             } else {
                 document.getElementById('qr').style.transform = 'scale(0)';
-                document.getElementById('descargarBtn').disabled = true;
             }
         }
 
@@ -241,18 +223,26 @@
         function descargarQR() {
             const canvas = document.getElementById('qr');
             if (canvas.style.transform !== 'scale(1)') return;
+            const newCanvas = document.createElement('canvas');
+            newCanvas.width = canvas.width;
+            newCanvas.height = canvas.height + 30;
+            const contexto = newCanvas.getContext('2d');
+            contexto.fillStyle = '#fff';
+            contexto.fillRect(0, 0, newCanvas.width, newCanvas.height);
+            contexto.drawImage(canvas, 0, 0);
+            contexto.font = '14px Consolas';
+            contexto.fillStyle = '#555';
+            contexto.textAlign = 'center';
+            contexto.fillText('Developed by Alejandro Toral', newCanvas.width / 2, newCanvas.height - 10);
             const enlace = document.createElement('a');
-            enlace.href = canvas.toDataURL();
+            enlace.href = newCanvas.toDataURL();
             enlace.download = 'codigo_qr.png';
             enlace.click();
-            incrementarContador();
         }
 
         document.getElementById('tipo').addEventListener('change', function() {
             const inputsDiv = document.getElementById('inputs');
             inputsDiv.innerHTML = '';
-            document.getElementById('qr').style.transform = 'scale(0)';
-            document.getElementById('descargarBtn').disabled = true;
             if (this.value === 'link') {
                 inputsDiv.innerHTML = '<input type="text" id="contenido" placeholder="Ingresa el enlace">';
             } else if (this.value === 'wifi') {
@@ -274,6 +264,7 @@
                     <input type="text" id="email" placeholder="Correo electrónico">
                 `;
             }
+            generarQR();
         });
 
         document.getElementById('inputs').addEventListener('input', generarQR);
@@ -307,7 +298,6 @@
             } else {
                 setThemeBasedOnSystemPreference();
             }
-            actualizarContador();
         });
     </script>
 </body>
