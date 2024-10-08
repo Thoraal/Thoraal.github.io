@@ -39,7 +39,7 @@
         .qr-container {
             display: inline-block;
             position: relative;
-            animation: fadeIn 3s ease-in-out;
+            animation: fadeIn 1s ease-in-out;
         }
         .watermark {
             font-size: 14px;
@@ -65,8 +65,8 @@
         .navbar {
             position: fixed;
             top: 20px;
-            left: 100px;
-            right: 100px;
+            left: 10px;
+            right: 10px;
             background-color: #333;
             color: #fff;
             display: flex;
@@ -79,7 +79,7 @@
             transition: background-color 0.6s;
         }
         .navbar h1 {
-            font-size: 15px;
+            font-size: 14px;
             margin: 0;
         }
         .toggle-switch {
@@ -169,10 +169,9 @@
         <div>
             <button id="colorBtn" onclick="seleccionarColor()">Elige el color del QR</button>
             <input type="color" id="color" value="#000000" style="display:none;" title="Seleccionar color">
-            <label for="color" id="colorLabel" style="padding: 10px; margin: 10px; border: 2px solid #000; border-radius: 5px; cursor: pointer; background-color: #fff;">Seleccionar Color</label>
             <button id="descargarBtn" onclick="descargarQR()">Descargar Código QR</button>
         </div>
-        <div class="watermark"><a href="https://www.facebook.com/alejandro.toral.35574/" target="_blank">Developed by Toral</a></div>
+        <div class="watermark"><a href="https://thoraal.github.io/" target="_blank">Developed by Toral</a></div>
     </div>
 
     <script>
@@ -219,7 +218,6 @@
         document.getElementById('color').addEventListener('input', function() {
             generarQR();
             document.getElementById('colorBtn').style.borderColor = this.value;
-            document.getElementById('colorLabel').style.borderColor = this.value;
         });
 
         function descargarQR() {
