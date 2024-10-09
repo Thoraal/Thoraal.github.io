@@ -91,6 +91,17 @@
             background-color: #218838;
             transform: translateY(-3px);
         }
+        
+        /* Estilos para vista móvil */
+        @media (max-width: 600px) {
+            table th:nth-child(3), table th:nth-child(4),
+            table td:nth-child(3), table td:nth-child(4) {
+                display: none;
+            }
+            th, td {
+                font-size: 0.8em;
+            }
+        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
