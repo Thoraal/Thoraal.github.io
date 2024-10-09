@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Finanzas Personales</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .form-container, .results, .chart-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            transition: transform 0.3s ease-in-out;
+        }
+        .form-container:hover, .results:hover, .chart-container:hover {
+            transform: scale(1.02);
+        }
+        .input-group {
+            margin-bottom: 10px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            transition: box-shadow 0.3s ease-in-out;
+        }
+        input[type="text"]:focus, input[type="number"]:focus, select:focus {
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+        button:hover {
+            background-color: #0056b3;
+            transform: translateY(-3px);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        .delete-button, .edit-button {
+            background-color: #ff4d4d;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            padding: 5px;
+            margin-right: 5px;
+            transition: background-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+        .edit-button {
+            background-color: #28a745;
+        }
+        .delete-button:hover {
+            background-color: #cc0000;
+            transform: translateY(-3px);
+        }
+        .edit-button:hover {
+            background-color: #218838;
+            transform: translateY(-3px);
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Simulador de Finanzas Personales</h1>
+    <div class="form-container">
+        <div class="input-group">
+            <label for="descripcion">Descripción del Gasto/Ingreso:</label>
+            <input type="text" id="descripcion" placeholder="Ej. Sueldo, Alquiler, Comida">
+        </div>
+        <div class="input-group">
+            <label for="tipo">Tipo de Movimiento:</label>
+            <select id="tipo">
+                <option value="ingreso">Ingreso</option>
+                <option value="egreso">Egreso</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label for="categoria">Categoría:</label>
+            <select id="categoria">
+                <option value="sueldo">Sueldo</option>
+                <option value="alquiler">Alquiler</option>
+                <option value="comida">Comida</option>
+                <option value="transporte">Transporte</option>
+                <option value="entretenimiento">Entretenimiento</option>
+                <option value="otros">Otros</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label for="monto">Monto (en Pesos Mexicanos):</label>
+            <input type="number" id="monto" placeholder="Ej. 500">
+        </div>
+        <button onclick="agregarMovimiento()">Agregar Movimiento</button>
+    </div>
+    <div class="results">
+        <h2>Movimientos:</h2>
+        <div class="input-group">
+            <label for="filtro">Filtrar por Categoría:</label>
+            <select id="filtro" onchange="actualizarTabla()">
+                <option value="todos">Todos</option>
+                <option value="sueldo">Sueldo</option>
+                <option value="alquiler">Alquiler</option>
+                <option value="comida">Comida</option>
+                <option value="transporte">Transporte</option>
+                <option value="entretenimiento">Entretenimiento</option>
+                <option value="otros">Otros</option>
+            </select>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Descripción</th>
+                    <th>Tipo</th>
+                    <th>Categoría</th>
+                    <th>Monto</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tabla-movimientos"></tbody>
+        </table>
+        <h3>Balance Total: <span id="balance">0</span> MXN</h3>
+    </div>
+    <div class="chart-container">
+        <h2>Indicador de Metas Financieras</h2>
+        <div>
+            <label for="meta">Meta Financiera (MXN):</label>
+            <input type="number" id="meta" placeholder="Ej. 10000" onchange="actualizarMeta()">
+            <h3>Progreso: <span id="progresoMeta">0%</span></h3>
+        </div>
+    </div>
+    <script>
+        let movimientos = JSON.parse(localStorage.getItem('movimientos')) || [];
+
+        function agregarMovimiento() {
+            let descripcion = document.getElementById("descripcion").value;
+            const tipo = document.getElementById("tipo").value;
+            const categoria = document.getElementById("categoria").value;
+            const monto = parseFloat(document.getElementById("monto").value);
+            const fecha = new Date().toLocaleDateString();
+
+            if (isNaN(monto)) {
+                alert("Por favor, ingresa un monto válido.");
+                return;
+            }
+
+            if (descripcion === "") {
+                descripcion = "S/N";
+            }
+
+            let balanceTotal = movimientos.reduce((acc, movimiento) => acc + movimiento.monto, 0);
+
+            if (tipo === "egreso" && monto > balanceTotal) {
+                alert("El egreso no puede ser mayor que el balance total actual.");
+                return;
+            }
+
+            const movimiento = {
+                descripcion: descripcion,
+                tipo: tipo,
+                categoria: categoria,
+                monto: tipo === "ingreso" ? monto : -monto,
+                fecha: fecha
+            };
+
+            movimientos.push(movimiento);
+            guardarMovimientos();
+            actualizarTabla();
+            limpiarCampos();
+        }
+
+        function actualizarTabla() {
+            const tablaMovimientos = document.getElementById("tabla-movimientos");
+            const filtro = document.getElementById("filtro").value;
+            tablaMovimientos.innerHTML = "";
+
+            let balanceTotal = 0;
+            movimientos.forEach((movimiento, index) => {
+                if (filtro === "todos" || movimiento.categoria === filtro) {
+                    balanceTotal += movimiento.monto;
+                    const row = document.createElement("tr");
+
+                    row.innerHTML = `
+                        <td>${movimiento.fecha}</td>
+                        <td>${movimiento.descripcion}</td>
+                        <td>${movimiento.tipo}</td>
+                        <td>${movimiento.categoria}</td>
+                        <td>${formatCurrency(movimiento.monto)}</td>
+                        <td>
+                            <button class="edit-button" onclick="editarMovimiento(${index})">Modificar</button>
+                            <button class="delete-button" onclick="eliminarMovimiento(${index})">Eliminar</button>
+                        </td>
+                    `;
+
+                    tablaMovimientos.appendChild(row);
+                }
+            });
+
+            document.getElementById("balance").textContent = formatCurrency(balanceTotal);
+            actualizarMeta();
+        }
+
+        function eliminarMovimiento(index) {
+            movimientos.splice(index, 1);
+            guardarMovimientos();
+            actualizarTabla();
+        }
+
+        function editarMovimiento(index) {
+            const movimiento = movimientos[index];
+            document.getElementById("descripcion").value = movimiento.descripcion;
+            document.getElementById("tipo").value = movimiento.tipo;
+            document.getElementById("categoria").value = movimiento.categoria;
+            document.getElementById("monto").value = Math.abs(movimiento.monto);
+
+            eliminarMovimiento(index);
+        }
+
+        function limpiarCampos() {
+            document.getElementById("descripcion").value = "";
+            document.getElementById("monto").value = "";
+            document.getElementById("tipo").value = "ingreso";
+            document.getElementById("categoria").value = "sueldo";
+        }
+
+        function guardarMovimientos() {
+            localStorage.setItem('movimientos', JSON.stringify(movimientos));
+        }
+
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(value);
+        }
+
+        function actualizarMeta() {
+            const balanceTotal = movimientos.reduce((acc, movimiento) => acc + movimiento.monto, 0);
+            const meta = parseFloat(document.getElementById("meta").value);
+            if (!isNaN(meta) && meta > 0) {
+                const progreso = (balanceTotal / meta) * 100;
+                document.getElementById("progresoMeta").textContent = progreso.toFixed(2) + "%";
+            } else {
+                document.getElementById("progresoMeta").textContent = "0%";
+            }
+        }
+
+        // Cargar los movimientos al iniciar
+        actualizarTabla();
+    </script>
+</body>
+</html>
