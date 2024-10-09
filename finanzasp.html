@@ -102,6 +102,19 @@
                 font-size: 0.6em;
             }
         }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+        .footer a {
+            color: #007bff;
+            text-decoration: none;
+            transition: color 0.3s ease-in-out;
+        }
+        .footer a:hover {
+            color: #0056b3;
+        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -173,6 +186,9 @@
             <input type="number" id="meta" placeholder="Ej. 10000" onchange="actualizarMeta()">
             <h3>Progreso: <span id="progresoMeta">0%</span></h3>
         </div>
+    </div>
+    <div class="footer">
+        <p>Developed by <a href="https://thoraal.github.io/" target="_blank">Alejandro Toral</a></p>
     </div>
     <script>
         let movimientos = JSON.parse(localStorage.getItem('movimientos')) || [];
