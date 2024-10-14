@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Datos de Banxico</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #333;
+            padding: 20px;
+            box-sizing: border-box;
+            flex-direction: column;
+        }
+        #content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            box-sizing: border-box;
+        }
+        h1 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        p {
+            font-size: 1em;
+            line-height: 1.6;
+        }
+        .loading {
+            font-style: italic;
+            color: #888;
+        }
+        .error {
+            color: #d9534f;
+            font-weight: bold;
+        }
+        #currency-selector {
+            margin-top: 20px;
+        }
+        label {
+            font-weight: 500;
+        }
+        select, input {
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 1em;
+            width: 100%;
+            max-width: 100%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        #currency-input {
+            margin-top: 20px;
+        }
+        button {
+            margin-top: 15px;
+            padding: 12px 20px;
+            font-size: 1em;
+            background: #667eea;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+        button:hover {
+            background: #5a67d8;
+        }
+        #equivalence {
+            margin-top: 28px;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        #equivalence-2900 {
+            margin-top: 10px;
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #000000;
+            padding: 15px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        #edit-amount-btn {
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 1em;
+            background: #667eea;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+        #edit-amount-btn:hover {
+            background: #8483dd;
+        }
+        #amount-input {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 1.1em;
+            width: 100%;
+            text-align: center;
+            border-radius: 5px;
+            border: 2px solid #ff0000;
+            box-sizing: border-box;
+        }
+        #footer {
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+        #footer a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        #footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div id="content">
+        <h1>Precio del Dólar Americano - Equivalencia</h1>
+        <p id="data" class="loading">Cargando datos...</p>
+        <div id="currency-selector">
+            <label for="currency">Seleccione una divisa:</label>
+            <select id="currency">
+                <option value="">Seleccione...</option>
+                <option value="eur">Euro (EUR)</option>
+                <option value="gbp">Libra Esterlina (GBP)</option>
+                <option value="jpy">Yen Japonés (JPY)</option>
+                <option value="cad">Dólar Canadiense (CAD)</option>
+            </select>
+        </div>
+        <div id="currency-input" style="display: none;">
+            <label for="currency-price">Ingrese el precio de la divisa seleccionada (en MXN):</label>
+            <input type="number" id="currency-price" step="0.01" placeholder="Precio en MXN" />
+        </div>
+        <p id="equivalence"></p>
+        <p id="equivalence-2900">Equivalencia de <span id="editable-amount">2900</span> USD: <span id="equivalence-result"></span></p>
+        <input type="number" id="amount-input" step="0.01" placeholder="Nuevo valor" />
+        <button id="edit-amount-btn">Editar Valor</button>
+    </div>
+    <div id="footer">
+        Developed by <a href="https://thoraal.github.io/#work" target="_blank">Alejandro Toral</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const today = new Date().toISOString().split('T')[0];
+            const apiToken = '812a7355fa14f189ea64e3112c255d3993069dee78d526892de342526057c6ad';
+            const url = `https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF60653/datos/${today}/${today}/?token=${apiToken}`;
+            const dataElement = document.getElementById('data');
+            const currencySelector = document.getElementById('currency');
+            const currencyInput = document.getElementById('currency-input');
+            const currencyPriceInput = document.getElementById('currency-price');
+            const equivalenceElement = document.getElementById('equivalence');
+            const equivalence2900Element = document.getElementById('equivalence-2900');
+            const editableAmountElement = document.getElementById('editable-amount');
+            const equivalenceResultElement = document.getElementById('equivalence-result');
+            const editAmountBtn = document.getElementById('edit-amount-btn');
+            const amountInput = document.getElementById('amount-input');
+            let dollarPrice = null;
+            let amount = 2900;
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error('No se pudo obtener los datos. Verifica el token y el enlace.');
+                }
+                const data = await response.json();
+                const serie = data.bmx.series[0];
+                
+                if (serie && serie.datos && serie.datos.length > 0) {
+                    const { fecha, dato } = serie.datos[0];
+                    dollarPrice = parseFloat(dato);
+                    dataElement.textContent = `Precio del dólar (${fecha}): ${dato} MXN`;
+                } else {
+                    dataElement.textContent = 'No hay datos disponibles para la fecha especificada.';
+                }
+            } catch (error) {
+                dataElement.textContent = error.message;
+                dataElement.classList.add('error');
+            }
+
+            currencySelector.addEventListener('change', () => {
+                currencyPriceInput.value = '';
+                if (currencySelector.value) {
+                    currencyInput.style.display = 'block';
+                } else {
+                    currencyInput.style.display = 'none';
+                    equivalenceElement.textContent = '';
+                    equivalenceResultElement.textContent = '';
+                }
+            });
+
+            currencyPriceInput.addEventListener('input', () => {
+                if (currencyPriceInput.value && !isNaN(parseFloat(currencyPriceInput.value)) && dollarPrice !== null) {
+                    const currencyPrice = parseFloat(currencyPriceInput.value);
+                    const equivalence = currencyPrice / dollarPrice;
+                    equivalenceElement.textContent = `Equivalencia: ${equivalence.toFixed(2)} ${currencySelector.options[currencySelector.selectedIndex].text} por 1 USD`;
+                    const equivalence2900 = amount / equivalence;
+                    equivalenceResultElement.textContent = `${equivalence2900.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currencySelector.options[currencySelector.selectedIndex].text}`;
+                } else {
+                    equivalenceElement.textContent = '';
+                    equivalenceResultElement.textContent = '';
+                }
+            });
+
+            editAmountBtn.addEventListener('click', () => {
+                if (amountInput.style.display === 'none' || amountInput.style.display === '') {
+                    amountInput.style.display = 'block';
+                    amountInput.value = amount;
+                    editAmountBtn.textContent = 'Establecer Valor';
+                } else {
+                    if (!isNaN(parseFloat(amountInput.value)) && parseFloat(amountInput.value) > 0) {
+                        amount = parseFloat(amountInput.value);
+                        editableAmountElement.textContent = amount.toLocaleString('en-US');
+                    } else {
+                        alert('Por favor, ingrese un valor válido.');
+                    }
+                    
+                    amountInput.style.display = 'none';
+                    editAmountBtn.textContent = 'Editar Valor';
+                    
+                    if (currencyPriceInput.value && !isNaN(parseFloat(currencyPriceInput.value)) && dollarPrice !== null) {
+                        const currencyPrice = parseFloat(currencyPriceInput.value);
+                        const equivalence = currencyPrice / dollarPrice;
+                        const equivalence2900 = amount / equivalence;
+                        equivalenceResultElement.textContent = `${equivalence2900.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currencySelector.options[currencySelector.selectedIndex].text}`;
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
