@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conversor de divisas</title>
+    <title>Datos de Banxico</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Poppins', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -19,6 +19,7 @@
             padding: 20px;
             box-sizing: border-box;
             flex-direction: column;
+            transition: background-color 0.3s, color 0.3s;
         }
         #content {
             background: #fff;
@@ -29,6 +30,7 @@
             width: 100%;
             text-align: center;
             box-sizing: border-box;
+            transition: background-color 0.3s;
         }
         h1 {
             font-size: 1.5em;
@@ -138,11 +140,84 @@
         #footer a:hover {
             text-decoration: underline;
         }
+        .navbar {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 40px);
+            max-width: 500px;
+            background: #667eea;
+            color: #fff;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            z-index: 1000;
+        }
+        .navbar .toggle-container {
+            display: flex;
+            align-items: center;
+        }
+        .toggle-label {
+            margin-right: 10px;
+        }
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 20px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 14px;
+            width: 14px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #000000;
+        }
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
     </style>
 </head>
 <body>
+    <div class="navbar">
+        <div>Datos de Banxico</div>
+        <div class="toggle-container">
+            <span class="toggle-label">Modo Noche</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="night-mode-toggle">
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
     <div id="content">
-        <h1>Precio del Dólar Americano - Equivalencia</h1>
+        <h1 id="title">Dólar Americano - Equivalencia</h1>
         <p id="data" class="loading">Cargando datos...</p>
         <div id="currency-selector">
             <label for="currency">Seleccione una divisa:</label>
@@ -161,7 +236,7 @@
         <p id="equivalence"></p>
         <p id="equivalence-2900">Equivalencia de <span id="editable-amount">2900</span> USD: <span id="equivalence-result"></span></p>
         <input type="number" id="amount-input" step="0.01" placeholder="Nuevo valor" />
-        <button id="edit-amount-btn">Editar Valor</button>
+        <button id="edit-amount-btn">Editar monto maximo</button>
     </div>
     <div id="footer">
         Developed by <a href="https://thoraal.github.io/#work" target="_blank">Alejandro Toral</a>
@@ -182,6 +257,7 @@
             const equivalenceResultElement = document.getElementById('equivalence-result');
             const editAmountBtn = document.getElementById('edit-amount-btn');
             const amountInput = document.getElementById('amount-input');
+            const nightModeToggle = document.getElementById('night-mode-toggle');
             let dollarPrice = null;
             let amount = 2900;
 
@@ -196,7 +272,7 @@
                 if (serie && serie.datos && serie.datos.length > 0) {
                     const { fecha, dato } = serie.datos[0];
                     dollarPrice = parseFloat(dato);
-                    dataElement.textContent = `Precio del dólar (${fecha}): ${dato} MXN`;
+                    dataElement.textContent = `Tipo de cambio para solventar obligaciones denominadas en moneda extranjera pagaderas en la República Mexicana (${fecha}): ${dato} MXN`;
                 } else {
                     dataElement.textContent = 'No hay datos disponibles para la fecha especificada.';
                 }
@@ -251,6 +327,21 @@
                         const equivalence2900 = amount / equivalence;
                         equivalenceResultElement.textContent = `${equivalence2900.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${currencySelector.options[currencySelector.selectedIndex].text}`;
                     }
+                }
+            });
+
+            nightModeToggle.addEventListener('change', () => {
+                const titleElement = document.getElementById('title');
+                if (nightModeToggle.checked) {
+                    titleElement.style.color = '#ffffff';
+                    document.body.style.backgroundColor = '#2c2c2c';
+                    document.body.style.color = '#ffffff';
+                    document.getElementById('content').style.backgroundColor = '#3c3c3c';
+                } else {
+                    document.body.style.backgroundColor = '#ffffff';
+                    document.body.style.color = '#333333';
+                    titleElement.style.color = '#333333';
+                    document.getElementById('content').style.backgroundColor = '#ffffff';
                 }
             });
         });
