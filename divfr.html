@@ -372,7 +372,7 @@
             const moneda = document.getElementById("moneda").value === "otro" ? document.getElementById("monedaOtro").value : document.getElementById("moneda").options[document.getElementById("moneda").selectedIndex].text;
             const totalMonedaNacional = (numero * tipoCambio).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-            doc.setFontSize(14);
+            doc.setFontSize(12);
             doc.text(`Fecha: ${obtenerFechaFormateada()} | ${moneda}  $${numberWithCommas(numero)} * ${numberWithCommas(tipoCambio)} = $${totalMonedaNacional}`, 40, 60);
 
             const xCol1 = 40;
