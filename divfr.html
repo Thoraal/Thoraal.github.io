@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fraccionador de Números</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Poppins', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -118,6 +118,19 @@
             font-size: 16px;
             color: #333;
             font-weight: bold;
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .labels-container-tc {
+            margin-top: 20px;
+            text-align: left;
+            font-size: 12px;
+            color: #727272;
+            font-style: italic;
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
         .error-message {
             color: red;
@@ -176,9 +189,12 @@
             <p>Monto: <span id="labelMonto"></span></p>
             <p>Tipo de cambio: <span id="labelTipoCambio"></span></p>
             <p>Total en moneda nacional: <span id="labelTotal"></span></p>
-            <p>Diario Oficial de la Federación:<span id="tipoDeCambio"></span></p>
             <p id="estadoMensaje" class="success-message"></p>
             <p class="error-message" id="verificacionMensaje"></p>
+        </div>
+        <div class="labels-container-tc">
+            <p>Diario Oficial de la Federación:<span id="tipoDeCambio"></span></p>
+            <p>Maximo:<span id="calculoAdicional"></span></p>
         </div>
         <table id="resultado">
             <thead>
@@ -377,6 +393,7 @@
             document.getElementById("verificacionMensaje").textContent = "";
             document.getElementById("estadoMensaje").textContent = "";
             document.getElementById("imprimirBtn").disabled = true;
+            document.getElementById("calculoAdicional").textContent = "";
         }
 
         function mulberry32(seed) {
@@ -400,39 +417,58 @@
             const fecha = new Date();
             return fecha.toLocaleDateString('es-ES', opciones);
         }
-
         let tokenIndex = 0;
-        async function fetchData() {
-            const tokens = [
-                '812a7355fa14f189ea64e3112c255d3993069dee78d526892de342526057c6ad',
-                'ea9e2067b75621dad3e50a21cd6f7f094060da2f1d0c6d6d4a65520c2e29459b'
-            ];
-            const today = new Date().toISOString().split('T')[0];
 
-            async function tryFetch(token) {
-                const url = `https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF60653/datos/${today}/${today}/?token=${token}`;
-                try {
-                    const response = await fetch(url);
-                    if (!response.ok) {
-                        throw new Error('Error en la respuesta de la API');
-                    }
-                    const data = await response.json();
-                    const serieData = data.bmx.series[0].datos[0];
-                    document.getElementById('tipoDeCambio').innerHTML = ` ${serieData.fecha} TC:${serieData.dato}`;
-                } catch (error) {
-                    if (tokenIndex === 0) {
-                        tokenIndex = 1;
-                        tryFetch(tokens[tokenIndex]);
-                    } else {
-                        document.getElementById('data').innerHTML = `Error al obtener los datos: ${error.message}`;
-                    }
-                }
+async function fetchData() {
+    const tokens = [
+        '812a7355fa14f189ea64e3112c255d3993069dee78d526892de342526057c6ad',
+        'ea9e2067b75621dad3e50a21cd6f7f094060da2f1d0c6d6d4a65520c2e29459b'
+    ];
+    const today = new Date().toISOString().split('T')[0];
+
+    for (let i = 0; i < tokens.length; i++) {
+        const token = tokens[i];
+        const url = `https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF60653/datos/${today}/${today}/?token=${token}`;
+        
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error('Error en la respuesta de la API');
             }
 
-            tryFetch(tokens[tokenIndex]);
-        }
+            const data = await response.json();
+            const serieData = data.bmx.series[0].datos[0];
+            document.getElementById('tipoDeCambio').innerHTML = ` ${serieData.fecha} TC: ${serieData.dato}`;
 
-        fetchData();
+            // Cálculo adicional
+            const tipoCambioUsuarioElement = document.getElementById("tipoCambio");
+            if (tipoCambioUsuarioElement) {
+                const tipoCambioUsuario = parseFloat(tipoCambioUsuarioElement.value);
+                if (!isNaN(tipoCambioUsuario) && tipoCambioUsuario > 0) {
+                    const calculoAdicional = (parseFloat(serieData.dato) * 1000 / tipoCambioUsuario).toFixed(2);
+                    document.getElementById('calculoAdicional').innerHTML = ` ${calculoAdicional}`;
+                } else {
+                    document.getElementById('calculoAdicional').innerHTML = '';
+                }
+            }
+            
+            // Successful response, so we break the loop
+            return;
+
+        } catch (error) {
+            console.error(`Intento con el token fallido: ${token}`, error);
+        }
+    }
+
+    // If we reach here, both tokens have failed
+    document.getElementById('data').innerHTML = `Error al obtener los datos: Todos los tokens fallaron.`;
+}
+
+// Evento para recalcular cuando el usuario cambia el tipo de cambio
+document.getElementById("tipoCambio").addEventListener("input", fetchData);
+
+fetchData();
+
     </script>
 </body>
 </html>
