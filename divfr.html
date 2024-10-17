@@ -43,7 +43,8 @@
         }
         .input-container input[type="number"],
         .input-container select,
-        .input-container button {
+        .input-container button,
+        .input-container input[type="text"] {
             padding: 12px;
             border: 1px solid #ccc;
             border-radius: 10px;
@@ -123,6 +124,11 @@
             font-weight: bold;
             margin-top: 20px;
         }
+        .success-message {
+            color: green;
+            font-weight: bold;
+            margin-top: 10px;
+        }
         @media print {
             table {
                 border: 1px solid black;
@@ -161,6 +167,7 @@
                 <option value="cad">Canadiense</option>
                 <option value="otro">Otro</option>
             </select>
+            <input type="text" id="monedaOtro" class="tipo-cambio" placeholder="Especificar otra moneda" oninput="formatearMonedaOtro()" style="display: none;" />
             <input type="number" id="tipoCambio" class="tipo-cambio" placeholder="Tipo de cambio" oninput="fraccionarNumero()" />
             <button id="imprimirBtn" onclick="imprimirPDF()" disabled>Imprimir</button>
             <button onclick="borrarTodo()">Borrar Todo</button>
@@ -169,6 +176,8 @@
             <p>Monto: <span id="labelMonto"></span></p>
             <p>Tipo de cambio: <span id="labelTipoCambio"></span></p>
             <p>Total en moneda nacional: <span id="labelTotal"></span></p>
+            <p>Diario Oficial de la Federación:<span id="tipoDeCambio"></span></p>
+            <p id="estadoMensaje" class="success-message"></p>
             <p class="error-message" id="verificacionMensaje"></p>
         </div>
         <table id="resultado">
@@ -190,62 +199,63 @@
 
     <script>
         function fraccionarNumero() {
-            if (document.getElementById("numero").value === "" || document.getElementById("tipoCambio").value === "") {
-                document.getElementById("verificacionMensaje").textContent = "Error: Todos los campos deben estar llenos.";
+            const numero = document.getElementById("numero").value;
+            const tipoCambio = document.getElementById("tipoCambio").value;
+            const estadoMensaje = document.getElementById("estadoMensaje");
+            const verificacionMensaje = document.getElementById("verificacionMensaje");
+
+            if (numero === "" || tipoCambio === "") {
+                verificacionMensaje.textContent = "Error: Todos los campos deben estar llenos.";
+                estadoMensaje.textContent = "";
                 document.getElementById("imprimirBtn").disabled = true;
                 limpiarResultado();
                 return;
             }
-            const numero = parseInt(document.getElementById("numero").value);
-            const tipoCambio = parseFloat(document.getElementById("tipoCambio").value) || 1;
 
-            if (!validarNumero(numero)) {
+            const numeroInt = parseInt(numero);
+            const tipoCambioFloat = parseFloat(tipoCambio) || 1;
+
+            if (!validarNumero(numeroInt)) {
                 limpiarResultado();
                 return;
             }
 
-            const totalMonedaNacional = (numero * tipoCambio).toFixed(2);
-            document.getElementById("labelMonto").textContent = `$${numberWithCommas(numero)}`;
-            document.getElementById("labelTipoCambio").textContent = `${tipoCambio}`;
-            document.getElementById("labelTotal").textContent = `$${numberWithCommas(totalMonedaNacional)}`;
+            const totalMonedaNacional = (numeroInt * tipoCambioFloat).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            document.getElementById("labelMonto").textContent = `$${numberWithCommas(numeroInt)}`;
+            document.getElementById("labelTipoCambio").textContent = `${tipoCambioFloat.toFixed(2)}`;
+            document.getElementById("labelTotal").textContent = `$${totalMonedaNacional}`;
 
-            const seed = numero;
+            const seed = numeroInt;
             const randomGenerator = mulberry32(seed);
-            let partes = [];
-            let restante = numero;
+            let partes = new Set();
+            let restante = numeroInt;
             const min = 400;
             const max = 990;
-            const maxPartes = 45;
-            let intentos = 0;
-            const maxIntentos = 10;
-            let suma;
+            const maxPartes = 44;
 
-            do {
-                partes = [];
-                restante = numero;
+            while (restante > 0 && partes.size < maxPartes) {
+                let fraccion = Math.floor(randomGenerator() * (max - min + 1)) + min;
+                fraccion = Math.round(fraccion / 5) * 5;
+                fraccion = Math.min(fraccion, restante);
 
-                while (restante > 0 && partes.length < maxPartes) {
-                    let fraccion = Math.floor(randomGenerator() * (max - min + 1)) + min;
-                    fraccion = Math.round(fraccion / 5) * 5;
-                    fraccion = Math.min(fraccion, restante);
-                    partes.push(fraccion);
+                // Verificar si la fracción ya existe y si es menor o igual al restante
+                if (!partes.has(fraccion) && fraccion <= restante) {
+                    partes.add(fraccion);
                     restante -= fraccion;
                 }
-
-                suma = partes.reduce((acc, val) => acc + val, 0);
-                intentos++;
-            } while (suma !== numero && intentos < maxIntentos);
-
-            if (suma !== numero) {
-                document.getElementById("verificacionMensaje").textContent = `Error: No se pudo generar una combinación correcta después de ${maxIntentos} intentos. Por favor, intente nuevamente.`;
-                document.getElementById("imprimirBtn").disabled = true;
-                limpiarResultado();
-            } else {
-                document.getElementById("sumaResultado").textContent = `$${numberWithCommas(partes.reduce((acc, val) => acc + val, 0))} verificación correcta`;
-                
-                document.getElementById("imprimirBtn").disabled = false;
-                mostrarResultado(partes, numero);
             }
+
+            if (Array.from(partes).reduce((a, b) => a + b, 0) !== numeroInt) {
+                verificacionMensaje.textContent = "Error: La suma de las fracciones no coincide con el número a fraccionar.";
+                estadoMensaje.textContent = "";
+                limpiarResultado();
+                return;
+            }
+
+            verificacionMensaje.textContent = "";
+            estadoMensaje.textContent = "Todo correcto ✔";
+            document.getElementById("imprimirBtn").disabled = false;
+            mostrarResultado(Array.from(partes), numeroInt);
         }
 
         function validarNumero(numero) {
@@ -262,18 +272,18 @@
             let desglosado = 0;
             partes.forEach((parte, index) => {
                 restante -= parte;
-                const montoMXN = (parte * tipoCambio).toFixed(2);
-                totalMXN += parseFloat(montoMXN);
+                const montoMXN = (parte * tipoCambio).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                totalMXN += parseFloat(montoMXN.replace(/,/g, ''));
                 desglosado += parte;
                 resultadoHTML += `
                     <tr>
                         <td>${(index + 1).toString().padStart(2, '0')}</td>
-                        <td>${parte}</td>
+                        <td>${numberWithCommas(parte)}</td>
                         <td>[    ]</td>
-                        <td>$${numberWithCommas(montoMXN)}</td>
-                        <td>$${numberWithCommas((restante > 0 ? restante : 0).toFixed(2))}</td>
-                        <td>$${numberWithCommas(totalMXN.toFixed(2))}</td>
-                        <td>$${numberWithCommas(desglosado.toFixed(2))}</td>
+                        <td>$${montoMXN}</td>
+                        <td>$${numberWithCommas((restante > 0 ? restante : 0).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 }))}</td>
+                        <td>$${numberWithCommas(totalMXN.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 }))}</td>
+                        <td>$${numberWithCommas(desglosado.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 }))}</td>
                     </tr>`;
             });
             resultado.innerHTML = resultadoHTML;
@@ -285,11 +295,11 @@
 
             const numero = parseInt(document.getElementById("numero").value);
             const tipoCambio = parseFloat(document.getElementById("tipoCambio").value) || 1;
-            const moneda = document.getElementById("moneda").options[document.getElementById("moneda").selectedIndex].text;
-            const totalMonedaNacional = (numero * tipoCambio).toFixed(2);
+            const moneda = document.getElementById("moneda").value === "otro" ? document.getElementById("monedaOtro").value : document.getElementById("moneda").options[document.getElementById("moneda").selectedIndex].text;
+            const totalMonedaNacional = (numero * tipoCambio).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
             doc.setFontSize(14);
-            doc.text(`Fecha y hora: ${new Date().toLocaleString()}  |  ${moneda} - $${numberWithCommas(numero)} * ${tipoCambio} = $${numberWithCommas(totalMonedaNacional)}`, 40, 60);
+            doc.text(`Fecha: ${obtenerFechaFormateada()} | ${moneda}  $${numberWithCommas(numero)} * ${numberWithCommas(tipoCambio)} = $${totalMonedaNacional}`, 40, 60);
 
             const xCol1 = 40;
             const xCol2 = 80;
@@ -329,21 +339,32 @@
                 y += 15;
             }
 
-            doc.text(document.getElementById("sumaResultado").textContent, xCol1, y + 10);
-
             doc.autoPrint();
             window.open(doc.output('bloburl'), '_blank');
         }
 
         function mostrarTipoCambio() {
             const tipoCambioInput = document.getElementById("tipoCambio");
+            const monedaOtroInput = document.getElementById("monedaOtro");
+            if (document.getElementById("moneda").value === "otro") {
+                monedaOtroInput.style.display = "block";
+            } else {
+                monedaOtroInput.style.display = "none";
+                monedaOtroInput.value = "";
+            }
             tipoCambioInput.style.display = "block";
             fraccionarNumero();
+        }
+
+        function formatearMonedaOtro() {
+            const monedaOtroInput = document.getElementById("monedaOtro");
+            monedaOtroInput.value = monedaOtroInput.value.charAt(0).toUpperCase() + monedaOtroInput.value.slice(1).toLowerCase();
         }
 
         function borrarTodo() {
             document.getElementById("numero").value = "";
             document.getElementById("tipoCambio").value = "";
+            document.getElementById("monedaOtro").value = "";
             limpiarResultado();
         }
 
@@ -354,21 +375,64 @@
             document.getElementById("labelTipoCambio").textContent = "";
             document.getElementById("labelTotal").textContent = "";
             document.getElementById("verificacionMensaje").textContent = "";
+            document.getElementById("estadoMensaje").textContent = "";
             document.getElementById("imprimirBtn").disabled = true;
         }
 
         function mulberry32(seed) {
+            seed = seed >>> 0;
             return function() {
-                let t = seed += 0x6D2B79F5;
-                t = Math.imul(t ^ t >>> 15, t | 1);
-                t ^= t + Math.imul(t ^ t >>> 7, t | 61);
-                return ((t ^ t >>> 14) >>> 0) / 4294967296;
+                seed += 0x9E3779B9;
+                seed = Math.imul(seed ^ (seed >>> 16), 0x85EBCA6B);
+                seed ^= seed >>> 13;
+                seed = Math.imul(seed, 0xC2B2AE35);
+                seed ^= seed >>> 16;
+                return (seed >>> 0) / 4294967296;
             }
         }
 
         function numberWithCommas(x) {
-            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            return x.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         }
+
+        function obtenerFechaFormateada() {
+            const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const fecha = new Date();
+            return fecha.toLocaleDateString('es-ES', opciones);
+        }
+
+        let tokenIndex = 0;
+        async function fetchData() {
+            const tokens = [
+                '812a7355fa14f189ea64e3112c255d3993069dee78d526892de342526057c6ad',
+                'ea9e2067b75621dad3e50a21cd6f7f094060da2f1d0c6d6d4a65520c2e29459b'
+            ];
+            const today = new Date().toISOString().split('T')[0];
+
+            async function tryFetch(token) {
+                const url = `https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF60653/datos/${today}/${today}/?token=${token}`;
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error('Error en la respuesta de la API');
+                    }
+                    const data = await response.json();
+                    const serieData = data.bmx.series[0].datos[0];
+                    document.getElementById('tipoDeCambio').innerHTML = ` ${serieData.fecha} TC:${serieData.dato}`;
+                } catch (error) {
+                    if (tokenIndex === 0) {
+                        tokenIndex = 1;
+                        tryFetch(tokens[tokenIndex]);
+                    } else {
+                        document.getElementById('data').innerHTML = `Error al obtener los datos: ${error.message}`;
+                    }
+                }
+            }
+
+            tryFetch(tokens[tokenIndex]);
+        }
+
+        fetchData();
     </script>
 </body>
 </html>
