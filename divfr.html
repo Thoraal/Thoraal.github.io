@@ -64,6 +64,46 @@
         .input-container button:hover {
             background-color: #0056b3;
         }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 30px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        input:checked + .slider {
+            background-color: #5245ff;
+        }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -121,7 +161,10 @@
             border-radius: 10px;
             padding: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
         }
+
         .labels-container-tc {
             margin-top: 20px;
             text-align: left;
@@ -131,7 +174,10 @@
             border-radius: 10px;
             padding: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
         }
+
         .error-message {
             color: red;
             font-weight: bold;
@@ -184,6 +230,10 @@
             <input type="number" id="tipoCambio" class="tipo-cambio" placeholder="Tipo de cambio" oninput="fraccionarNumero()" />
             <button id="imprimirBtn" onclick="imprimirPDF()" disabled>Imprimir</button>
             <button onclick="borrarTodo()">Borrar Todo</button>
+            <label class="switch">
+                <input type="checkbox" onclick="toggleLabelsContainerTc()">
+                <span class="slider"></span>
+            </label>
         </div>
         <div class="labels-container">
             <p>Monto: <span id="labelMonto"></span></p>
@@ -194,7 +244,9 @@
         </div>
         <div class="labels-container-tc">
             <p>Diario Oficial de la Federación:<span id="tipoDeCambio"></span></p>
-            <p>Maximo:<span id="calculoAdicional"></span></p>
+            <p>Div/TC DOF:<span id="calculoAdicional"></span></p>
+            <p>Maximo:<span id=></span></p>
+            <p>Minimo:<span id=></span></p>
         </div>
         <table id="resultado">
             <thead>
@@ -214,6 +266,12 @@
     </div>
 
     <script>
+
+        function toggleLabelsContainerTc() {
+            const labelsContainerTc = document.querySelector('.labels-container-tc');
+            labelsContainerTc.style.display = labelsContainerTc.style.display === 'none' ? 'block' : 'none';
+        }
+
         function fraccionarNumero() {
             const numero = document.getElementById("numero").value;
             const tipoCambio = document.getElementById("tipoCambio").value;
