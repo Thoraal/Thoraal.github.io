@@ -27,6 +27,16 @@
             overflow-y: auto;
             width: 100%;
             max-width: 1000px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+
+
+        .container > .item {
+        flex: 1 1 calc(50% - 20px);
+        box-sizing: border-box;
         }
         h2 {
             color: #5900ff;
@@ -172,25 +182,25 @@ input:checked + .slider:before {
         }
 
         .labels-container-tc {
-    opacity: 0;
-    max-height: 0;
-    overflow: hidden;
-    transition: opacity 0.4s ease, max-height 0.4s ease;
-    margin-top: 20px;
-    text-align: left;
-    font-size: 12px;
-    color: #727272;
-    font-style: italic;
-    border-radius: 10px;
-    padding: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    width: 100%;
-    max-width: 400px;
+        opacity: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: opacity 0.4s ease, max-height 0.4s ease;
+        margin-top: 20px;
+        text-align: left;
+        font-size: 12px;
+        color: #727272;
+        font-style: italic;
+        border-radius: 10px;
+        padding: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        width: 100%;
+        max-width: 400px;
 }
 
-.labels-container-tc.show {
-    opacity: 1;
-    max-height: 200px;
+        .labels-container-tc.show {
+            opacity: 1;
+            max-height: 200px;
 }
 
 
