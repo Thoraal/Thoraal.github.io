@@ -6,6 +6,7 @@
     <title>Fraccionador de Números</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
+        /* General Styles */
         body {
             font-family: 'Poppins', sans-serif;
             display: flex;
@@ -17,6 +18,7 @@
             padding: 0 20px;
             box-sizing: border-box;
         }
+
         .container {
             background: white;
             padding: 30px;
@@ -33,16 +35,18 @@
             gap: 10px;
         }
 
-
         .container > .item {
-        flex: 1 1 calc(50% - 20px);
-        box-sizing: border-box;
+            flex: 1 1 calc(50% - 20px);
+            box-sizing: border-box;
         }
+
         h2 {
             color: #5900ff;
             font-weight: 700;
             margin-bottom: 20px;
         }
+
+        /* Input Styles */
         .input-container {
             display: flex;
             flex-wrap: wrap;
@@ -51,17 +55,19 @@
             gap: 10px;
             margin-bottom: 20px;
         }
+
         .input-container input[type="number"],
         .input-container select,
         .input-container button,
         .input-container input[type="text"] {
             padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
+            border: 2px solid #7073ff;
+            border-radius: 100px;
             font-size: 12px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.623);
             flex: 1 1 auto;
         }
+
         .input-container button {
             background-color: #5245ff;
             color: white;
@@ -71,55 +77,59 @@
             transition: background-color 0.3s;
             box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
         }
+
         .input-container button:hover {
             background-color: #0056b3;
         }
+
+        /* Toggle Switch */
         .switch {
-    position: relative;
-    display: inline-block;
-    width: 40px;
-    height: 20px;
-}
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+        }
 
-.switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
 
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: 0.4s;
-    border-radius: 20px;
-}
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 20px;
+        }
 
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 14px;
-    width: 14px;
-    left: 3px;
-    bottom: 3px;
-    background-color: white;
-    transition: 0.4s;
-    border-radius: 50%;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 14px;
+            width: 14px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
 
-input:checked + .slider {
-    background-color: #5245ff;
-}
+        input:checked + .slider {
+            background-color: #5245ff;
+        }
 
-input:checked + .slider:before {
-    transform: translateX(20px);
-}
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
 
+        /* Table Styles */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -127,40 +137,50 @@ input:checked + .slider:before {
             text-align: center;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
+
         th, td {
             border: 1px solid #ccc;
             padding: 12px;
             text-align: center;
             white-space: nowrap;
-            font-size: 16px;
+            font-size: 12px;
         }
+
         th {
             background-color: #007BFF;
             color: white;
             font-weight: 700;
         }
+
         td {
             padding: 15px;
         }
+
         tbody {
             display: block;
             max-height: 400px;
             overflow-y: auto;
         }
+
         thead, tbody tr {
             display: table;
             width: 100%;
             table-layout: fixed;
         }
+
         tbody tr:nth-child(odd) {
             background-color: #f9f9f9;
         }
+
         tbody tr:nth-child(even) {
             background-color: #eef5ff;
         }
+
         tbody tr td:nth-child(3) {
             font-size: 18px;
         }
+
+        /* Miscellaneous Styles */
         .sum-result {
             margin-top: 20px;
             font-weight: bold;
@@ -168,7 +188,8 @@ input:checked + .slider:before {
             font-size: 18px;
             color: #333;
         }
-        .labels-container {
+
+        .labels-container, .labels-container-tc {
             margin-top: 20px;
             text-align: left;
             font-size: 16px;
@@ -176,63 +197,61 @@ input:checked + .slider:before {
             font-weight: bold;
             border-radius: 10px;
             padding: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 8px rgba(137, 86, 255, 0.37);
             width: 100%;
             max-width: 400px;
         }
 
         .labels-container-tc {
-        opacity: 0;
-        max-height: 0;
-        overflow: hidden;
-        transition: opacity 0.4s ease, max-height 0.4s ease;
-        margin-top: 20px;
-        text-align: left;
-        font-size: 12px;
-        color: #727272;
-        font-style: italic;
-        border-radius: 10px;
-        padding: 10px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        width: 100%;
-        max-width: 400px;
-}
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: opacity 0.4s ease, max-height 0.4s ease;
+            font-size: 12px;
+            color: #727272;
+            font-style: italic;
+        }
 
         .labels-container-tc.show {
             opacity: 1;
             max-height: 200px;
-}
-
+        }
 
         .error-message {
             color: red;
             font-weight: bold;
             margin-top: 20px;
         }
+
         .success-message {
             color: green;
             font-weight: bold;
             margin-top: 10px;
         }
+
         @media print {
             table {
                 border: 1px solid black;
                 border-collapse: collapse;
                 width: 100%;
             }
+
             th, td {
                 border: 1px solid black;
                 padding: 10px;
                 box-sizing: border-box;
             }
+
             th {
                 background-color: #d3d3d3 !important;
                 -webkit-print-color-adjust: exact;
             }
+
             tbody tr:nth-child(odd) {
                 background-color: #f0f0f0 !important;
                 -webkit-print-color-adjust: exact;
             }
+
             tbody tr:nth-child(even) {
                 background-color: #ffffff !important;
                 -webkit-print-color-adjust: exact;
@@ -245,15 +264,15 @@ input:checked + .slider:before {
     <div class="container">
         <h2>Fraccionador de Números</h2>
         <div class="input-container">
-            <input type="number" id="numero" placeholder="Ingresa un número (Ej: 2500)" oninput="fraccionarNumero()" aria-label="Ingresar un número a fraccionar" />
-            <select id="moneda" onchange="mostrarTipoCambio()">
+            <input type="number" id="numero" placeholder="Monto máximo $35,000" oninput="fraccionarNumero(); actualizarMinimo(); mostrarTipoCambio();" aria-label="Ingresar un número a fraccionar" />
+            <select id="moneda" onchange="mostrarTipoCambio(); actualizarMinimo(); fraccionarNumero();">
                 <option value="usd">Dólar americano</option>
                 <option value="eur">Euro</option>
                 <option value="cad">Canadiense</option>
                 <option value="otro">Otro</option>
             </select>
-            <input type="text" id="monedaOtro" class="tipo-cambio" placeholder="Especificar otra moneda" oninput="formatearMonedaOtro()" style="display: none;" />
-            <input type="number" id="tipoCambio" class="tipo-cambio" placeholder="Tipo de cambio" oninput="fraccionarNumero()" />
+            <input type="text" id="monedaOtro" class="tipo-cambio" placeholder="Especificar otra moneda" oninput="formatearMonedaOtro(); fraccionarNumero(); actualizarMinimo();" style="display: none;" />
+            <input type="number" id="tipoCambio" class="tipo-cambio" placeholder="Tipo de cambio" oninput="fraccionarNumero(); actualizarMinimo(); mostrarTipoCambio();" />
             <button id="imprimirBtn" onclick="imprimirPDF()" disabled>Imprimir</button>
             <button onclick="borrarTodo()">Borrar Todo</button>
             <label class="switch">
@@ -269,10 +288,12 @@ input:checked + .slider:before {
             <p class="error-message" id="verificacionMensaje"></p>
         </div>
         <div class="labels-container-tc">
-            <p>Diario Oficial de la Federación:<span id="tipoDeCambio"></span></p>
+            <p>Diario Oficial de la Federación</p>
+            <p>Acuerdo que consigna la equivalencia de las monedas de los diversos paises con el peso mexicano, para efectos fiscales.</p>
+            <input type="date" id="fechaTipoCambio" onchange="fetchDataForDate()" value="${new Date().toISOString().split('T')[0]}" /> <span id="tipoDeCambio"></span>
             <p>Div/TC DOF:<span id="calculoAdicional"></span></p>
-            <p>Maximo:<span id=></span></p>
-            <p>Minimo:<span id=></span></p>
+            <p>Máximo: <span id="maximoValor"></span></p>
+            <p>Mínimo: <span id="minimoValor"></span></p>
         </div>
         <table id="resultado">
             <thead>
@@ -290,21 +311,38 @@ input:checked + .slider:before {
         </table>
         <div id="sumaResultado" class="sum-result"></div>
     </div>
-
     <script>
+        function actualizarMinimo() {
+            const numero = parseInt(document.getElementById("numero").value);
+            let minimo = 0;
 
-function toggleLabelsContainerTc() {
-    const labelsContainerTc = document.querySelector('.labels-container-tc');
-    const isChecked = document.querySelector('.switch input').checked;
+            if (numero < 5000) {
+                minimo = 100;
+            } else if (numero < 10000) {
+                minimo = 300;
+            } else if (numero < 15000) {
+                minimo = 400;
+            } else if (numero < 20000) {
+                minimo = 500;
+            } else if (numero < 25000) {
+                minimo = 600;
+            } else {
+                minimo = 700;
+            }
 
-    if (isChecked) {
-        labelsContainerTc.classList.add('show');
-    } else {
-        labelsContainerTc.classList.remove('show');
-    }
-}
+            document.getElementById('minimoValor').textContent = minimo;
+        }
 
+        function toggleLabelsContainerTc() {
+            const labelsContainerTc = document.querySelector('.labels-container-tc');
+            const isChecked = document.querySelector('.switch input').checked;
 
+            if (isChecked) {
+                labelsContainerTc.classList.add('show');
+            } else {
+                labelsContainerTc.classList.remove('show');
+            }
+        }
 
         function fraccionarNumero() {
             const numero = document.getElementById("numero").value;
@@ -337,8 +375,8 @@ function toggleLabelsContainerTc() {
             const randomGenerator = mulberry32(seed);
             let partes = new Set();
             let restante = numeroInt;
-            const min = 400;
-            const max = 990;
+            const min = parseInt(document.getElementById('minimoValor').textContent) || 400;
+            const max = parseInt(document.getElementById('maximoValor').textContent) || 990;
             const maxPartes = 44;
 
             while (restante > 0 && partes.size < maxPartes) {
@@ -485,6 +523,7 @@ function toggleLabelsContainerTc() {
             document.getElementById("estadoMensaje").textContent = "";
             document.getElementById("imprimirBtn").disabled = true;
             document.getElementById("calculoAdicional").textContent = "";
+            document.getElementById("minimoValor").textContent = "";
         }
 
         function mulberry32(seed) {
@@ -508,55 +547,63 @@ function toggleLabelsContainerTc() {
             const fecha = new Date();
             return fecha.toLocaleDateString('es-ES', opciones);
         }
-        let tokenIndex = 0;
 
-async function fetchData() {
-    const tokens = [
-        '812a7355fa14f189ea64e3112c255d3993069dee78d526892de342526057c6ad',
-        'ea9e2067b75621dad3e50a21cd6f7f094060da2f1d0c6d6d4a65520c2e29459b'
-    ];
-    const today = new Date().toISOString().split('T')[0];
+        async function fetchDataForDate() {
+            const selectedDate = document.getElementById('fechaTipoCambio').value || new Date().toISOString().split('T')[0];
+            const tokens = [
+                '812a7355fa14f189ea64e3112c255d3993069dee78d526892de342526057c6ad',
+                'ea9e2067b75621dad3e50a21cd6f7f094060da2f1d0c6d6d4a65520c2e29459b'
+            ];
+            const today = selectedDate;
 
-    for (let i = 0; i < tokens.length; i++) {
-        const token = tokens[i];
-        const url = `https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF60653/datos/${today}/${today}/?token=${token}`;
-        
-        try {
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error('Error en la respuesta de la API');
-            }
+            for (let i = 0; i < tokens.length; i++) {
+                const token = tokens[i];
+                const url = `https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF60653/datos/${today}/${today}/?token=${token}`;
 
-            const data = await response.json();
-            const serieData = data.bmx.series[0].datos[0];
-            document.getElementById('tipoDeCambio').innerHTML = ` ${serieData.fecha} TC: ${serieData.dato}`;
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error('Error en la respuesta de la API');
+                    }
 
-            // Cálculo adicional
-            const tipoCambioUsuarioElement = document.getElementById("tipoCambio");
-            if (tipoCambioUsuarioElement) {
-                const tipoCambioUsuario = parseFloat(tipoCambioUsuarioElement.value);
-                if (!isNaN(tipoCambioUsuario) && tipoCambioUsuario > 0) {
-                    const calculoAdicional = (parseFloat(serieData.dato) * 1000 / tipoCambioUsuario).toFixed(2);
-                    document.getElementById('calculoAdicional').innerHTML = ` ${calculoAdicional}`;
-                } else {
-                    document.getElementById('calculoAdicional').innerHTML = '';
+                    const data = await response.json();
+                    const serieData = data.bmx.series[0].datos[0];
+                    document.getElementById('tipoDeCambio').innerHTML = ` ${serieData.fecha} TC: ${serieData.dato}`;
+
+                    const tipoCambioUsuarioElement = document.getElementById("tipoCambio");
+                    if (tipoCambioUsuarioElement) {
+                        const tipoCambioUsuario = parseFloat(tipoCambioUsuarioElement.value);
+                        if (!isNaN(tipoCambioUsuario) && tipoCambioUsuario > 0) {
+                            const calculoAdicional = (parseFloat(serieData.dato) * 1000 / tipoCambioUsuario).toFixed(2);
+                            document.getElementById('calculoAdicional').innerHTML = ` ${calculoAdicional}`;
+                            const maximoElement = document.getElementById('maximoValor');
+                            if (document.getElementById('moneda').value === 'usd' && calculoAdicional > 1000) {
+                                maximoElement.innerHTML = ' 990';
+                            } else {
+                                maximoElement.innerHTML = ` ${calculoAdicional}`;
+                            }
+                        } else {
+                            document.getElementById('calculoAdicional').innerHTML = '';
+                        }
+                    }
+
+                    return;
+
+                } catch (error) {
+                    console.error(`Intento con el token fallido: ${token}`, error);
                 }
             }
 
-            return;
-
-        } catch (error) {
-            console.error(`Intento con el token fallido: ${token}`, error);
+            document.getElementById('data').innerHTML = `Error al obtener los datos: Todos los tokens fallaron.`;
         }
-    }
 
-    document.getElementById('data').innerHTML = `Error al obtener los datos: Todos los tokens fallaron.`;
-}
-
-document.getElementById("tipoCambio").addEventListener("input", fetchData);
-
-fetchData();
-
+        document.getElementById("tipoCambio").addEventListener("input", fetchDataForDate);
+        document.getElementById("numero").addEventListener("input", fraccionarNumero);
+        document.getElementById("numero").addEventListener("input", actualizarMinimo);
+        document.getElementById("moneda").addEventListener("change", mostrarTipoCambio);
+        document.getElementById("moneda").addEventListener("change", actualizarMinimo);
+        document.getElementById("moneda").addEventListener("change", fraccionarNumero);
+        fetchData();
     </script>
 </body>
 </html>
