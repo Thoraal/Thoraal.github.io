@@ -14,36 +14,33 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f7f9fc;
+            background: #a7a7a7;
             padding: 0 20px;
             box-sizing: border-box;
+            color: #333;
         }
 
         .container {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
             text-align: center;
             max-height: 90vh;
             overflow-y: auto;
             width: 100%;
-            max-width: 1000px;
+            max-width: 800px;
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 10px;
-        }
-
-        .container > .item {
-            flex: 1 1 calc(50% - 20px);
-            box-sizing: border-box;
+            gap: 20px;
         }
 
         h2 {
-            color: #5900ff;
+            color: #2e85bf;
             font-weight: 700;
             margin-bottom: 20px;
+            font-size: 2em;
         }
 
         /* Input Styles */
@@ -52,42 +49,55 @@
             flex-wrap: wrap;
             justify-content: center;
             align-items: center;
-            gap: 10px;
+            gap: 15px;
             margin-bottom: 20px;
+            width: 100%;
         }
 
         .input-container input[type="number"],
         .input-container select,
         .input-container button,
         .input-container input[type="text"] {
-            padding: 12px;
-            border: 2px solid #7073ff;
-            border-radius: 100px;
-            font-size: 12px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.623);
+            padding: 15px;
+            border: 2px solid #4e4f9c;
+            border-radius: 10px;
+            font-size: 1em;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            outline: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
             flex: 1 1 auto;
+            max-width: 250px;
+        }
+
+        .input-container input:focus,
+        .input-container select:focus,
+        .input-container button:focus,
+        .input-container input[type="text"]:focus {
+            transform: scale(1.10);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.514);
         }
 
         .input-container button {
-            background-color: #5245ff;
+            background: linear-gradient(to right, #7e6fff, #35039194);
             color: white;
             border: none;
             cursor: pointer;
             font-weight: bold;
-            transition: background-color 0.3s;
-            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+            transition: background-color 0.3s, transform 0.2s ease;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
         }
 
         .input-container button:hover {
-            background-color: #0056b3;
+            transform: scale(1.10);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
         }
 
         /* Toggle Switch */
         .switch {
             position: relative;
             display: inline-block;
-            width: 40px;
-            height: 20px;
+            width: 50px;
+            height: 25px;
         }
 
         .switch input {
@@ -105,14 +115,14 @@
             bottom: 0;
             background-color: #ccc;
             transition: 0.4s;
-            border-radius: 20px;
+            border-radius: 25px;
         }
 
         .slider:before {
             position: absolute;
             content: "";
-            height: 14px;
-            width: 14px;
+            height: 18px;
+            width: 18px;
             left: 3px;
             bottom: 3px;
             background-color: white;
@@ -122,11 +132,11 @@
         }
 
         input:checked + .slider {
-            background-color: #5245ff;
+            background-color: #302ebf;
         }
 
         input:checked + .slider:before {
-            transform: translateX(20px);
+            transform: translateX(25px);
         }
 
         /* Table Styles */
@@ -135,49 +145,34 @@
             border-collapse: collapse;
             margin-top: 20px;
             text-align: center;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
         th, td {
-            border: 1px solid #ccc;
-            padding: 12px;
+            border: 1px solid #ddd;
+            padding: 15px;
             text-align: center;
             white-space: nowrap;
-            font-size: 12px;
+            font-size: 1em;
         }
 
         th {
-            background-color: #007BFF;
+            background-color: #382ebf;
             color: white;
             font-weight: 700;
         }
 
-        td {
-            padding: 15px;
-        }
-
-        tbody {
-            display: block;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        thead, tbody tr {
-            display: table;
-            width: 100%;
-            table-layout: fixed;
-        }
-
         tbody tr:nth-child(odd) {
-            background-color: #f9f9f9;
+            background-color: #f3f4f6;
         }
 
         tbody tr:nth-child(even) {
-            background-color: #eef5ff;
+            background-color: #e1e8f0;
         }
 
-        tbody tr td:nth-child(3) {
-            font-size: 18px;
+        tbody tr:hover {
+            background-color: #d3f9e3;
+            transition: background-color 0.2s;
         }
 
         /* Miscellaneous Styles */
@@ -185,21 +180,22 @@
             margin-top: 20px;
             font-weight: bold;
             text-align: center;
-            font-size: 18px;
+            font-size: 1.2em;
             color: #333;
         }
 
         .labels-container, .labels-container-tc {
             margin-top: 20px;
             text-align: left;
-            font-size: 16px;
-            color: #333;
+            font-size: 1em;
+            color: #6b6b6b;
             font-weight: bold;
-            border-radius: 10px;
-            padding: 10px;
-            box-shadow: 0 4px 8px rgba(137, 86, 255, 0.37);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.671);
+            background: rgba(255, 255, 255, 0.8);
             width: 100%;
-            max-width: 400px;
+            max-width: 350px;
         }
 
         .labels-container-tc {
@@ -207,24 +203,24 @@
             max-height: 0;
             overflow: hidden;
             transition: opacity 0.4s ease, max-height 0.4s ease;
-            font-size: 12px;
-            color: #727272;
+            font-size: 0.9em;
+            color: #555;
             font-style: italic;
         }
 
         .labels-container-tc.show {
             opacity: 1;
-            max-height: 200px;
+            max-height: 350px;
         }
 
         .error-message {
-            color: red;
+            color: #d9534f;
             font-weight: bold;
             margin-top: 20px;
         }
 
         .success-message {
-            color: green;
+            color: #5cb85c;
             font-weight: bold;
             margin-top: 10px;
         }
@@ -289,7 +285,7 @@
         </div>
         <div class="labels-container-tc">
             <p>Diario Oficial de la Federación</p>
-            <p>Acuerdo que consigna la equivalencia de las monedas de los diversos paises con el peso mexicano, para efectos fiscales.</p>
+            <p>Acuerdo que consigna la equivalencia de las monedas de los diversos países con el peso mexicano, para efectos fiscales.</p>
             <input type="date" id="fechaTipoCambio" onchange="fetchDataForDate()" value="${new Date().toISOString().split('T')[0]}" /> <span id="tipoDeCambio"></span>
             <p>Div/TC DOF:<span id="calculoAdicional"></span></p>
             <p>Máximo: <span id="maximoValor"></span></p>
@@ -312,7 +308,9 @@
         <div id="sumaResultado" class="sum-result"></div>
     </div>
     <script>
+        // JavaScript functions for handling various actions
         function actualizarMinimo() {
+            // Update the minimum value based on the input number
             const numero = parseInt(document.getElementById("numero").value);
             let minimo = 0;
 
@@ -345,6 +343,7 @@
         }
 
         function fraccionarNumero() {
+            // Handle number fractionation logic
             const numero = document.getElementById("numero").value;
             const tipoCambio = document.getElementById("tipoCambio").value;
             const estadoMensaje = document.getElementById("estadoMensaje");
@@ -359,9 +358,9 @@
             }
 
             const numeroInt = parseInt(numero);
-            const tipoCambioFloat = parseFloat(tipoCambio) || 1;
+            const tipoCambioFloat = parseFloat(tipoCambio);
 
-            if (!validarNumero(numeroInt)) {
+            if (!validarNumero(numeroInt) || !validarTipoCambio(tipoCambioFloat)) {
                 limpiarResultado();
                 return;
             }
@@ -372,7 +371,7 @@
             document.getElementById("labelTotal").textContent = `$${totalMonedaNacional}`;
 
             const seed = numeroInt;
-            const randomGenerator = mulberry32(seed);
+            const randomGenerator = xoshiro128ss(seed);
             let partes = new Set();
             let restante = numeroInt;
             const min = parseInt(document.getElementById('minimoValor').textContent) || 400;
@@ -404,10 +403,15 @@
         }
 
         function validarNumero(numero) {
-            return !isNaN(numero) && numero > 0 && Number.isInteger(numero);
+            return !isNaN(numero) && numero > 0 && numero <= 35000 && Number.isInteger(numero);
+        }
+
+        function validarTipoCambio(tipoCambio) {
+            return !isNaN(tipoCambio) && tipoCambio > 0 && tipoCambio <= 1000;
         }
 
         function mostrarResultado(partes, numeroInicial) {
+            // Display the result in the table
             const tipoCambio = parseFloat(document.getElementById("tipoCambio").value) || 1;
             const resultado = document.getElementById("resultado").getElementsByTagName("tbody")[0];
 
@@ -435,6 +439,7 @@
         }
 
         function imprimirPDF() {
+            // Print the table to PDF using jsPDF
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF({ unit: 'pt', format: 'letter' });
 
@@ -526,16 +531,23 @@
             document.getElementById("minimoValor").textContent = "";
         }
 
-        function mulberry32(seed) {
-            seed = seed >>> 0;
+        function xoshiro128ss(a) {
+            let s = new Uint32Array(4);
+            s[0] = a >>> 0;
+            s[1] = (a * 0x9e3779bb) >>> 0;
+            s[2] = (a * 0x85ebca6b) >>> 0;
+            s[3] = (a * 0xc2b2ae35) >>> 0;
             return function() {
-                seed += 0x9E3779B9;
-                seed = Math.imul(seed ^ (seed >>> 16), 0x85EBCA6B);
-                seed ^= seed >>> 13;
-                seed = Math.imul(seed, 0xC2B2AE35);
-                seed ^= seed >>> 16;
-                return (seed >>> 0) / 4294967296;
-            }
+                const result = (s[0] + s[3]) >>> 0;
+                const t = s[1] << 9;
+                s[2] ^= s[0];
+                s[3] ^= s[1];
+                s[1] ^= s[2];
+                s[0] ^= s[3];
+                s[2] ^= t;
+                s[3] = (s[3] << 11) | (s[3] >>> 21);
+                return result / 0x100000000;
+            };
         }
 
         function numberWithCommas(x) {
