@@ -224,7 +224,10 @@
             font-weight: bold;
             margin-top: 10px;
         }
-
+        .logo {
+        width: 100px;
+        height: auto;
+        }
         @media print {
             table {
                 border: 1px solid black;
@@ -277,6 +280,9 @@
             </label>
         </div>
         <div class="labels-container">
+            <div class="logo-container">
+                <img src="/logo.png" alt="Logo" class="logo" />
+            </div>
             <p>Monto: <span id="labelMonto"></span></p>
             <p>Tipo de cambio: <span id="labelTipoCambio"></span></p>
             <p>Total en moneda nacional: <span id="labelTotal"></span></p>
@@ -315,9 +321,9 @@
             let minimo = 0;
 
             if (numero < 5000) {
-                minimo = 50;
+                minimo = 1;
             } else if (numero < 10000) {
-                minimo = 200;
+                minimo = 150;
             } else if (numero < 15000) {
                 minimo = 300;
             } else if (numero < 20000) {
