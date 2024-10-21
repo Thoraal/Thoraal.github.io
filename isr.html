@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculo del Pago Provisional del ISR</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        h1, h2 {
+            color: #0056b3;
+            text-align: center;
+        }
+        p {
+            text-align: center;
+            color: #555;
+        }
+        .input-group {
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s, transform 0.5s;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+            font-size: 1.1em;
+        }
+        input {
+            padding: 18px;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            font-size: 1em;
+        }
+        input:focus {
+            border-color: #0056b3;
+            outline: none;
+            box-shadow: 0 0 10px rgba(0, 86, 179, 0.2);
+        }
+        input::placeholder {
+            color: #aaa;
+        }
+        .result, .procedure {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            font-size: 1em;
+        }
+        .result {
+            background-color: #e6f3ff;
+            border: 1px solid #b3d7ff;
+        }
+        .procedure {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            margin-top: 20px;
+            background-color: #0056b3;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #004494;
+        }
+        .oculto {
+            display: none;
+            opacity: 0;
+        }
+        .visible {
+            display: block;
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+            h1 {
+                font-size: 1.7em;
+            }
+            label {
+                font-size: 1em;
+            }
+            input {
+                padding: 16px;
+                font-size: 0.95em;
+            }
+            button {
+                padding: 16px;
+                font-size: 1em;
+            }
+            .result, .procedure {
+                font-size: 0.95em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Cálculo del Pago Provisional del ISR</h1>
+    <p>Calcula el pago provisional del ISR utilizando el coeficiente de utilidad y otros valores relevantes.</p>
+    
+    <div class="input-group" id="ingresos-group">
+        <label for="ingresos">Ingresos mensuales ($):</label>
+        <input type="number" id="ingresos" placeholder="Ej: 50000" oninput="calcularISR()">
+    </div>
+    <div class="input-group" id="gastos-group">
+        <label for="gastos">Gastos deducibles mensuales ($):</label>
+        <input type="number" id="gastos" placeholder="Ej: 20000" oninput="calcularISR()">
+    </div>
+    <div class="input-group" id="tasa-group">
+        <label for="tasa">Tasa de ISR (%):</label>
+        <input type="number" id="tasa" placeholder="Ej: 30" oninput="calcularISR()">
+    </div>
+    
+    <div id="resultado" class="result oculto" aria-live="polite"></div>
+    <div id="procedimiento" class="procedure oculto" aria-live="polite"></div>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            document.querySelectorAll('.input-group').forEach((group, index) => {
+                setTimeout(() => {
+                    group.style.opacity = 1;
+                    group.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+        });
+
+        function obtenerValoresInputs() {
+            return {
+                ingresos: parseFloat(document.getElementById('ingresos').value),
+                gastos: parseFloat(document.getElementById('gastos').value),
+                tasa: parseFloat(document.getElementById('tasa').value)
+            };
+        }
+
+        function formatearPesos(valor) {
+            return valor.toLocaleString('es-MX', {
+                style: 'currency',
+                currency: 'MXN',
+                minimumFractionDigits: 2
+            }).replace('MXN', '').trim();
+        }
+
+        function calcularISR() {
+            const { ingresos, gastos, tasa } = obtenerValoresInputs();
+            if (isNaN(ingresos)) {
+                mostrarMensajeError("Por favor, ingresa un valor numérico para los ingresos.");
+                return;
+            } else if (isNaN(gastos)) {
+                mostrarMensajeError("Por favor, ingresa un valor numérico para los gastos.");
+                return;
+            } else if (isNaN(tasa)) {
+                mostrarMensajeError("Por favor, ingresa un valor numérico para la tasa de ISR.");
+                return;
+            }
+
+            if (ingresos < 0 || gastos < 0 || tasa < 0) {
+                mostrarMensajeError("Los valores ingresados no pueden ser negativos.");
+                return;
+            }
+
+            if (tasa > 100) {
+                mostrarMensajeError("La tasa de ISR no puede ser mayor al 100%.");
+                return;
+            }
+
+            const baseGravable = ingresos - gastos;
+            if (baseGravable < 0) {
+                mostrarMensajeError("La base gravable no puede ser negativa.");
+                return;
+            }
+
+            const isrProvisional = baseGravable * (tasa / 100);
+            actualizarResultados(baseGravable, isrProvisional, ingresos, gastos, tasa);
+        }
+
+        function mostrarMensajeError(mensaje) {
+            const resultadoDiv = document.getElementById('resultado');
+            resultadoDiv.innerHTML = mensaje;
+            mostrarElemento(resultadoDiv);
+        }
+
+        function actualizarResultados(baseGravable, isrProvisional, ingresos, gastos, tasa) {
+            const resultadoDiv = document.getElementById('resultado');
+            const procedimientoDiv = document.getElementById('procedimiento');
+            
+            const baseFormateada = formatearPesos(baseGravable);
+            const isrFormateado = formatearPesos(isrProvisional);
+            
+            resultadoDiv.innerHTML = `Base gravable: ${baseFormateada}<br>ISR provisional a pagar: ${isrFormateado}`;
+            procedimientoDiv.innerHTML = `Procedimiento:<br>Ingresos: ${formatearPesos(ingresos)}<br>Gastos: ${formatearPesos(gastos)}<br>Base gravable (Ingresos - Gastos): ${baseFormateada}<br>Tasa de ISR: ${tasa}%<br>ISR provisional (Base gravable * Tasa): ${isrFormateado}`;
+
+            mostrarElemento(resultadoDiv);
+            mostrarElemento(procedimientoDiv);
+        }
+
+        function mostrarElemento(elemento) {
+            elemento.classList.remove('oculto');
+            elemento.classList.add('visible');
+        }
+    </script>
+<footer style="text-align: center; margin-top: 30px;">
+        <a href="https://thoraal.github.io" target="_blank" style="color: #0056b3; text-decoration: none; font-weight: bold;">Developed by Alejandro Toral</a>
+    </footer>
+</html>
