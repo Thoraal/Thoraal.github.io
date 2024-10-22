@@ -383,7 +383,7 @@
             const verificacionMensaje = document.getElementById("verificacionMensaje");
 
             if (numero === "" || tipoCambio === "") {
-                verificacionMensaje.textContent = "Error: Todos los campos deben estar llenos.";
+                verificacionMensaje.textContent = "Error: Todos los campos deben estar llenos 😒";
                 estadoMensaje.textContent = "";
                 document.getElementById("imprimirBtn").disabled = true;
                 limpiarResultado();
@@ -423,14 +423,14 @@
             }
 
             if (Array.from(partes).reduce((a, b) => a + b, 0) !== numeroInt) {
-                verificacionMensaje.textContent = "Error: La suma de las fracciones no coincide con el número a fraccionar.";
+                verificacionMensaje.textContent = "Error: La suma de las fracciones no coincide con el número a fraccionar 😫";
                 estadoMensaje.textContent = "";
                 limpiarResultado();
                 return;
             }
 
             verificacionMensaje.textContent = "";
-            estadoMensaje.textContent = "Todo correcto ✔";
+            estadoMensaje.textContent = "Todo correcto 😊";
             document.getElementById("imprimirBtn").disabled = false;
             mostrarResultado(Array.from(partes), numeroInt);
         }
