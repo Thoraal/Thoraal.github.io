@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fraccionador de Números</title>
+    <title>Fraccionador de números</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         /* General Styles */
@@ -37,7 +38,7 @@
         }
 
         h2 {
-            color: #2e85bf;
+            color: #337bac;
             font-weight: 600;
             margin-bottom: 20px;
             font-size: 2em;
@@ -75,6 +76,11 @@
         .input-container input[type="text"]:focus {
             transform: scale(1.10);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.514);
+        }
+
+        .input-container input::placeholder {
+            color: #afafaf;
+            font-weight: bold;
         }
 
         .input-container button {
@@ -148,7 +154,8 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
-        th, td {
+        th,
+        td {
             border: 1px solid #ddd;
             padding: 15px;
             text-align: center;
@@ -157,7 +164,7 @@
         }
 
         th {
-            background-color: #382ebf;
+            background-color: #5641b6;
             color: white;
             font-weight: 700;
         }
@@ -184,7 +191,8 @@
             color: #333;
         }
 
-        .labels-container, .labels-container-tc {
+        .labels-container,
+        .labels-container-tc {
             margin-top: 20px;
             text-align: left;
             font-size: 1em;
@@ -224,10 +232,12 @@
             font-weight: bold;
             margin-top: 10px;
         }
+
         .logo {
-        width: 100px;
-        height: auto;
+            width: 100px;
+            height: auto;
         }
+
         @media print {
             table {
                 border: 1px solid black;
@@ -235,7 +245,8 @@
                 width: 100%;
             }
 
-            th, td {
+            th,
+            td {
                 border: 1px solid black;
                 padding: 10px;
                 box-sizing: border-box;
@@ -259,19 +270,20 @@
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 </head>
+
 <body>
     <div class="container">
-        <h2>Fraccionador de Números</h2>
+        <h2>Fraccionador de números</h2>
         <div class="input-container">
-            <input type="number" id="numero" placeholder="Monto máximo $35,000" oninput="fraccionarNumero(); actualizarMinimo(); mostrarTipoCambio();" aria-label="Ingresar un número a fraccionar" />
-            <select id="moneda" onchange="mostrarTipoCambio(); actualizarMinimo(); fraccionarNumero();">
+            <input type="number" id="numero" placeholder="Monto, máximo $35,000" oninput="validarMaximo(); fraccionarNumero(); actualizarMinimo(); fetchDataForDate(); mostrarTipoCambio();" aria-label="Ingresar un número a fraccionar" />
+            <select id="moneda" onchange="mostrarTipoCambio(); actualizarMinimo(); fraccionarNumero(); fetchDataForDate();">
                 <option value="usd">Dólar americano</option>
                 <option value="eur">Euro</option>
                 <option value="cad">Canadiense</option>
                 <option value="otro">Otro</option>
             </select>
-            <input type="text" id="monedaOtro" class="tipo-cambio" placeholder="Especificar otra moneda" oninput="formatearMonedaOtro(); fraccionarNumero(); actualizarMinimo();" style="display: none;" />
-            <input type="number" id="tipoCambio" class="tipo-cambio" placeholder="Tipo de cambio" oninput="fraccionarNumero(); actualizarMinimo(); mostrarTipoCambio();" />
+            <input type="text" id="monedaOtro" class="tipo-cambio" placeholder="Especificar otra moneda" oninput="formatearMonedaOtro(); fraccionarNumero(); actualizarMinimo(); fetchDataForDate();" style="display: none;" />
+            <input type="number" id="tipoCambio" class="tipo-cambio" placeholder="Ingrese tipo de cambio" oninput="fraccionarNumero(); actualizarMinimo(); fetchDataForDate(); mostrarTipoCambio();" />
             <button id="imprimirBtn" onclick="imprimirPDF()" disabled>Imprimir</button>
             <button onclick="borrarTodo()">Borrar Todo</button>
             <label class="switch">
@@ -284,7 +296,7 @@
                 <a href="https://thoraal.github.io/">
                     <img src="assets/img/logo.png" alt="Logo" class="logo" />
                 </a>
-            </div
+            </div>
             <p>Monto: <span id="labelMonto"></span></p>
             <p>Tipo de cambio: <span id="labelTipoCambio"></span></p>
             <p>Total en moneda nacional: <span id="labelTotal"></span></p>
@@ -294,7 +306,7 @@
         <div class="labels-container-tc">
             <p>Diario Oficial de la Federación</p>
             <p>Acuerdo que consigna la equivalencia de las monedas de los diversos países con el peso mexicano, para efectos fiscales.</p>
-            <input type="date" id="fechaTipoCambio" onchange="fetchDataForDate()" value="${new Date().toISOString().split('T')[0]}" /> <span id="tipoDeCambio"></span>
+            <input type="date" id="fechaTipoCambio" onchange="fetchDataForDate(); fraccionarNumero(); actualizarMinimo();" value="${new Date().toISOString().split('T')[0]}" /> <span id="tipoDeCambio"></span>
             <p>Div/TC DOF:<span id="calculoAdicional"></span></p>
             <p>Máximo: <span id="maximoValor"></span></p>
             <p>Mínimo: <span id="minimoValor"></span></p>
@@ -313,12 +325,23 @@
             </thead>
             <tbody></tbody>
         </table>
-    <div id="footer">
-        Developed by <a href="https://thoraal.github.io/#work" target="_blank">Alejandro Toral</a>
-    </div>
+        <div id="footer">
+            Developed by <a href="https://thoraal.github.io/#work" target="_blank">Alejandro Toral</a>
+        </div>
     </div>
     <script>
         // JavaScript functions for handling various actions
+        function validarMaximo() {
+            const numeroInput = document.getElementById("numero");
+            const verificacionMensaje = document.getElementById("verificacionMensaje");
+            if (parseInt(numeroInput.value) > 35000) {
+                verificacionMensaje.textContent = "Error: El monto no puede exceder $35,000.";
+                numeroInput.value = 35000;
+            } else {
+                verificacionMensaje.textContent = "";
+            }
+        }
+
         function actualizarMinimo() {
             // Update the minimum value based on the input number
             const numero = parseInt(document.getElementById("numero").value);
@@ -547,7 +570,7 @@
             s[1] = (a * 0x9e3779bb) >>> 0;
             s[2] = (a * 0x85ebca6b) >>> 0;
             s[3] = (a * 0xc2b2ae35) >>> 0;
-            return function() {
+            return function () {
                 const result = (s[0] + s[3]) >>> 0;
                 const t = s[1] << 9;
                 s[2] ^= s[0];
@@ -620,12 +643,19 @@
         }
 
         document.getElementById("tipoCambio").addEventListener("input", fetchDataForDate);
+        document.getElementById("tipoCambio").addEventListener("input", fraccionarNumero);
+        document.getElementById("tipoCambio").addEventListener("input", actualizarMinimo);
+        document.getElementById("tipoCambio").addEventListener("input", mostrarTipoCambio);
+        document.getElementById("numero").addEventListener("input", fetchDataForDate);
         document.getElementById("numero").addEventListener("input", fraccionarNumero);
         document.getElementById("numero").addEventListener("input", actualizarMinimo);
-        document.getElementById("moneda").addEventListener("change", mostrarTipoCambio);
-        document.getElementById("moneda").addEventListener("change", actualizarMinimo);
+        document.getElementById("numero").addEventListener("input", mostrarTipoCambio);
+        document.getElementById("moneda").addEventListener("change", fetchDataForDate);
         document.getElementById("moneda").addEventListener("change", fraccionarNumero);
+        document.getElementById("moneda").addEventListener("change", actualizarMinimo);
+        document.getElementById("moneda").addEventListener("change", mostrarTipoCambio);
         fetchData();
     </script>
 </body>
+
 </html>
