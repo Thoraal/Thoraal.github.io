@@ -275,7 +275,7 @@
     <div class="container">
         <h2>Fraccionador de números</h2>
         <div class="input-container">
-            <input type="number" id="numero" placeholder="Monto, máximo $35,000" oninput="validarMaximo(); fraccionarNumero(); actualizarMinimo(); fetchDataForDate(); mostrarTipoCambio();" aria-label="Ingresar un número a fraccionar" />
+            <input type="number" id="numero" placeholder="Monto máximo $35,000" oninput="validarMaximo(); fraccionarNumero(); actualizarMinimo(); fetchDataForDate(); mostrarTipoCambio();" aria-label="Ingresar un número a fraccionar" />
             <select id="moneda" onchange="mostrarTipoCambio(); actualizarMinimo(); fraccionarNumero(); fetchDataForDate();">
                 <option value="usd">Dólar americano</option>
                 <option value="eur">Euro</option>
