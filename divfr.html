@@ -331,6 +331,12 @@
     </div>
     <script>
         // JavaScript functions for handling various actions
+        document.addEventListener("DOMContentLoaded", () => {
+            const currentDate = new Date();
+            currentDate.setMinutes(currentDate.getMinutes() - currentDate.getTimezoneOffset());
+            document.getElementById("fechaTipoCambio").value = currentDate.toISOString().split("T")[0];
+        });
+
         function validarMaximo() {
             const numeroInput = document.getElementById("numero");
             const verificacionMensaje = document.getElementById("verificacionMensaje");
