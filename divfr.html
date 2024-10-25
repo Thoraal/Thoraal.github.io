@@ -315,7 +315,7 @@
             <thead>
                 <tr>
                     <th># Op</th>
-                    <th>Cantidad</th>
+                    <th>Cantidad a ingresar</th>
                     <th></th>
                     <th>Monto (MXN)</th>
                     <th>Restante</th>
@@ -467,7 +467,7 @@
                     <tr>
                         <td>${(index + 1).toString().padStart(2, '0')}</td>
                         <td>${numberWithCommas(parte)}</td>
-                        <td>[    ]</td>
+                        <td>[  ]====></td>
                         <td>$${montoMXN}</td>
                         <td>$${numberWithCommas((restante > 0 ? restante : 0).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 }))}</td>
                         <td>$${numberWithCommas(totalMXN.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 }))}</td>
@@ -493,17 +493,17 @@
             const xCol1 = 40;
             const xCol2 = 80;
             const xCol3 = 120;
-            const xCol4 = 150;
-            const xCol5 = 240;
-            const xCol6 = 320;
-            const xCol7 = 400;
+            const xCol4 = 170;
+            const xCol5 = 250;
+            const xCol6 = 330;
+            const xCol7 = 420;
 
             let y = 100;
 
             doc.setFontSize(12);
             doc.setFont(undefined, 'bold');
             doc.text("#Op", xCol1, y);
-            doc.text("Cantidad", xCol2, y);
+            doc.text("Can a ingresar", xCol2, y);
             doc.text("", xCol3, y);
             doc.text("Monto (MXN)", xCol4, y);
             doc.text("Restante", xCol5, y);
@@ -519,7 +519,7 @@
 
                 doc.text(celdas[0].textContent, xCol1, y);
                 doc.text(celdas[1].textContent, xCol2, y);
-                doc.text(celdas[2].textContent === "☐" ? "[]" : celdas[2].textContent, xCol3, y);
+                doc.text(celdas[2].textContent, xCol3, y);
                 doc.text(celdas[3].textContent, xCol4, y);
                 doc.text(celdas[4].textContent, xCol5, y);
                 doc.text(celdas[5].textContent, xCol6, y);
