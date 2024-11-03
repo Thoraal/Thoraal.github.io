@@ -3,33 +3,42 @@
 <head>
   <meta charset="UTF-8">
   <title>REGISTRO DE RETIROS DE CAJA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Roboto', sans-serif;
       margin: 0;
       padding: 0;
-      background-color: #f4f4f4;
+      background-color: #f0f2f5;
+      color: #333;
     }
 
     header {
-      background-color: #007bff;
+      background-color: #4e73df;
       color: #fff;
-      padding: 20px 0;
+      padding: 30px 0;
       text-align: center;
+      font-size: 1em;
+      font-weight: 700;
     }
 
     .container {
       width: 90%;
-      max-width: 1200px;
-      margin: 20px auto;
+      max-width: 1000px;
+      margin: 40px auto;
       background-color: #fff;
-      padding: 20px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
     }
 
     h2 {
-      color: #007bff;
-      margin-bottom: 10px;
+      color: #4e73df;
+      margin-bottom: 15px;
+      font-size: 1.5em;
+      font-weight: 500;
     }
 
     form {
@@ -38,91 +47,105 @@
 
     label {
       display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
+      margin-bottom: 8px;
+      font-weight: 500;
     }
 
     input[type="text"],
     input[type="date"],
     input[type="password"] {
       width: 100%;
-      padding: 8px;
-      margin-bottom: 15px;
+      padding: 10px;
+      margin-bottom: 20px;
       border: 1px solid #ccc;
-      border-radius: 4px;
-      text-transform: uppercase;
+      border-radius: 6px;
+      font-size: 1em;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
     }
 
     button {
-      padding: 10px 20px;
-      background-color: #28a745;
+      padding: 12px 25px;
+      background-color: #1cc88a;
       color: #fff;
       border: none;
-      border-radius: 4px;
+      border-radius: 6px;
       cursor: pointer;
       text-transform: uppercase;
+      font-weight: 700;
+      font-size: 0.9em;
+      transition: background-color 0.3s ease;
     }
 
     button:hover {
-      background-color: #218838;
+      background-color: #17a673;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
       margin-bottom: 30px;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     th, td {
-      padding: 12px;
-      border: 1px solid #ddd;
-      text-align: center;
+      padding: 15px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
       text-transform: uppercase;
     }
 
     th {
-      background-color: #007bff;
+      background-color: #4e73df;
       color: #fff;
+      font-weight: 700;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
     }
 
     .delete-btn {
-      background-color: #dc3545;
+      background-color: #e74a3b;
       color: #fff;
-      padding: 5px 10px;
+      padding: 8px 12px;
       border: none;
-      border-radius: 4px;
+      border-radius: 6px;
       cursor: pointer;
       text-transform: uppercase;
+      font-weight: 500;
+      transition: background-color 0.3s ease;
     }
 
     .delete-btn:hover {
-      background-color: #c82333;
+      background-color: #c0392b;
     }
 
     .error {
-      color: #dc3545;
-      margin-bottom: 15px;
-      text-transform: uppercase;
+      color: #e74a3b;
+      margin-bottom: 20px;
+      font-weight: 500;
     }
 
     .success {
-      color: #28a745;
-      margin-bottom: 15px;
-      text-transform: uppercase;
+      color: #1cc88a;
+      margin-bottom: 20px;
+      font-weight: 500;
     }
 
     .contador {
-      margin-top: 20px;
+      margin-top: 30px;
     }
 
     .contador table {
-      width: 50%;
+      width: 60%;
       margin: 0 auto;
     }
 
     @media (max-width: 768px) {
       th, td {
-        padding: 8px;
+        padding: 10px;
       }
 
       .contador table {
@@ -137,16 +160,17 @@
       top: 50%;
       transform: translate(-50%, -50%);
       background-color: #fff;
-      padding: 20px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+      padding: 30px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
       display: none;
       z-index: 1000;
-      width: 80%;
+      width: 90%;
       max-width: 600px;
+      border-radius: 8px;
     }
 
     .popup button {
-      margin-right: 10px;
+      margin-right: 15px;
     }
 
     .overlay {
@@ -163,34 +187,34 @@
 </head>
 <body>
   <header>
-    <h1>REGISTRO DE RETIROS DE CAJA</h1>
+    <h1>REGISTRO DE RETIROS</h1>
   </header>
 
   <div class="container" id="contenido">
     <section id="registro-retiro">
-      <h2>REGISTRAR UN NUEVO RETIRO</h2>
+      <h2>Registrar un nuevo retiro</h2>
       <div id="mensaje"></div>
       <form id="form-retiro">
-        <label for="fecha">FECHA DEL RETIRO:</label>
+        <label for="fecha">Fecha del retiro:</label>
         <input type="date" id="fecha" name="fecha" required>
 
-        <label for="empleado">CORTE DE:</label>
+        <label for="empleado">Retiro de:</label>
         <input type="text" id="empleado" name="empleado" list="empleados" required>
         <datalist id="empleados"></datalist>
 
-        <button type="submit">REGISTRAR RETIRO</button>
+        <button type="submit">Registrar retiro</button>
       </form>
     </section>
 
     <section id="lista-retiros">
-      <h2>RETIROS REGISTRADOS</h2>
+      <h2>Retiros registrados</h2>
       <table>
         <thead>
           <tr>
             <th>ID</th>
-            <th>FECHA</th>
-            <th>EJECUTIVO</th>
-            <th>ACCIONES</th>
+            <th>Fecha</th>
+            <th>Ejecutivo</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody id="tabla-retiros"></tbody>
@@ -198,12 +222,12 @@
     </section>
 
     <section id="contador-diario" class="contador">
-      <h2>CONTADOR DIARIO DE RETIROS</h2>
+      <h2>Contador diario de retiros</h2>
       <table>
         <thead>
           <tr>
-            <th>FECHA</th>
-            <th>TOTAL DE RETIROS</th>
+            <th>Fecha</th>
+            <th>Total de retiros</th>
           </tr>
         </thead>
         <tbody id="tabla-contador"></tbody>
@@ -211,27 +235,27 @@
     </section>
 
     <section id="reporte-retiros">
-      <h2>GENERAR REPORTE DE RETIROS</h2>
-      <label for="sucursal">SUCURSAL:</label>
+      <h2>Generar reporte de retiros</h2>
+      <label for="sucursal">Sucursal:</label>
       <input type="text" id="sucursal" name="sucursal" value="COBA">
 
-      <label for="ejecutivo">EJECUTIVO:</label>
+      <label for="ejecutivo">Ejecutivo:</label>
       <input type="text" id="ejecutivo" name="ejecutivo" value="">
 
-      <label for="custodio">CUSTODIO:</label>
+      <label for="custodio">Custodio:</label>
       <input type="text" id="custodio" name="custodio" value="">
 
-      <button id="btn-reporte">GENERAR REPORTE</button>
+      <button id="btn-reporte">Generar reporte</button>
     </section>
   </div>
 
   <div id="overlay" class="overlay"></div>
   <div id="popup" class="popup">
     <pre id="reporte"></pre>
-    <p>¿ESTÁS SEGURO DE QUE QUIERES LIMPIAR LOS DATOS DESPUÉS DE GENERAR EL REPORTE?</p>
-    <button id="btn-confirmar-limpiar" style="background-color: #dc3545;">SÍ, PROCEDER</button>
-    <button id="btn-cancelar-limpiar" style="background-color: #007bff;">NO, CANCELAR</button>
-    <button id="btn-imprimir">IMPRIMIR REPORTE</button>
+    <p>¿Estás seguro de que quieres limpiar los datos después de generar el reporte?</p>
+    <button id="btn-confirmar-limpiar" style="background-color: #e74a3b;">Sí, proceder</button>
+    <button id="btn-cancelar-limpiar" style="background-color: #4e73df;">No, cancelar</button>
+    <button id="btn-imprimir">Imprimir reporte</button>
   </div>
 
   <script>
