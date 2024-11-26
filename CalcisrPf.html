@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cálculo de ISR para Personas Físicas</title>
+    <title>Cálculo de ISR</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         /* Estilos CSS */
@@ -48,7 +49,8 @@
             font-size: 1.1em;
         }
 
-        form input, form select {
+        form input,
+        form select {
             padding: 12px;
             border: 2px solid #ccc;
             border-radius: 8px;
@@ -56,7 +58,8 @@
             transition: border-color 0.3s;
         }
 
-        form input:focus, form select:focus {
+        form input:focus,
+        form select:focus {
             border-color: #6200ea;
             box-shadow: 0 0 8px rgba(98, 0, 234, 0.3);
         }
@@ -132,7 +135,8 @@
                 font-size: 1em;
             }
 
-            form input, form select {
+            form input,
+            form select {
                 padding: 10px;
                 font-size: 0.9em;
             }
@@ -147,15 +151,16 @@
         }
     </style>
 </head>
+
 <body>
     <header>
-        <h1>Cálculo del ISR para Personas Físicas</h1>
-        <p>Calcula el Impuesto Sobre la Renta (ISR) para personas físicas de manera sencilla.</p>
+        <h1>Cálculo del ISR</h1>
+        <p>Retenciones periódicas de ISR</p>
     </header>
     <main>
         <form id="isrForm">
             <label for="baseGravable">Base Gravable ($):</label>
-            <input type="number" id="baseGravable" placeholder="Ingresa la base gravable" required>
+            <input type="text" id="baseGravable" placeholder="Ingresa la base gravable" required>
 
             <label for="periodo">Tipo de Periodo:</label>
             <select id="periodo" required>
@@ -261,7 +266,8 @@
         };
 
         document.getElementById('isrForm').addEventListener('input', function () {
-            const baseGravable = parseFloat(document.getElementById('baseGravable').value);
+            const baseGravableInput = document.getElementById('baseGravable').value;
+            const baseGravable = parseFloat(baseGravableInput.replace(/[^\d.-]/g, ''));
             const periodo = document.getElementById('periodo').value;
             const resultado = calcularISR(baseGravable, periodo);
 
@@ -308,4 +314,5 @@
         }
     </script>
 </body>
+
 </html>
