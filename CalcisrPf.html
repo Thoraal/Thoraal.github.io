@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculo de ISR para Personas Físicas</title>
+    <style>
+        /* Estilos CSS */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        header {
+            background-color: #6200ea;
+            color: #fff;
+            padding: 1.5em 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        main {
+            max-width: 700px;
+            margin: 30px auto;
+            background: #fff;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        form label {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        form input, form select {
+            padding: 12px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        form input:focus, form select:focus {
+            border-color: #6200ea;
+        }
+
+        #resultados {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #e3f2fd;
+            border-radius: 15px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            font-size: 1.1em;
+        }
+
+        #resultados h2 {
+            margin-bottom: 15px;
+            color: #333;
+            text-align: center;
+        }
+
+        #resultados p {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+
+        #resultados p span {
+            font-weight: bold;
+            color: #6200ea;
+        }
+
+        #procedimiento {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f1f8e9;
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        #procedimiento p {
+            margin: 5px 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #f1f1f1;
+            margin-top: 30px;
+            font-size: 0.9em;
+        }
+
+        footer a {
+            color: #6200ea;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Cálculo del ISR para Personas Físicas</h1>
+        <p>Calcula el Impuesto Sobre la Renta (ISR) para personas físicas de manera sencilla.</p>
+    </header>
+    <main>
+        <form id="isrForm">
+            <label for="baseGravable">Base Gravable ($):</label>
+            <input type="number" id="baseGravable" placeholder="Ingresa la base gravable" required>
+
+            <label for="periodo">Tipo de Periodo:</label>
+            <select id="periodo" required>
+                <option value="diario">Diario</option>
+                <option value="semanal">Semanal</option>
+                <option value="decenal">Decenal</option>
+                <option value="quincenal">Quincenal</option>
+                <option value="mensual">Mensual</option>
+            </select>
+        </form>
+
+        <section id="resultados" style="display: none;">
+            <h2>Resultados del Cálculo</h2>
+            <p><span>Límite Inferior:</span> <span id="limiteInferior"></span></p>
+            <p><span>Excedente:</span> <span id="excedente"></span></p>
+            <p><span>Impuesto Marginal:</span> <span id="impuestoMarginal"></span></p>
+            <p><span>Cuota Fija:</span> <span id="cuotaFija"></span></p>
+            <p><strong>ISR a Retener:</strong> <span id="isrTotal"></span></p>
+        </section>
+
+        <section id="procedimiento" style="display: none;">
+            <h2>Procedimiento del Cálculo</h2>
+            <p><strong>Base Gravable:</strong> <span id="procBaseGravable"></span></p>
+            <p><strong>- Límite Inferior:</strong> <span id="procLimiteInferior"></span></p>
+            <p><strong>= Excedente del Límite Inferior:</strong> <span id="procExcedente"></span></p>
+            <p><strong>x Porcentaje sobre el Límite Inferior:</strong> <span id="procPorcentaje"></span></p>
+            <p><strong>= Impuesto Marginal:</strong> <span id="procImpuestoMarginal"></span></p>
+            <p><strong>+ Cuota Fija:</strong> <span id="procCuotaFija"></span></p>
+            <p><strong>= Retención de ISR:</strong> <span id="procISRTotal"></span></p>
+        </section>
+    </main>
+    <footer>
+        <p>Desarrollado por <a href="https://thoral.netlify.app/portfolio" target="_blank">Alejandro Toral</a></p>
+    </footer>
+    <script>
+        // Tablas de ISR por periodo para personas físicas
+        const tablasISR = {
+            diario: [
+                { limiteInferior: 0.01, limiteSuperior: 24.54, cuotaFija: 0, porcentaje: 0.0192 },
+                { limiteInferior: 24.55, limiteSuperior: 208.29, cuotaFija: 0.47, porcentaje: 0.064 },
+                { limiteInferior: 208.3, limiteSuperior: 366.05, cuotaFija: 12.23, porcentaje: 0.1088 },
+                { limiteInferior: 366.06, limiteSuperior: 425.52, cuotaFija: 29.4, porcentaje: 0.16 },
+                { limiteInferior: 425.53, limiteSuperior: 509.46, cuotaFija: 38.91, porcentaje: 0.1792 },
+                { limiteInferior: 509.47, limiteSuperior: 1027.52, cuotaFija: 53.95, porcentaje: 0.2136 },
+                { limiteInferior: 1027.53, limiteSuperior: 1619.51, cuotaFija: 164.61, porcentaje: 0.2352 },
+                { limiteInferior: 1619.52, limiteSuperior: 3091.90, cuotaFija: 303.85, porcentaje: 0.30 },
+                { limiteInferior: 3091.91, limiteSuperior: 4122.54, cuotaFija: 745.56, porcentaje: 0.32 },
+                { limiteInferior: 4122.55, limiteSuperior: 12367.62, cuotaFija: 1075.37, porcentaje: 0.34 },
+                { limiteInferior: 12367.63, limiteSuperior: Infinity, cuotaFija: 3878.69, porcentaje: 0.35 }
+            ],
+            semanal: [
+                { limiteInferior: 0.01, limiteSuperior: 171.78, cuotaFija: 0, porcentaje: 0.0192 },
+                { limiteInferior: 171.79, limiteSuperior: 1458.03, cuotaFija: 3.29, porcentaje: 0.064 },
+                { limiteInferior: 1458.04, limiteSuperior: 2562.35, cuotaFija: 85.61, porcentaje: 0.1088 },
+                { limiteInferior: 2562.36, limiteSuperior: 2978.64, cuotaFija: 205.8, porcentaje: 0.16 },
+                { limiteInferior: 2978.65, limiteSuperior: 3566.22, cuotaFija: 272.37, porcentaje: 0.1792 },
+                { limiteInferior: 3566.23, limiteSuperior: 7192.64, cuotaFija: 377.65, porcentaje: 0.2136 },
+                { limiteInferior: 7192.65, limiteSuperior: 11336.57, cuotaFija: 1152.27, porcentaje: 0.2352 },
+                { limiteInferior: 11336.58, limiteSuperior: 21643.30, cuotaFija: 2126.95, porcentaje: 0.30 },
+                { limiteInferior: 21643.31, limiteSuperior: 28857.78, cuotaFija: 5218.92, porcentaje: 0.32 },
+                { limiteInferior: 28857.79, limiteSuperior: 86573.34, cuotaFija: 7527.59, porcentaje: 0.34 },
+                { limiteInferior: 86573.35, limiteSuperior: Infinity, cuotaFija: 27150.83, porcentaje: 0.35 }
+            ],
+            decenal: [
+                { limiteInferior: 0.01, limiteSuperior: 254.40, cuotaFija: 0, porcentaje: 0.0192 },
+                { limiteInferior: 254.41, limiteSuperior: 2082.90, cuotaFija: 4.7, porcentaje: 0.064 },
+                { limiteInferior: 2082.91, limiteSuperior: 3660.50, cuotaFija: 122.3, porcentaje: 0.1088 },
+                { limiteInferior: 3660.51, limiteSuperior: 4255.20, cuotaFija: 294, porcentaje: 0.16 },
+                { limiteInferior: 4255.21, limiteSuperior: 5094.60, cuotaFija: 389.1, porcentaje: 0.1792 },
+                { limiteInferior: 5094.61, limiteSuperior: 10275.20, cuotaFija: 539.5, porcentaje: 0.2136 },
+                { limiteInferior: 10275.21, limiteSuperior: 16195.10, cuotaFija: 1646.1, porcentaje: 0.2352 },
+                { limiteInferior: 16195.11, limiteSuperior: 30919.00, cuotaFija: 3038.5, porcentaje: 0.30 },
+                { limiteInferior: 30919.01, limiteSuperior: 41225.40, cuotaFija: 7455.6, porcentaje: 0.32 },
+                { limiteInferior: 41225.41, limiteSuperior: 123676.20, cuotaFija: 10753.7, porcentaje: 0.34 },
+                { limiteInferior: 123676.21, limiteSuperior: Infinity, cuotaFija: 38786.9, porcentaje: 0.35 }
+            ],
+            quincenal: [
+                { limiteInferior: 0.01, limiteSuperior: 368.10, cuotaFija: 0, porcentaje: 0.0192 },
+                { limiteInferior: 368.11, limiteSuperior: 3124.35, cuotaFija: 7.05, porcentaje: 0.064 },
+                { limiteInferior: 3124.36, limiteSuperior: 5490.75, cuotaFija: 183.45, porcentaje: 0.1088 },
+                { limiteInferior: 5490.76, limiteSuperior: 6382.80, cuotaFija: 441, porcentaje: 0.16 },
+                { limiteInferior: 6382.81, limiteSuperior: 7641.90, cuotaFija: 583.65, porcentaje: 0.1792 },
+                { limiteInferior: 7641.91, limiteSuperior: 15412.80, cuotaFija: 809.25, porcentaje: 0.2136 },
+                { limiteInferior: 15412.81, limiteSuperior: 24292.65, cuotaFija: 2469.15, porcentaje: 0.2352 },
+                { limiteInferior: 24292.66, limiteSuperior: 46378.50, cuotaFija: 4557.75, porcentaje: 0.30 },
+                { limiteInferior: 46378.51, limiteSuperior: 61838.10, cuotaFija: 11183.4, porcentaje: 0.32 },
+                { limiteInferior: 61838.11, limiteSuperior: 185514.30, cuotaFija: 16130.55, porcentaje: 0.34 },
+                { limiteInferior: 185514.31, limiteSuperior: Infinity, cuotaFija: 58180.35, porcentaje: 0.35 }
+            ],
+            mensual: [
+                { limiteInferior: 0.01, limiteSuperior: 746.04, cuotaFija: 0, porcentaje: 0.0192 },
+                { limiteInferior: 746.05, limiteSuperior: 6332.05, cuotaFija: 14.32, porcentaje: 0.064 },
+                { limiteInferior: 6332.06, limiteSuperior: 11128.01, cuotaFija: 371.83, porcentaje: 0.1088 },
+                { limiteInferior: 11128.02, limiteSuperior: 12935.82, cuotaFija: 893.63, porcentaje: 0.16 },
+                { limiteInferior: 12935.83, limiteSuperior: 15487.71, cuotaFija: 1182.88, porcentaje: 0.1792 },
+                { limiteInferior: 15487.72, limiteSuperior: 31236.49, cuotaFija: 1640.18, porcentaje: 0.2136 },
+                { limiteInferior: 31236.5, limiteSuperior: 49233.00, cuotaFija: 5004.12, porcentaje: 0.2352 },
+                { limiteInferior: 49233.01, limiteSuperior: 93993.90, cuotaFija: 9236.89, porcentaje: 0.30 },
+                { limiteInferior: 93993.91, limiteSuperior: 125325.20, cuotaFija: 22665.17, porcentaje: 0.32 },
+                { limiteInferior: 125325.21, limiteSuperior: 375975.61, cuotaFija: 32691.18, porcentaje: 0.34 },
+                { limiteInferior: 375975.62, limiteSuperior: Infinity, cuotaFija: 117912.32, porcentaje: 0.35 }
+            ]
+        };
+
+        document.getElementById('isrForm').addEventListener('input', function () {
+            const baseGravable = parseFloat(document.getElementById('baseGravable').value);
+            const periodo = document.getElementById('periodo').value;
+            const resultado = calcularISR(baseGravable, periodo);
+
+            if (resultado) {
+                document.getElementById('limiteInferior').textContent = resultado.limiteInferior.toLocaleString('es-MX', { minimumFractionDigits: 2 });
+                document.getElementById('excedente').textContent = resultado.excedente.toLocaleString('es-MX', { minimumFractionDigits: 2 });
+                document.getElementById('impuestoMarginal').textContent = resultado.impuestoMarginal.toLocaleString('es-MX', { minimumFractionDigits: 2 });
+                document.getElementById('cuotaFija').textContent = resultado.cuotaFija.toLocaleString('es-MX', { minimumFractionDigits: 2 });
+                document.getElementById('isrTotal').textContent = resultado.isrTotal.toLocaleString('es-MX', { minimumFractionDigits: 2 });
+                document.getElementById('resultados').style.display = 'block';
+
+                document.getElementById('procBaseGravable').textContent = baseGravable.toLocaleString('es-MX', { minimumFractionDigits: 2 });
+                document.getElementById('procLimiteInferior').textContent = resultado.limiteInferior.toLocaleString('es-MX', { minimumFractionDigits: 2 });
+                document.getElementById('procExcedente').textContent = resultado.excedente.toLocaleString('es-MX', { minimumFractionDigits: 2 });
+                document.getElementById('procPorcentaje').textContent = (resultado.porcentaje * 100).toFixed(2) + '%';
+                document.getElementById('procImpuestoMarginal').textContent = resultado.impuestoMarginal.toLocaleString('es-MX', { minimumFractionDigits: 2 });
+                document.getElementById('procCuotaFija').textContent = resultado.cuotaFija.toLocaleString('es-MX', { minimumFractionDigits: 2 });
+                document.getElementById('procISRTotal').textContent = resultado.isrTotal.toLocaleString('es-MX', { minimumFractionDigits: 2 });
+                document.getElementById('procedimiento').style.display = 'block';
+            } else {
+                document.getElementById('resultados').style.display = 'none';
+                document.getElementById('procedimiento').style.display = 'none';
+            }
+        });
+
+        function calcularISR(baseGravable, periodo) {
+            const tabla = tablasISR[periodo];
+            const fila = tabla.find(fila => baseGravable >= fila.limiteInferior && baseGravable <= fila.limiteSuperior);
+
+            if (!fila) return null;
+
+            const excedente = baseGravable - fila.limiteInferior;
+            const impuestoMarginal = excedente * fila.porcentaje;
+            const isrTotal = impuestoMarginal + fila.cuotaFija;
+
+            return {
+                limiteInferior: fila.limiteInferior,
+                excedente: excedente,
+                impuestoMarginal: impuestoMarginal,
+                cuotaFija: fila.cuotaFija,
+                isrTotal: isrTotal,
+                porcentaje: fila.porcentaje
+            };
+        }
+    </script>
+</body>
+</html>
