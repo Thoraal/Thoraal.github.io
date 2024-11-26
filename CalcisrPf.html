@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cálculo de ISR para Personas Físicas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         /* Estilos CSS */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f9f9f9;
@@ -29,6 +30,11 @@
             padding: 25px;
             border-radius: 15px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        main:hover {
+            transform: translateY(-5px);
         }
 
         form {
@@ -52,6 +58,7 @@
 
         form input:focus, form select:focus {
             border-color: #6200ea;
+            box-shadow: 0 0 8px rgba(98, 0, 234, 0.3);
         }
 
         #resultados {
@@ -103,10 +110,40 @@
         footer a {
             color: #6200ea;
             text-decoration: none;
+            transition: color 0.3s;
         }
 
         footer a:hover {
+            color: #3700b3;
             text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            main {
+                margin: 15px;
+                padding: 20px;
+            }
+
+            header {
+                padding: 1em;
+            }
+
+            form label {
+                font-size: 1em;
+            }
+
+            form input, form select {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+
+            #resultados {
+                padding: 15px;
+            }
+
+            #procedimiento {
+                padding: 10px;
+            }
         }
     </style>
 </head>
