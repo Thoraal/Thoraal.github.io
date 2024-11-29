@@ -588,7 +588,7 @@ function imprimirRolloTermico() {
             celdas[1].textContent.replace('$', '')trim().padEnd(maxLengths[1], ' '), // Cantidad
             celdas[3].textContent.replace('$', '')trim().padEnd(maxLengths[2], ' '), // Monto
             celdas[4].textContent.replace('$', '')trim().padEnd(maxLengths[3], ' '), // Falta
-            celdas[5].textContent.replace('$', '')trim().padEnd(maxLengths[4], ' '), // Total
+            celdas[5].textContent.padEnd(maxLengths[4], ' '), // Total
             celdas[6].textContent.replace('$', '')trim().padEnd(maxLengths[5], ' ') // Desglose
         ].join("|") + "\n";
     });
