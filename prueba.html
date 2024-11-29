@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fraccionador de números</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: #a7a7a7;
+            padding: 0 20px;
+            box-sizing: border-box;
+            color: #333;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            max-height: 90vh;
+            overflow-y: auto;
+            width: 100%;
+            max-width: 920px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        h2 {
+            color: #337bac;
+            font-weight: 600;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        /* Input Styles */
+        .input-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: stretch;
+            gap: 20px;
+            margin-bottom: 15px;
+            width: 100%;
+        }
+
+        .input-container input[type="number"],
+        .input-container select,
+        .input-container button,
+        .input-container input[type="text"] {
+            padding: 15px;
+            border: 0px solid #4e4f9c;
+            border-radius: 10px;
+            font-size: 1em;
+            box-shadow: 0 4px 10px rgb(0, 0, 0);
+            outline: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            flex: 1 1 auto;
+            min-width: 200px;
+        }
+
+        .input-container input:focus,
+        .input-container select:focus,
+        .input-container button:focus,
+        .input-container input[type="text"]:focus {
+            transform: scale(1.10);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.514);
+        }
+
+        .input-container input::placeholder {
+            color: #afafaf;
+            font-weight: bold;
+        }
+
+        .input-container button {
+            background: linear-gradient(to right, #7e6fff, #35039194);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.2s ease;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .input-container button:hover {
+            transform: scale(1.10);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Toggle Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 25px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 25px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        input:checked + .slider {
+            background-color: #302ebf;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(25px);
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 15px;
+            text-align: center;
+            white-space: nowrap;
+            font-size: 1em;
+        }
+
+        th {
+            background-color: #5641b6;
+            color: white;
+            font-weight: 700;
+        }
+
+        tbody tr:nth-child(odd) {
+            background-color: #f3f4f6;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #e1e8f0;
+        }
+
+        tbody tr:hover {
+            background-color: #d3f9e3;
+            transition: background-color 0.2s;
+        }
+
+        /* Miscellaneous Styles */
+        .sum-result {
+            margin-top: 20px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        .labels-container,
+        .labels-container-tc {
+            margin-top: 20px;
+            text-align: left;
+            font-size: 1em;
+            color: #6b6b6b;
+            font-weight: bold;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.671);
+            background: rgba(255, 255, 255, 0.8);
+            width: 100%;
+            max-width: 350px;
+        }
+
+        .labels-container-tc {
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: opacity 0.4s ease, max-height 0.4s ease;
+            font-size: 0.9em;
+            color: #555;
+            font-style: italic;
+        }
+
+        .labels-container-tc.show {
+            opacity: 1;
+            max-height: 350px;
+        }
+
+        .error-message {
+            color: #d9534f;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .success-message {
+            color: #5cb85c;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .logo {
+            width: 100px;
+            height: auto;
+        }
+
+        @media print {
+            table {
+                border: 1px solid black;
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+            th,
+            td {
+                border: 1px solid black;
+                padding: 10px;
+                box-sizing: border-box;
+            }
+
+            th {
+                background-color: #d3d3d3 !important;
+                -webkit-print-color-adjust: exact;
+            }
+
+            tbody tr:nth-child(odd) {
+                background-color: #f0f0f0 !important;
+                -webkit-print-color-adjust: exact;
+            }
+
+            tbody tr:nth-child(even) {
+                background-color: #ffffff !important;
+                -webkit-print-color-adjust: exact;
+            }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Fraccionador de números</h2>
+        <div class="input-container">
+            <input type="number" id="numero" placeholder="Monto máximo $35,000" oninput="validarMaximo(); fraccionarNumero(); actualizarMinimo(); fetchDataForDate(); mostrarTipoCambio();" aria-label="Ingresar un número a fraccionar" />
+            <select id="moneda" onchange="mostrarTipoCambio(); actualizarMinimo(); fraccionarNumero(); fetchDataForDate();">
+                <option value="usd">Dólar americano</option>
+                <option value="eur">Euro</option>
+                <option value="cad">Canadiense</option>
+                <option value="otro">Otro</option>
+            </select>
+            <input type="text" id="monedaOtro" class="tipo-cambio" placeholder="Especificar otra moneda" oninput="formatearMonedaOtro(); fraccionarNumero(); actualizarMinimo(); fetchDataForDate();" style="display: none;" />
+            <input type="number" id="tipoCambio" class="tipo-cambio" placeholder="Ingrese tipo de cambio" oninput="fraccionarNumero(); actualizarMinimo(); fetchDataForDate(); mostrarTipoCambio();" />
+            <button id="imprimirBtn" onclick="imprimirPDF()" disabled>Imprimir</button>
+            <button id="imprimirRolloBtn" onclick="imprimirRolloTermico()">Imprimir Rollo Térmico</button>
+            <button onclick="borrarTodo()">Borrar Todo</button>
+            <label class="switch">
+                <input type="checkbox" onclick="toggleLabelsContainerTc()">
+                <span class="slider"></span>
+            </label>
+        </div>
+        <div class="labels-container">
+            <div class="logo-container">
+                <a href="https://thoraal.github.io/">
+                    <img src="assets/img/logo.png" alt="Logo" class="logo" />
+                </a>
+            </div>
+            <p>Monto: <span id="labelMonto"></span></p>
+            <p>Tipo de cambio: <span id="labelTipoCambio"></span></p>
+            <p>Total en moneda nacional: <span id="labelTotal"></span></p>
+            <p id="estadoMensaje" class="success-message"></p>
+            <p class="error-message" id="verificacionMensaje"></p>
+        </div>
+        <div class="labels-container-tc">
+            <p>Diario Oficial de la Federación</p>
+            <p>Acuerdo que consigna la equivalencia de las monedas de los diversos países con el peso mexicano, para efectos fiscales.</p>
+            <input type="date" id="fechaTipoCambio" onchange="fetchDataForDate(); fraccionarNumero(); actualizarMinimo();" value="${new Date().toISOString().split('T')[0]}" /> <span id="tipoDeCambio"></span>
+            <p>Div/TC DOF:<span id="calculoAdicional"></span></p>
+            <p>Máximo: <span id="maximoValor"></span></p>
+            <p>Mínimo: <span id="minimoValor"></span></p>
+        </div>
+        <table id="resultado">
+            <thead>
+                <tr>
+                    <th># Op</th>
+                    <th>Cantidad a ingresar</th>
+                    <th></th>
+                    <th>Monto (MXN)</th>
+                    <th>Restante</th>
+                    <th>Total (MXN)</th>
+                    <th>Desglosado</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <div id="footer">
+            Developed by <a href="https://thoraal.github.io/#work" target="_blank">Alejandro Toral</a>
+        </div>
+    </div>
+    <script>
+        // JavaScript functions for handling various actions
+        document.addEventListener("DOMContentLoaded", () => {
+            const currentDate = new Date();
+            currentDate.setMinutes(currentDate.getMinutes() - currentDate.getTimezoneOffset());
+            document.getElementById("fechaTipoCambio").value = currentDate.toISOString().split("T")[0];
+        });
+
+        function validarMaximo() {
+            const numeroInput = document.getElementById("numero");
+            const verificacionMensaje = document.getElementById("verificacionMensaje");
+            if (parseInt(numeroInput.value) > 35000) {
+                verificacionMensaje.textContent = "Error: El monto no puede exceder $35,000.";
+                numeroInput.value = 35000;
+            } else {
+                verificacionMensaje.textContent = "";
+            }
+        }
+
+        function actualizarMinimo() {
+            // Update the minimum value based on the input number
+            const numero = parseInt(document.getElementById("numero").value);
+            let minimo = 0;
+
+            if (numero < 5000) {
+                minimo = 50;
+            } else if (numero < 10000) {
+                minimo = 300;
+            } else if (numero < 15000) {
+                minimo = 400;
+            } else if (numero < 20000) {
+                minimo = 500;
+            } else if (numero < 25000) {
+                minimo = 550;
+            } else {
+                minimo = 600;
+            }
+
+            document.getElementById('minimoValor').textContent = minimo;
+        }
+
+        function toggleLabelsContainerTc() {
+            const labelsContainerTc = document.querySelector('.labels-container-tc');
+            const isChecked = document.querySelector('.switch input').checked;
+
+            if (isChecked) {
+                labelsContainerTc.classList.add('show');
+            } else {
+                labelsContainerTc.classList.remove('show');
+            }
+        }
+
+        function fraccionarNumero() {
+            // Handle number fractionation logic
+            const numero = document.getElementById("numero").value;
+            const tipoCambio = document.getElementById("tipoCambio").value;
+            const estadoMensaje = document.getElementById("estadoMensaje");
+            const verificacionMensaje = document.getElementById("verificacionMensaje");
+
+            if (numero === "" || tipoCambio === "") {
+                verificacionMensaje.textContent = "Error: Todos los campos deben estar llenos 😒";
+                estadoMensaje.textContent = "";
+                document.getElementById("imprimirBtn").disabled = true;
+                limpiarResultado();
+                return;
+            }
+
+            const numeroInt = parseInt(numero);
+            const tipoCambioFloat = parseFloat(tipoCambio);
+
+            if (!validarNumero(numeroInt) || !validarTipoCambio(tipoCambioFloat)) {
+                limpiarResultado();
+                return;
+            }
+
+            const totalMonedaNacional = (numeroInt * tipoCambioFloat).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            document.getElementById("labelMonto").textContent = `$${numberWithCommas(numeroInt)}`;
+            document.getElementById("labelTipoCambio").textContent = `${tipoCambioFloat.toFixed(2)}`;
+            document.getElementById("labelTotal").textContent = `$${totalMonedaNacional}`;
+
+            const seed = numeroInt;
+            const randomGenerator = xoshiro128ss(seed);
+            let partes = new Set();
+            let restante = numeroInt;
+            const min = parseInt(document.getElementById('minimoValor').textContent) || 400;
+            const max = parseInt(document.getElementById('maximoValor').textContent) || 990;
+            const maxPartes = 44;
+
+            while (restante > 0 && partes.size < maxPartes) {
+                let fraccion = Math.floor(randomGenerator() * (max - min + 1)) + min;
+                fraccion = Math.round(fraccion / 5) * 5;
+                fraccion = Math.min(fraccion, restante);
+
+                if (!partes.has(fraccion) && fraccion <= restante) {
+                    partes.add(fraccion);
+                    restante -= fraccion;
+                }
+            }
+
+            if (Array.from(partes).reduce((a, b) => a + b, 0) !== numeroInt) {
+                verificacionMensaje.textContent = "Error: La suma de las fracciones no coincide con el número a fraccionar 😫";
+                estadoMensaje.textContent = "";
+                limpiarResultado();
+                return;
+            }
+
+            verificacionMensaje.textContent = "";
+            estadoMensaje.textContent = "Todo correcto 😊";
+            document.getElementById("imprimirBtn").disabled = false;
+            mostrarResultado(Array.from(partes), numeroInt);
+        }
+
+        function validarNumero(numero) {
+            return !isNaN(numero) && numero > 0 && numero <= 35000 && Number.isInteger(numero);
+        }
+
+        function validarTipoCambio(tipoCambio) {
+            return !isNaN(tipoCambio) && tipoCambio > 0 && tipoCambio <= 1000;
+        }
+
+        function mostrarResultado(partes, numeroInicial) {
+            // Display the result in the table
+            const tipoCambio = parseFloat(document.getElementById("tipoCambio").value) || 1;
+            const resultado = document.getElementById("resultado").getElementsByTagName("tbody")[0];
+
+            let resultadoHTML = '';
+            let restante = numeroInicial;
+            let totalMXN = 0;
+            let desglosado = 0;
+            partes.forEach((parte, index) => {
+                restante -= parte;
+                const montoMXN = (parte * tipoCambio).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                totalMXN += parseFloat(montoMXN.replace(/,/g, ''));
+                desglosado += parte;
+                resultadoHTML += `
+                    <tr>
+                        <td>${(index + 1).toString().padStart(2, '0')}</td>
+                        <td>${numberWithCommas(parte, false)}</td>
+                        <td>[  ]=></td>
+                        <td>$${montoMXN}</td>
+                        <td>${numberWithCommas((restante > 0 ? restante : 0).toLocaleString('es-MX', { minimumFractionDigits: 0, maximumFractionDigits: 0 }), false)}</td>
+                        <td>$${numberWithCommas(totalMXN.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 }))}</td>
+                        <td>${numberWithCommas(desglosado.toLocaleString('es-MX', { minimumFractionDigits: 0, maximumFractionDigits: 0 }), false)}</td>
+                    </tr>`;
+            });
+            resultado.innerHTML = resultadoHTML;
+        }
+
+        function imprimirPDF() {
+            // Print the table to PDF using jsPDF
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ unit: 'pt', format: 'letter' });
+
+            const numero = parseInt(document.getElementById("numero").value);
+            const tipoCambio = parseFloat(document.getElementById("tipoCambio").value) || 1;
+            const moneda = document.getElementById("moneda").value === "otro" ? document.getElementById("monedaOtro").value : document.getElementById("moneda").options[document.getElementById("moneda").selectedIndex].text;
+            const totalMonedaNacional = (numero * tipoCambio).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+            doc.setFontSize(12);
+            doc.text(`Fecha: ${obtenerFechaFormateada()} | ${moneda}  $${numberWithCommas(numero)} * ${numberWithCommas(tipoCambio)} = $${totalMonedaNacional}`, 40, 60);
+
+            const xCol1 = 40;
+            const xCol2 = 80;
+            const xCol3 = 120;
+            const xCol4 = 170;
+            const xCol5 = 250;
+            const xCol6 = 330;
+            const xCol7 = 420;
+
+            let y = 100;
+
+            doc.setFontSize(12);
+            doc.setFont(undefined, 'bold');
+            doc.text("#Op", xCol1, y);
+            doc.text("Can a ingresar", xCol2, y);
+            doc.text("", xCol3, y);
+            doc.text("Monto (MXN)", xCol4, y);
+            doc.text("Restante", xCol5, y);
+            doc.text("Total (MXN)", xCol6, y);
+            doc.text("Desglosado", xCol7, y);
+            y += 20;
+
+            doc.setFont(undefined, 'normal');
+            const tabla = document.getElementById("resultado");
+
+            for (let i = 1, row; row = tabla.rows[i]; i++) {
+                const celdas = Array.from(row.cells);
+
+                doc.text(celdas[0].textContent, xCol1, y);
+                doc.text(celdas[1].textContent, xCol2, y);
+                doc.text(celdas[2].textContent, xCol3, y);
+                doc.text(celdas[3].textContent, xCol4, y);
+                doc.text(celdas[4].textContent, xCol5, y);
+                doc.text(celdas[5].textContent, xCol6, y);
+                doc.text(celdas[6].textContent, xCol7, y);
+
+                y += 15;
+            }
+
+            doc.autoPrint();
+            window.open(doc.output('bloburl'), '_blank');
+        }
+
+        function imprimirRolloTermico() {
+    const tabla = document.getElementById("resultado");
+    const filas = Array.from(tabla.getElementsByTagName("tbody")[0].rows);
+
+    // Calcular los anchos máximos de cada columna
+    const maxLengths = [0, 0, 0, 0, 0, 0]; // Almacenar longitud máxima de cada columna (6 columnas)
+
+    filas.forEach((fila) => {
+        const celdas = Array.from(fila.cells);
+        maxLengths[0] = Math.max(maxLengths[0], celdas[0].textContent.length);
+        maxLengths[1] = Math.max(maxLengths[1], celdas[1].textContent.length);
+        maxLengths[2] = Math.max(maxLengths[2], celdas[3].textContent.replace('$', '').length);
+        maxLengths[3] = Math.max(maxLengths[3], celdas[4].textContent.length);
+        maxLengths[4] = Math.max(maxLengths[4], celdas[5].textContent.replace('$', '').length);
+        maxLengths[5] = Math.max(maxLengths[5], celdas[6].textContent.length);
+    });
+
+    // Información del encabezado
+    let contenido = "Fraccionador de números\n";
+    contenido += "---------------------------------------\n";
+    contenido += `Fecha: ${obtenerFechaFormateada()}\n\n`;
+
+    // Encabezados de las columnas con espacio dinámico
+    contenido += "#".padEnd(maxLengths[0] + 2, '') + "| " +
+                 "Cant".padEnd(maxLengths[1] + 2, '') + "| " +
+                 "Monto".padEnd(maxLengths[2] + 2, '') + "| " +
+                 "Falta".padEnd(maxLengths[3] + 2, '') + "| " +
+                 "Total".padEnd(maxLengths[4] + 2, '') + "| " +
+                 "Desg\n";
+    contenido += "---------------------------------------\n";
+
+    // Recorrer cada fila de la tabla y agregar la información
+    filas.forEach((fila) => {
+        const celdas = Array.from(fila.cells);
+        contenido += celdas[0].textContent.padEnd(maxLengths[0] + 2, '') + "|"; // Número de fila
+        contenido += celdas[1].textContent.padEnd(maxLengths[1] + 2, '') + "|"; // Cantidad
+        contenido += celdas[3].textContent.replace('$', '').padEnd(maxLengths[2] + 2, '') + "|"; // Monto
+        contenido += celdas[4].textContent.padEnd(maxLengths[3] + 2, '') + ""+"|"; // Falta
+        contenido += celdas[5].textContent.replace('$', '').padEnd(maxLengths[4] + 2, '') + "|"; // Total
+        contenido += celdas[6].textContent.padEnd(maxLengths[5] + 2, '') + "\n"; // Desglosado
+    });
+
+    contenido += "---------------------------------------\n";
+
+    // Llamar a la función de impresión térmica
+    printTextInThermal(contenido);
+}
+
+function printTextInThermal(text) {
+    const newWindow = window.open('', '', 'width=800,height=400');
+    newWindow.document.write('<pre style="font-size: 9px;">' + text + '</pre>');
+    newWindow.document.close();
+    newWindow.print();
+}
+
+        function mostrarTipoCambio() {
+            const tipoCambioInput = document.getElementById("tipoCambio");
+            const monedaOtroInput = document.getElementById("monedaOtro");
+            if (document.getElementById("moneda").value === "otro") {
+                monedaOtroInput.style.display = "block";
+            } else {
+                monedaOtroInput.style.display = "none";
+                monedaOtroInput.value = "";
+            }
+            tipoCambioInput.style.display = "block";
+            fraccionarNumero();
+        }
+
+        function formatearMonedaOtro() {
+            const monedaOtroInput = document.getElementById("monedaOtro");
+            monedaOtroInput.value = monedaOtroInput.value.charAt(0).toUpperCase() + monedaOtroInput.value.slice(1).toLowerCase();
+        }
+
+        function borrarTodo() {
+            document.getElementById("numero").value = "";
+            document.getElementById("tipoCambio").value = "";
+            document.getElementById("monedaOtro").value = "";
+            limpiarResultado();
+        }
+
+        function limpiarResultado() {
+            document.getElementById("sumaResultado").textContent = "";
+            document.getElementById("resultado").getElementsByTagName("tbody")[0].innerHTML = "";
+            document.getElementById("labelMonto").textContent = "";
+            document.getElementById("labelTipoCambio").textContent = "";
+            document.getElementById("labelTotal").textContent = "";
+            document.getElementById("verificacionMensaje").textContent = "";
+            document.getElementById("estadoMensaje").textContent = "";
+            document.getElementById("imprimirBtn").disabled = true;
+            document.getElementById("calculoAdicional").textContent = "";
+            document.getElementById("minimoValor").textContent = "";
+        }
+
+        function xoshiro128ss(a) {
+            let s = new Uint32Array(4);
+            s[0] = a >>> 0;
+            s[1] = (a * 0x9e3779bb) >>> 0;
+            s[2] = (a * 0x85ebca6b) >>> 0;
+            s[3] = (a * 0xc2b2ae35) >>> 0;
+            return function () {
+                const result = (s[0] + s[3]) >>> 0;
+                const t = s[1] << 9;
+                s[2] ^= s[0];
+                s[3] ^= s[1];
+                s[1] ^= s[2];
+                s[0] ^= s[3];
+                s[2] ^= t;
+                s[3] = (s[3] << 11) | (s[3] >>> 21);
+                return result / 0x100000000;
+            };
+        }
+
+        function numberWithCommas(x, includeDecimals = true) {
+            if (includeDecimals) {
+                return x.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            } else {
+                return x.toLocaleString('es-MX', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+            }
+        }
+
+        function obtenerFechaFormateada() {
+            const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const fecha = new Date();
+            return fecha.toLocaleDateString('es-ES', opciones);
+        }
+
+        async function fetchDataForDate() {
+            const selectedDate = document.getElementById('fechaTipoCambio').value || new Date().toISOString().split('T')[0];
+            const tokens = [
+                '812a7355fa14f189ea64e3112c255d3993069dee78d526892de342526057c6ad',
+                'ea9e2067b75621dad3e50a21cd6f7f094060da2f1d0c6d6d4a65520c2e29459b'
+            ];
+            const today = selectedDate;
+
+            for (let i = 0; i < tokens.length; i++) {
+                const token = tokens[i];
+                const url = `https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF60653/datos/${today}/${today}/?token=${token}`;
+
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error('Error en la respuesta de la API');
+                    }
+
+                    const data = await response.json();
+                    const serieData = data.bmx.series[0].datos[0];
+                    document.getElementById('tipoDeCambio').innerHTML = ` ${serieData.fecha} TC: ${serieData.dato}`;
+
+                    const tipoCambioUsuarioElement = document.getElementById("tipoCambio");
+                    if (tipoCambioUsuarioElement) {
+                        const tipoCambioUsuario = parseFloat(tipoCambioUsuarioElement.value);
+                        if (!isNaN(tipoCambioUsuario) && tipoCambioUsuario > 0) {
+                            const calculoAdicional = (parseFloat(serieData.dato) * 1000 / tipoCambioUsuario).toFixed(2);
+                            document.getElementById('calculoAdicional').innerHTML = ` ${calculoAdicional}`;
+                            const maximoElement = document.getElementById('maximoValor');
+                            if (document.getElementById('moneda').value === 'usd' && calculoAdicional > 1000) {
+                                maximoElement.innerHTML = ' 990';
+                            } else {
+                                maximoElement.innerHTML = ` ${calculoAdicional}`;
+                            }
+                        } else {
+                            document.getElementById('calculoAdicional').innerHTML = '';
+                        }
+                    }
+
+                    return;
+
+                } catch (error) {
+                    console.error(`Intento con el token fallido: ${token}`, error);
+                }
+            }
+
+            document.getElementById('data').innerHTML = `Error al obtener los datos: Todos los tokens fallaron.`;
+        }
+
+        document.getElementById("tipoCambio").addEventListener("input", fetchDataForDate);
+        document.getElementById("tipoCambio").addEventListener("input", fraccionarNumero);
+        document.getElementById("tipoCambio").addEventListener("input", actualizarMinimo);
+        document.getElementById("tipoCambio").addEventListener("input", mostrarTipoCambio);
+        document.getElementById("numero").addEventListener("input", fetchDataForDate);
+        document.getElementById("numero").addEventListener("input", fraccionarNumero);
+        document.getElementById("numero").addEventListener("input", actualizarMinimo);
+        document.getElementById("numero").addEventListener("input", mostrarTipoCambio);
+        document.getElementById("moneda").addEventListener("change", fetchDataForDate);
+        document.getElementById("moneda").addEventListener("change", fraccionarNumero);
+        document.getElementById("moneda").addEventListener("change", actualizarMinimo);
+        document.getElementById("moneda").addEventListener("change", mostrarTipoCambio);
+        fetchData();
+    </script>
+</body>
+
+</html>
