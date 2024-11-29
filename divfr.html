@@ -533,7 +533,8 @@
             window.open(doc.output('bloburl'), '_blank');
         }
         
-        function imprimirRolloTermico() {
+        
+function imprimirRolloTermico() {
     const tabla = document.getElementById("resultado");
     const filas = Array.from(tabla.getElementsByTagName("tbody")[0].rows);
 	const numero = parseInt(document.getElementById("numero").value);
@@ -556,12 +557,6 @@
         maxLengths[5] = Math.max(maxLengths[5], celdas[6].textContent.trim().length); // Desglosado
     });
 
-    // Ajuste de espacio adicional
-    const padding = 0;
-    for (let i = 0; i < maxLengths.length; i++) {
-        maxLengths[i] += padding;
-    }
-
     // Generar encabezados con anchos calculados
     const headers = [
         "#".padEnd(maxLengths[0], ' '),
@@ -570,14 +565,14 @@
         "Falta".padEnd(maxLengths[3], ' '),
         "Total".padEnd(maxLengths[4], ' '),
         "Desg".padEnd(maxLengths[5], ' ')
-    ].join(" | ");
+    ].join("|");
 
     // Línea separadora ajustada al ancho total
-    const totalWidth = maxLengths.reduce((a, b) => a + b, 0) + (maxLengths.length * 3) - 1; // Incluye separadores
+    const totalWidth = maxLengths.reduce((a, b) => a + b, 0) + (maxLengths.length - 1); // Incluye separadores
     const separator = "-".repeat(totalWidth);
 
-    // Construcción del contenido
-    let contenido = "Fraccionador de números\n";
+    // Construccion del contenido
+    let contenido = "Fraccionador de numeros\n";
     contenido += separator + "\n";
     contenido += `Fecha: ${obtenerFechaFormateada()}\n\n`;
 	contenido += `${moneda}  $${numberWithCommas(numero)} * ${numberWithCommas(tipoCambio)} = $${totalMonedaNacional}\n\n`;
@@ -589,13 +584,13 @@
     filas.forEach((fila) => {
         const celdas = Array.from(fila.cells);
         contenido += [
-            celdas[0].textContent.trim().padEnd(maxLengths[0], ' '),
-            celdas[1].textContent.trim().padEnd(maxLengths[1], ' '),
-            celdas[3].textContent.replace('$', '').trim().padEnd(maxLengths[2], ' '),
-            celdas[4].textContent.trim().padEnd(maxLengths[3], ' '),
-            celdas[5].textContent.replace('$', '').trim().padEnd(maxLengths[4], ' '),
-            celdas[6].textContent.trim().padEnd(maxLengths[5], ' ')
-        ].join(" | ") + "\n";
+            celdas[0].textContent.trim().padEnd(maxLengths[0], ' '), // Número
+            celdas[1].textContent.trim().padEnd(maxLengths[1], ' '), // Cantidad
+            celdas[3].textContent.replace('$', '').trim().padEnd(maxLengths[2], ' '), // Monto
+            celdas[4].textContent.trim().padEnd(maxLengths[3], ' '), // Falta
+            celdas[5].textContent.replace('$', '').trim().padEnd(maxLengths[4], ' '), // Total
+            celdas[6].textContent.trim().padEnd(maxLengths[5], ' ') // Desglose
+        ].join("|") + "\n";
     });
 
     contenido += separator + "\n";
@@ -609,12 +604,12 @@ function printTextInThermal(text) {
     newWindow.document.write(`
         <style>
             @page {
-                margin: 14; / Sin márgenes /
+                margin: 14px; / Sin márgenes /
             }
             body {
                 margin: 0; / Sin márgenes internos /
                 padding: 0;
-                font-size: 12px;
+                font-size: 13px;
                 font-family: monospace;
             }
             pre {
