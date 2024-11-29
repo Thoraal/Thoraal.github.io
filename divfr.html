@@ -562,7 +562,7 @@ function imprimirRolloTermico() {
         "#".padEnd(maxLengths[0], ' '),
         "Cant".padEnd(maxLengths[1], ' '),
         "Monto MXN".padEnd(maxLengths[2], ' '),
-        "Falta x Des".padEnd(maxLengths[3], ' '),
+        "Falta Des".padEnd(maxLengths[3], ' '),
         "Total MXN".padEnd(maxLengths[4], ' '),
         "Desglosado".padEnd(maxLengths[5], ' ')
     ].join("|");
@@ -586,9 +586,9 @@ function imprimirRolloTermico() {
         contenido += [
             celdas[0].textContent.trim().padEnd(maxLengths[0], ' '), // Número
             celdas[1].textContent.trim().padEnd(maxLengths[1], ' '), // Cantidad
-            celdas[3].textContent.replace('$', '').trim().padEnd(maxLengths[2], ' '), // Monto
+            celdas[3].textContent.trim().padEnd(maxLengths[2], ' '), // Monto
             celdas[4].textContent.trim().padEnd(maxLengths[3], ' '), // Falta
-            celdas[5].textContent.replace('$', '').trim().padEnd(maxLengths[4], ' '), // Total
+            celdas[5].textContent.trim().padEnd(maxLengths[4], ' '), // Total
             celdas[6].textContent.trim().padEnd(maxLengths[5], ' ') // Desglose
         ].join("|") + "\n";
     });
