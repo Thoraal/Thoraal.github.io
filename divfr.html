@@ -531,6 +531,101 @@
             doc.autoPrint();
             window.open(doc.output('bloburl'), '_blank');
         }
+        
+        function imprimirRolloTermico() {
+    const tabla = document.getElementById("resultado");
+    const filas = Array.from(tabla.getElementsByTagName("tbody")[0].rows);
+	const numero = parseInt(document.getElementById("numero").value);
+    const tipoCambio = parseFloat(document.getElementById("tipoCambio").value) || 1;
+	const moneda = document.getElementById("moneda").value === "otro" ? document.getElementById("monedaOtro").value : document.getElementById("moneda").options[document.getElementById("moneda").selectedIndex].text;
+    const totalMonedaNacional = (numero * tipoCambio).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+
+    // Calcular los anchos máximos de cada columna
+    const maxLengths = [0, 0, 0, 0, 0, 0]; // Longitud máxima para 6 columnas
+
+    // Calcula el ancho máximo de cada columna
+    filas.forEach((fila) => {
+        const celdas = Array.from(fila.cells);
+        maxLengths[0] = Math.max(maxLengths[0], celdas[0].textContent.trim().length); // Número
+        maxLengths[1] = Math.max(maxLengths[1], celdas[1].textContent.trim().length); // Cantidad
+        maxLengths[2] = Math.max(maxLengths[2], celdas[3].textContent.replace('$', '').trim().length); // Monto
+        maxLengths[3] = Math.max(maxLengths[3], celdas[4].textContent.trim().length); // Falta
+        maxLengths[4] = Math.max(maxLengths[4], celdas[5].textContent.replace('$', '').trim().length); // Total
+        maxLengths[5] = Math.max(maxLengths[5], celdas[6].textContent.trim().length); // Desglosado
+    });
+
+    // Ajuste de espacio adicional
+    const padding = 0;
+    for (let i = 0; i < maxLengths.length; i++) {
+        maxLengths[i] += padding;
+    }
+
+    // Generar encabezados con anchos calculados
+    const headers = [
+        "#".padEnd(maxLengths[0], ' '),
+        "Cant".padEnd(maxLengths[1], ' '),
+        "Monto".padEnd(maxLengths[2], ' '),
+        "Falta".padEnd(maxLengths[3], ' '),
+        "Total".padEnd(maxLengths[4], ' '),
+        "Desg".padEnd(maxLengths[5], ' ')
+    ].join(" | ");
+
+    // Línea separadora ajustada al ancho total
+    const totalWidth = maxLengths.reduce((a, b) => a + b, 0) + (maxLengths.length * 3) - 1; // Incluye separadores
+    const separator = "-".repeat(totalWidth);
+
+    // Construcción del contenido
+    let contenido = "Fraccionador de números\n";
+    contenido += separator + "\n";
+    contenido += `Fecha: ${obtenerFechaFormateada()}\n\n`;
+	contenido += `${moneda}  $${numberWithCommas(numero)} * ${numberWithCommas(tipoCambio)} = $${totalMonedaNacional}\n\n`;
+	contenido += separator + "\n"
+    contenido += headers + "\n";
+    contenido += separator + "\n";
+
+    // Agregar filas de datos
+    filas.forEach((fila) => {
+        const celdas = Array.from(fila.cells);
+        contenido += [
+            celdas[0].textContent.trim().padEnd(maxLengths[0], ' '),
+            celdas[1].textContent.trim().padEnd(maxLengths[1], ' '),
+            celdas[3].textContent.replace('$', '').trim().padEnd(maxLengths[2], ' '),
+            celdas[4].textContent.trim().padEnd(maxLengths[3], ' '),
+            celdas[5].textContent.replace('$', '').trim().padEnd(maxLengths[4], ' '),
+            celdas[6].textContent.trim().padEnd(maxLengths[5], ' ')
+        ].join(" | ") + "\n";
+    });
+
+    contenido += separator + "\n";
+
+    // Llamar a la función de impresión térmica
+    printTextInThermal(contenido);
+}
+
+function printTextInThermal(text) {
+    const newWindow = window.open('', '', 'width=300,height=400');
+    newWindow.document.write(`
+        <style>
+            @page {
+                margin: 14; / Sin márgenes /
+            }
+            body {
+                margin: 0; / Sin márgenes internos /
+                padding: 0;
+                font-size: 13px;
+                font-family: monospace;
+            }
+            pre {
+                margin: 0;
+            }
+        </style>
+        <pre>${text}</pre>
+    `);
+    newWindow.document.close();
+    newWindow.print();
+}
+
 
         function mostrarTipoCambio() {
             const tipoCambioInput = document.getElementById("tipoCambio");
