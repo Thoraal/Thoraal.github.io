@@ -284,8 +284,8 @@
             </select>
             <input type="text" id="monedaOtro" class="tipo-cambio" placeholder="Especificar otra moneda" oninput="formatearMonedaOtro(); fraccionarNumero(); actualizarMinimo(); fetchDataForDate();" style="display: none;" />
             <input type="number" id="tipoCambio" class="tipo-cambio" placeholder="Ingrese tipo de cambio" oninput="fraccionarNumero(); actualizarMinimo(); fetchDataForDate(); mostrarTipoCambio();" />
-            <button id="imprimirBtn" onclick="imprimirPDF()" disabled>Imprimir</button>
-            <button id="imprimirRolloBtn" onclick="imprimirRolloTermico()">Imprimir en ticket</button>
+            <button id="imprimirBtn" onclick="imprimirPDF()" title="Elija la impresora Brother" disabled>Imprimir</button>
+            <button id="imprimirRolloBtn" onclick="imprimirRolloTermico()" title="Elija la impresora Epson o Tickets">Imprimir en ticket</button>
             <button onclick="borrarTodo()">Borrar Todo</button>
             <label class="switch">
                 <input type="checkbox" onclick="toggleLabelsContainerTc()">
