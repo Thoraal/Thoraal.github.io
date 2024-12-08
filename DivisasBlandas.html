@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>Divisas Blandas</title>
+    <style>
+        :root {
+            --primary-color: rgba(255, 255, 255, 0.8);
+            --secondary-color: rgb(0, 0, 0);
+            --accent-color: rgb(108, 121, 139);
+            --background-color: rgba(245, 245, 247, 0.9);
+            --text-color: #1d1d1f;
+            --header-text-color: rgba(0, 0, 0, 0.8);
+            --footer-bg: rgba(245, 245, 247, 0.8);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: var(--header-text-color);
+            text-align: center;
+            padding: 5px 0;
+            font-size: 1.8rem;
+            font-weight: 600;
+            animation: fadeIn 0.8s ease;
+            border-radius: 12px;
+            margin: 20px auto;
+            max-width: 1000px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        main {
+            padding: 20px;
+            max-width: 1000px;
+            margin: 30px auto;
+            border-radius: 12px;
+            background: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            animation: fadeInUp 0.8s ease;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--primary-color);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        table thead {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            font-weight: bold;
+        }
+
+        table th,
+        table td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        table tbody tr:hover {
+            background-color: rgba(56, 106, 156, 0.1);
+            transform: scale(1.03);
+        }
+
+        .button-container {
+            text-align: left;
+            margin: 20px 0;
+        }
+
+        .button-container button {
+            margin-right: 15px;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #000000;
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            border: 1.5px solid #000000;
+        }
+
+        button:hover {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            transform: scale(1.05);
+        }
+
+        button i {
+            margin-right: 8px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: var(--footer-bg);
+            color: var(--secondary-color);
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.8s ease;
+            border-radius: 12px;
+            margin: 20px auto;
+            max-width: 1000px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        a {
+            color:darkcyan;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .user-message {
+    position: fixed;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--secondary-color);
+    color: var(--primary-color);
+    padding: 10px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    z-index: 1000;
+    transition: opacity 0.3s ease;
+}
+
+.user-message.show {
+    animation: slideDownUp 3s ease;
+    opacity: 1;
+}
+
+@keyframes slideDownUp {
+    0% {
+        top: -100px;
+        opacity: 0;
+    }
+    10% {
+        top: 20px;
+        opacity: 1;
+    }
+    90% {
+        top: 20px;
+        opacity: 1;
+    }
+    100% {
+        top: -100px;
+        opacity: 0;
+    }
+}
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            header {
+                font-size: 1.5rem;
+                padding: 20px 0;
+            }
+
+            main {
+                padding: 15px;
+            }
+
+            table th,
+            table td {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+
+            button {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+
+            footer {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        Divisas blandas
+    </header>
+    <main>
+        <div class="button-container">
+            <button id="resetFilters"><i class="fas fa-filter"></i>Borrar Filtros</button>
+            <button id="printPage"><i class="fas fa-print"></i>Imprimir</button>
+            <button id="exportPDF"><i class="fas fa-file-pdf"></i>Descargar en PDF</button>
+        </div>
+        <table id="sortableTable">
+            <thead>
+                <tr>
+                    <th data-type="text">País</th>
+                    <th data-type="text">Moneda</th>
+                    <th data-type="number">Clave SCI</th>
+                    <th data-type="number">Compra</th>
+                    <th data-type="number">Venta</th>
+                    <th data-type="text">Observaciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Belice</td>
+                    <td>Dólar</td>
+                    <td>19</td>
+                    <td>5.00</td>
+                    <td>9.00</td>
+                    <td>Ninguna</td>
+                </tr>
+                <tr>
+                    <td>Colombia</td>
+                    <td>Peso</td>
+                    <td>18</td>
+                    <td>0.0037</td>
+                    <td>0.0060</td>
+                    <td>Ninguna</td>
+                </tr>
+                <tr>
+                    <td>Chile</td>
+                    <td>Peso</td>
+                    <td>20</td>
+                    <td>0.010</td>
+                    <td>0.022</td>
+                    <td>Ninguna</td>
+                </tr>
+                <tr>
+                    <td>China</td>
+                    <td>Yuan</td>
+                    <td>21</td>
+                    <td>1.80</td>
+                    <td>3.00</td>
+                    <td>Ninguna</td>
+                </tr>
+                <tr>
+                    <td>Corea del Sur</td>
+                    <td>Won</td>
+                    <td>32</td>
+                    <td>0.0070</td>
+                    <td>0.0180</td>
+                    <td>Ninguna</td>
+                </tr>
+                <tr>
+                    <td>Guatemala</td>
+                    <td>Quetzal</td>
+                    <td>23</td>
+                    <td>1.50</td>
+                    <td>2.80</td>
+                    <td>Ninguna</td>
+                </tr>
+                <tr>
+                    <td>Hong Kong</td>
+                    <td>Dólar</td>
+                    <td>24</td>
+                    <td>1.20</td>
+                    <td>2.45</td>
+                    <td>Ninguna</td>
+                </tr>
+                <tr>
+                    <td>Perú</td>
+                    <td>Sol</td>
+                    <td>27</td>
+                    <td>3.50</td>
+                    <td>5.50</td>
+                    <td>Ninguna</td>
+                </tr>
+                <tr>
+                    <td>Costa Rica</td>
+                    <td>Colón</td>
+                    <td>33</td>
+                    <td>0.0180</td>
+                    <td>0.0400</td>
+                    <td>Ninguna</td>
+                </tr>
+                <tr>
+                    <td>Turquía</td>
+                    <td>Lira</td>
+                    <td>34</td>
+                    <td>0.40</td>
+                    <td>1.20</td>
+                    <td>Ninguna</td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+    <footer>
+        Actualizado el sábado, 7 de diciembre - <a href="https://divisascc.blogspot.com/">www.divisascc.blogspot.com</a>
+    </footer>
+    <div class="user-message" id="userMessage">Mensaje</div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <script>
+        const table = document.getElementById('sortableTable');
+        const originalRows = Array.from(table.querySelector('tbody').rows);
+        const userMessage = document.getElementById('userMessage');
+
+        function showMessage(message) {
+            userMessage.textContent = message;
+            userMessage.classList.add('show');
+            setTimeout(() => {
+                userMessage.classList.remove('show');
+            }, 3000);
+        }
+
+        table.querySelectorAll('th').forEach((header, index) => {
+            header.addEventListener('click', () => {
+                const type = header.getAttribute('data-type');
+                const tbody = table.querySelector('tbody');
+                const rows = Array.from(tbody.rows);
+
+                const currentSort = header.classList.contains('sorted-asc') ? 'desc' : 'asc';
+
+                table.querySelectorAll('th').forEach(th => th.classList.remove('sorted-asc', 'sorted-desc'));
+                header.classList.add(currentSort === 'asc' ? 'sorted-asc' : 'sorted-desc');
+
+                rows.sort((a, b) => {
+                    const aText = a.cells[index].innerText;
+                    const bText = b.cells[index].innerText;
+
+                    if (type === 'number') {
+                        return currentSort === 'asc'
+                            ? parseFloat(aText) - parseFloat(bText)
+                            : parseFloat(bText) - parseFloat(aText);
+                    } else {
+                        return currentSort === 'asc'
+                            ? aText.localeCompare(bText)
+                            : bText.localeCompare(aText);
+                    }
+                });
+
+                rows.forEach(row => tbody.appendChild(row));
+                showMessage(`Orden cambiado en columna: ${header.textContent}`);
+            });
+        });
+
+        document.getElementById('resetFilters').addEventListener('click', () => {
+            const tbody = table.querySelector('tbody');
+            tbody.innerHTML = '';
+            originalRows.forEach(row => tbody.appendChild(row));
+
+            table.querySelectorAll('th').forEach(th => th.classList.remove('sorted-asc', 'sorted-desc'));
+            showMessage('Filtros restaurados a su estado original.');
+        });
+
+        document.getElementById('exportPDF').addEventListener('click', () => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: 'landscape' });
+
+            const pageWidth = doc.internal.pageSize.width;
+            const title = "Divisas Blandas";
+            const titleX = pageWidth / 2 - (doc.getTextWidth(title) / 2);
+            doc.text(title, titleX, 20);
+
+            const columns = Array.from(table.querySelectorAll('thead th')).map(th => th.textContent);
+            const rows = Array.from(table.querySelectorAll('tbody tr')).map(tr => 
+                Array.from(tr.querySelectorAll('td')).map(td => td.textContent)
+            );
+
+            doc.autoTable({
+                head: [columns],
+                body: rows,
+                startY: 30,
+                styles: { halign: 'center', fontSize: 10 },
+                theme: 'grid',
+                headStyles: { fillColor: [0, 0, 0], textColor: [255, 255, 255] },
+                bodyStyles: { fillColor: [255, 255, 255] },
+                alternateRowStyles: { fillColor: [240, 240, 240] },
+                margin: { left: 10, right: 10, top: 10, bottom: 30 },
+                didDrawPage: (data) => {
+                    const now = new Date();
+                    const date = now.toLocaleDateString('es-ES', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit'
+                    });
+
+                    const hours = now.getHours();
+                    const minutes = now.getMinutes().toString().padStart(2, '0');
+                    const period = hours >= 12 ? 'PM' : 'AM';
+                    const formattedHours = hours % 12 || 12;
+                    const time = `${formattedHours}:${minutes} ${period}`;
+
+                    const footerLine1 = "Recuerda que puedes consultar la imagen de las divisas en www.divisascc.blogspot.com";
+                    const footerLine2 = `Impreso el día ${date} a las ${time}`;
+                    const footerX = data.settings.margin.left;
+                    const footerY = data.cursor.y + 10;
+
+                    doc.setFontSize(10);
+                    doc.text(footerLine1, footerX, footerY);
+                    doc.text(footerLine2, footerX, footerY + 5);
+                }
+            });
+
+            const today = new Date();
+            const formattedDate = today.toLocaleDateString('es-ES', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            }).replace(/\//g, '-');
+
+            doc.save(`Divisas ${formattedDate}.pdf`);
+
+            showMessage("Datos exportados a PDF correctamente.");
+        });
+
+        document.getElementById('printPage').addEventListener('click', () => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: 'landscape' });
+
+            const pageWidth = doc.internal.pageSize.width;
+            const title = "Divisas Blandas";
+            const titleX = pageWidth / 2 - (doc.getTextWidth(title) / 2);
+            doc.text(title, titleX, 20);
+
+            const columns = Array.from(table.querySelectorAll('thead th')).map(th => th.textContent);
+            const rows = Array.from(table.querySelectorAll('tbody tr')).map(tr => 
+                Array.from(tr.querySelectorAll('td')).map(td => td.textContent)
+            );
+
+            doc.autoTable({
+                head: [columns],
+                body: rows,
+                startY: 30,
+                styles: { halign: 'center', fontSize: 10 },
+                theme: 'grid',
+                headStyles: { fillColor: [0, 0, 0], textColor: [255, 255, 255] },
+                bodyStyles: { fillColor: [255, 255, 255] },
+                alternateRowStyles: { fillColor: [240, 240, 240] },
+                margin: { left: 10, right: 10, top: 10, bottom: 30 },
+                didDrawPage: (data) => {
+                    const now = new Date();
+                    const date = now.toLocaleDateString('es-ES', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit'
+                    });
+
+                    const hours = now.getHours();
+                    const minutes = now.getMinutes().toString().padStart(2, '0');
+                    const period = hours >= 12 ? 'PM' : 'AM';
+                    const formattedHours = hours % 12 || 12;
+                    const time = `${formattedHours}:${minutes} ${period}`;
+
+                    const footerLine1 = "Recuerda que puedes consultar la imagen de las divisas en www.divisascc.blogspot.com";
+                    const footerLine2 = `Impreso el día ${date} a las ${time}`;
+                    const footerX = data.settings.margin.left;
+                    const footerY = data.cursor.y + 10;
+
+                    doc.setFontSize(10);
+                    doc.text(footerLine1, footerX, footerY);
+                    doc.text(footerLine2, footerX, footerY + 5);
+                }
+            });
+
+            doc.output('dataurlnewwindow');
+        });
+    </script>
+</body>
+
+</html>
