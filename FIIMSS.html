@@ -223,13 +223,13 @@
             // Mostrar detalles matemáticos del cálculo
             detailsDiv.classList.add('visible');
             detailsDiv.innerHTML = `
-                <h3>Detalles del cálculo:</h3>
-                <p><strong>Salario Diario = </strong> Salario Introducido / 30 (si mensual) o 15 (si quincenal).</p>
-                <p><strong>Días de Vacaciones = </strong> Según la antigüedad: ${antiguedad} años = ${diasVacaciones} días.</p>
-                <p><strong>Proporcional Aguinaldo = </strong> Días de Aguinaldo / 365 = ${diasAguinaldo} / 365 = ${proporcionalAguinaldo.toFixed(4)}.</p>
-                <p><strong>Proporcional Prima Vacacional = </strong> (Días de Vacaciones * Prima Vacacional) / 365 = (${diasVacaciones} * ${(primaVacacional * 100).toFixed(2)}%) / 365 = ${proporcionalPrimaVacacional.toFixed(4)}.</p>
-                <p><strong>Factor de Integración = </strong> 1 + Proporcional Aguinaldo + Proporcional Prima Vacacional = 1 + ${proporcionalAguinaldo.toFixed(4)} + ${proporcionalPrimaVacacional.toFixed(4)} = ${factorIntegracion.toFixed(4)}.</p>
-                <p><strong>SBC = </strong> Salario Diario * Factor de Integración + Prestaciones Adicionales = $${salarioDiario.toFixed(2)} * ${factorIntegracion.toFixed(4)} + $${otrasPrestaciones.toFixed(2)} = $${salarioBaseCotizacion.toFixed(2)}.</p>
+                <h3>Detalles del cálculo</h3>
+                <p><strong>Salario Diario: </strong>${salarioDiario}</p>
+                <p><strong>Días de Vacaciones: </strong> Según la antigüedad: ${antiguedad} años = ${diasVacaciones} días.</p>
+                <p><strong>Proporcional Aguinaldo: </strong> Días de Aguinaldo / 365: ${diasAguinaldo} / 365 = ${proporcionalAguinaldo.toFixed(4)}.</p>
+                <p><strong>Proporcional Prima Vacacional: </strong> (Días de Vacaciones * Prima Vacacional) / 365: (${diasVacaciones} * ${(primaVacacional * 100).toFixed(2)}%) / 365 = ${proporcionalPrimaVacacional.toFixed(4)}.</p>
+                <p><strong>Factor de Integración: </strong> 1 + Proporcional Aguinaldo + Proporcional Prima Vacacional: 1 + ${proporcionalAguinaldo.toFixed(4)} + ${proporcionalPrimaVacacional.toFixed(4)} = ${factorIntegracion.toFixed(4)}.</p>
+                <p><strong>SBC: </strong> Salario Diario * Factor de Integración + Prestaciones Adicionales: $${salarioDiario.toFixed(2)} * ${factorIntegracion.toFixed(4)} + $${otrasPrestaciones.toFixed(2)} = $${salarioBaseCotizacion.toFixed(2)}.</p>
             `;
         }
     </script>
