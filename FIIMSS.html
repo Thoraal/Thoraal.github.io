@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cálculo del Factor de Integración IMSS</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            padding: 20px;
+            margin: 20px auto;
+            box-sizing: border-box;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #7700ff;
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        form {
+            margin: 20px 0;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #f9f9f9;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            border-color: #7700ff;
+            box-shadow: 0 0 5px rgba(119, 0, 255, 0.795);
+            outline: none;
+        }
+
+        .result, .details {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .details {
+            background-color: #eef9ff;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+        }
+
+        @media (min-width: 601px) and (max-width: 1200px) {
+            .container {
+                max-width: 600px;
+            }
+        }
+
+        @media (min-width: 1201px) {
+            .container {
+                max-width: 800px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cálculo del Factor de Integración IMSS</h1>
+        <form id="calculationForm">
+            <div class="form-group">
+                <label for="tipoSalario">Tipo de salario:</label>
+                <select id="tipoSalario" required>
+                    <option value="mensual">Mensual</option>
+                    <option value="quincenal">Quincenal</option>
+                    <option value="diario">Diario</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="salario">Monto del salario ($):</label>
+                <input type="number" id="salario" required>
+            </div>
+
+            <div class="form-group">
+                <label for="antiguedad">Años de antigüedad:</label>
+                <input type="number" id="antiguedad" required>
+            </div>
+
+            <div class="form-group">
+                <label for="diasAguinaldo">Días de aguinaldo:</label>
+                <input type="number" id="diasAguinaldo" required>
+            </div>
+
+            <div class="form-group">
+                <label for="primaVacacional">Porcentaje de prima vacacional (%):</label>
+                <input type="number" id="primaVacacional" required>
+            </div>
+
+            <div class="form-group">
+                <label for="otrasPrestaciones">Otras prestaciones adicionales ($, opcional):</label>
+                <input type="number" id="otrasPrestaciones" value="0">
+            </div>
+        </form>
+
+        <div id="result" class="result"></div>
+        <div id="details" class="details"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById('calculationForm');
+        const resultDiv = document.getElementById('result');
+        const detailsDiv = document.getElementById('details');
+
+        form.addEventListener('input', calcularFactorIMSS);
+
+        function calcularDiasVacaciones(antiguedad) {
+            if (antiguedad >= 1 && antiguedad <= 5) {
+                return 12 + (antiguedad - 1) * 2;
+            } else if (antiguedad >= 6 && antiguedad <= 10) {
+                return 22;
+            } else if (antiguedad >= 11 && antiguedad <= 15) {
+                return 24;
+            } else if (antiguedad >= 16 && antiguedad <= 20) {
+                return 26;
+            } else if (antiguedad >= 21 && antiguedad <= 25) {
+                return 28;
+            } else if (antiguedad >= 26 && antiguedad <= 30) {
+                return 30;
+            } else if (antiguedad >= 31) {
+                return 32;
+            } else {
+                return 0;
+            }
+        }
+
+        function calcularFactorIMSS() {
+            const tipoSalario = document.getElementById('tipoSalario').value;
+            let salario = parseFloat(document.getElementById('salario').value) || 0;
+            const antiguedad = parseFloat(document.getElementById('antiguedad').value) || 0;
+            const diasAguinaldo = parseFloat(document.getElementById('diasAguinaldo').value) || 0;
+            const primaVacacional = parseFloat(document.getElementById('primaVacacional').value) / 100 || 0;
+            const otrasPrestaciones = parseFloat(document.getElementById('otrasPrestaciones').value) || 0;
+
+            // Ajustar salario diario según tipo
+            let salarioDiario;
+            if (tipoSalario === 'mensual') {
+                salarioDiario = salario / 30;
+            } else if (tipoSalario === 'quincenal') {
+                salarioDiario = salario / 15;
+            } else {
+                salarioDiario = salario;
+            }
+
+            // Calcular días de vacaciones según antigüedad
+            const diasVacaciones = calcularDiasVacaciones(antiguedad);
+
+            // Cálculos
+            const proporcionalAguinaldo = diasAguinaldo / 365;
+            const proporcionalPrimaVacacional = (diasVacaciones * primaVacacional) / 365;
+            const factorIntegracion = 1 + proporcionalAguinaldo + proporcionalPrimaVacacional;
+            const salarioBaseCotizacion = salarioDiario * factorIntegracion + otrasPrestaciones;
+
+            // Mostrar resultado
+            resultDiv.classList.add('visible');
+            resultDiv.innerHTML = `
+                <p><strong>Salario Diario:</strong> $${salarioDiario.toFixed(2)}</p>
+                <p><strong>Días de Vacaciones:</strong> ${diasVacaciones} días</p>
+                <p><strong>Proporcional de Aguinaldo:</strong> ${proporcionalAguinaldo.toFixed(4)}</p>
+                <p><strong>Proporcional de Prima Vacacional:</strong> ${proporcionalPrimaVacacional.toFixed(4)}</p>
+                <p><strong>Factor de Integración:</strong> ${factorIntegracion.toFixed(4)}</p>
+                <p><strong>Salario Base de Cotización (SBC):</strong> $${salarioBaseCotizacion.toFixed(2)}</p>
+            `;
+
+            // Mostrar detalles matemáticos del cálculo
+            detailsDiv.classList.add('visible');
+            detailsDiv.innerHTML = `
+                <h3>Detalles del cálculo:</h3>
+                <p><strong>Salario Diario = </strong> Salario Introducido / 30 (si mensual) o 15 (si quincenal).</p>
+                <p><strong>Días de Vacaciones = </strong> Según la antigüedad: ${antiguedad} años = ${diasVacaciones} días.</p>
+                <p><strong>Proporcional Aguinaldo = </strong> Días de Aguinaldo / 365 = ${diasAguinaldo} / 365 = ${proporcionalAguinaldo.toFixed(4)}.</p>
+                <p><strong>Proporcional Prima Vacacional = </strong> (Días de Vacaciones * Prima Vacacional) / 365 = (${diasVacaciones} * ${(primaVacacional * 100).toFixed(2)}%) / 365 = ${proporcionalPrimaVacacional.toFixed(4)}.</p>
+                <p><strong>Factor de Integración = </strong> 1 + Proporcional Aguinaldo + Proporcional Prima Vacacional = 1 + ${proporcionalAguinaldo.toFixed(4)} + ${proporcionalPrimaVacacional.toFixed(4)} = ${factorIntegracion.toFixed(4)}.</p>
+                <p><strong>SBC = </strong> Salario Diario * Factor de Integración + Prestaciones Adicionales = $${salarioDiario.toFixed(2)} * ${factorIntegracion.toFixed(4)} + $${otrasPrestaciones.toFixed(2)} = $${salarioBaseCotizacion.toFixed(2)}.</p>
+            `;
+        }
+    </script>
+<footer style="position: fixed; bottom: 0; width: 100%; text-align: center; padding: 10px; background-color: #f1f1f1; font-size: 14px; border-top: 1px solid #ddd; box-shadow: 0 -2px 5px rgba(0,0,0,0.1);">
+    Creado por Alejandro Toral
+</footer>
+
+</body>
+</html>
