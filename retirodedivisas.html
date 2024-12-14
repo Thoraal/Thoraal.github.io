@@ -94,6 +94,12 @@
         #user-input {
             width: 90%;
         }
+        #sucursal-input {
+            width: 90%;
+        }
+        #tc-input {
+            width: 90%;
+        }
         #currency-key {
             width: 48%;
             margin-right: 4%;
@@ -121,33 +127,30 @@
             margin-top: -10px;
             margin-bottom: 10px;
         }
-        #print-button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 1rem;
-            border-radius: 6px;
-            border: none;
-            background-color: #3498db;
-            color: #ffffff;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        #print-button:hover {
-            background-color: #2a3e52;
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Retiro de divisas 💵</h1>
+        <h1>Retiro de divisas</h1>
+        <div id="date-time" style="font-size: 0.8rem; color: #003cff; margin-bottom: 10px;"></div>
+        <hr style="border-color:#4d46a7;">
         <input type="text" id="user-input" placeholder="Ingrese su nombre de usuario 👨🏻" />
-        <select id="sucursal" onchange="updateCurrencyKey()">
-          <option value="S/N">--- Seleccione una sucursal ---</option>
-          <option value="ADO">ADO</option>
-          <option value="COBA">COBA</option>
+        <hr style="border-color:#4d46a7;">
+        <select id="sucursal" onchange="toggleSucursalInput()">
+        <option>--- Seleccione una sucursal ---</option>
+        <option value="ADO">ADO</option>
+        <option value="COBA">COBA</option>
+        <option value="OTRA">OTRA SUCURSAL</option>
         </select>
-        <div id="date-time"  style="font-size: 0.8rem; color: #7700ff; margin-bottom: 10px;"></div>
-        <hr style="border-color:#7700ff;">
+        <input type="text" id="sucursal-input" placeholder="Ingresa el nombre de otra sucursal" style="display: none;" />
+        <hr style="border-color:#4d46a7;">
+        <select id="accion" onchange="toggletcInput()">
+            <option value="RETIRO">Retiro de divisas</option>
+            <option value="COMPRA">Compra de divisas</option>
+            <option value="VENTA">Venta de divisas</option>
+          </select>
+          <input type="text" id="tc-input" placeholder="Tipo de cambio" style="display: none;" />
+        <hr style="border-color:#4d46a7;">
         <input type="number" id="currency-key" placeholder="Clave divisa 🔑" oninput="selectCurrencyByKey()" />
         <div id="currency-key-error" class="error-message" style="display: none;">Clave de divisa no válida</div>
         <select id="currency" onchange="updateCurrencyKey()">
@@ -182,7 +185,6 @@
         </select>
         <div id="denominations-container"></div>
         <div class="total" id="total">Monto total: $0.00</div>
-        <button id="print-button" onclick="printTicket()">Imprimir Ticket</button>
     </div>
     <script>
         function updateDateTime() {
@@ -231,22 +233,17 @@
             29: 'SEK', 5: 'CHF', 34: 'TRY'
         };
 
-        // Optimización del código JavaScript basado en las sugerencias
-
-        // Actualización de denominaciones con optimización
         function updateDenominations() {
             const currency = document.getElementById('currency').value;
             const denominations = denominationsByCurrency[currency];
             const denominationsContainer = document.getElementById('denominations-container');
 
-            // Limpiar contenedor de denominaciones
             while (denominationsContainer.firstChild) {
                 denominationsContainer.removeChild(denominationsContainer.firstChild);
             }
 
             if (!denominations) return;
 
-            // Crear y agregar denominaciones utilizando createElement()
             denominations.forEach(denomination => {
                 const denominationRow = document.createElement('div');
                 denominationRow.className = 'denomination-container';
@@ -260,7 +257,7 @@
                 const input = document.createElement('input');
                 input.type = 'number';
                 input.setAttribute('data-denomination', denomination);
-                input.placeholder = '💲';
+                input.placeholder = '-';
                 input.addEventListener('change', updateSubtotal);
 
                 inputContainer.appendChild(input);
@@ -270,7 +267,6 @@
             });
         }
 
-        // Actualización del subtotal y total optimizada
         function updateSubtotal() {
             updateTotal();
         }
@@ -283,10 +279,9 @@
                 const value = parseInt(input.value) || 0;
                 total += denomination * value;
             });
-            document.getElementById('total').textContent = 'Monto total: $' + total.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
+            document.getElementById('total').textContent = 'Monto total: ' + total.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
         }
 
-        // Seleccionar divisa por clave con optimización y gestión de errores
         function selectCurrencyByKey() {
             const key = parseInt(document.getElementById('currency-key').value);
             const currency = currencyMap[key] ? currencyMap[key] : "";
@@ -304,41 +299,37 @@
             }
         }
 
-        // Actualizar clave de divisa con optimización
         function updateCurrencyKey() {
             const currency = document.getElementById('currency').value;
             const key = Object.keys(currencyMap).find(key => currencyMap[key] === currency);
             document.getElementById('currency-key').value = key ? key : "";
-            updateDenominations();
+        }
+        function toggleSucursalInput() {
+            const sucursalSelect = document.getElementById('sucursal');
+            const sucursalInput = document.getElementById('sucursal-input');
+
+            if (sucursalSelect.value === 'OTRA') {
+                sucursalInput.style.display = 'block';
+            } else {
+                sucursalInput.style.display = 'none';
+                sucursalInput.value = ""; // Clear the input to avoid confusion
+            }
         }
 
-        // Función para imprimir ticket
-        function printTicket() {
-            const user = document.getElementById('user-input').value;
-            const sucursal = document.getElementById('sucursal').value;
-            const currency = document.getElementById('currency').value;
-            const dateTime = document.getElementById('date-time').textContent;
-            let denominationsText = '';
+        function toggletcInput() {
+        const accionSelect = document.getElementById('accion');
+        const accionInput = document.getElementById('tc-input');
 
-            const inputs = document.querySelectorAll('.denomination-container input');
-            inputs.forEach(input => {
-                const denomination = input.getAttribute('data-denomination');
-                const value = parseInt(input.value) || 0;
-                if (value > 0) {
-                    denominationsText += `${denomination}: ${value}\n`;
-                }
-            });
-
-            const total = document.getElementById('total').textContent;
-
-            const ticketContent = `Retiro de divisas\nFecha: ${dateTime}\nUsuario: ${user}\nSucursal: ${sucursal}\nDivisa: ${currency}\n${denominationsText}${total}`;
-
-            const newWindow = window.open('', '', 'width=400,height=600');
-            newWindow.document.write(`<pre>${ticketContent}</pre>`);
-            newWindow.print();
+        if (accionSelect.value === 'RETIRO') {
+            accionInput.style.display = 'none';
+            accionInput.value = "";
+        } else {
+            accionInput.style.display = 'block';
+        }
         }
 
-        // Llamada inicial para actualizar denominaciones
+        document.getElementById('sucursal-input').style.display = 'none';
+        document.getElementById('tc-input').style.display = 'none';
         updateDenominations();
     </script>
 </body>
