@@ -418,17 +418,16 @@
             const max = parseInt(document.getElementById('maximoValor').textContent) || 990;
             const maxPartes = 44;
 
-            let ultimoValor = null; // Variable para rastrear el último valor generado
-
-while (restante > 0 && partes.size < maxPartes) {
+            while (restante > 0 && partes.size < maxPartes) {
     let fraccion = Math.floor(randomGenerator() * (max - min + 1)) + min;
     fraccion = Math.round(fraccion / 5) * 5;
     fraccion = Math.min(fraccion, restante);
 
-    // Verificar si la fracción es demasiado similar al último valor
-    if (fraccion === ultimoValor || Math.abs(fraccion - ultimoValor) < 50) {
-        continue; // Reintentar si el valor es similar al anterior
+    if (!partes.has(fraccion) && fraccion <= restante) {
+        partes.add(fraccion);
+        restante -= fraccion;
     }
+}
 
     if (!partes.has(fraccion) && fraccion <= restante) {
         partes.add(fraccion);
