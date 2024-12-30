@@ -418,16 +418,24 @@
             const max = parseInt(document.getElementById('maximoValor').textContent) || 990;
             const maxPartes = 44;
 
-            while (restante > 0 && partes.size < maxPartes) {
-                let fraccion = Math.floor(randomGenerator() * (max - min + 1)) + min;
-                fraccion = Math.round(fraccion / 5) * 5;
-                fraccion = Math.min(fraccion, restante);
+            let ultimoValor = null; // Variable para rastrear el último valor generado
 
-                if (!partes.has(fraccion) && fraccion <= restante) {
-                    partes.add(fraccion);
-                    restante -= fraccion;
-                }
-            }
+while (restante > 0 && partes.size < maxPartes) {
+    let fraccion = Math.floor(randomGenerator() * (max - min + 1)) + min;
+    fraccion = Math.round(fraccion / 5) * 5;
+    fraccion = Math.min(fraccion, restante);
+
+    // Verificar si la fracción es demasiado similar al último valor
+    if (fraccion === ultimoValor || Math.abs(fraccion - ultimoValor) < 50) {
+        continue; // Reintentar si el valor es similar al anterior
+    }
+
+    if (!partes.has(fraccion) && fraccion <= restante) {
+        partes.add(fraccion);
+        restante -= fraccion;
+        ultimoValor = fraccion; // Actualizar el último valor
+    }
+}
 
             if (Array.from(partes).reduce((a, b) => a + b, 0) !== numeroInt) {
                 verificacionMensaje.textContent = "Error: La suma de las fracciones no coincide con el número a fraccionar 😫";
