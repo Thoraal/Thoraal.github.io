@@ -2,7 +2,7 @@
      <html lang="es">
      <head>
      <meta charset="UTF-8">
-     <title>INPC Histórico</title>
+     <title>Consulta de INPC Histórico</title>
      <style>
           :root {
               /* Colores */
@@ -20,22 +20,22 @@
               --color-footer: #6c757d;
       
               /* Espaciados */
-              --padding-global: 20px;
-              --padding-container: 30px;
-              --padding-section: 10px;
-              --margin-h1: 20px;
-              --margin-button: 10px;
-              --border-radius: 10px;
-              --border-radius-btn: 5px;
+              --padding-global: 2em;
+              --padding-container: 2em;
+              --padding-section: 1em;
+              --margin-h1: 1.5em;
+              --margin-button: 1em;
+              --border-radius: 0.625em;
+              --border-radius-btn: 0.3125em;
       
               /* Tipografía */
               --fuente-principal: 'Poppins', Tahoma, Geneva, Verdana, sans-serif;
-              --fuente-titulo: 18px;
-              --fuente-texto: 16px;
-              --fuente-footer: 0.9em;
+              --fuente-titulo: 1.125em;
+              --fuente-texto: 1em;
+              --fuente-footer: 0.875em;
       
               /* Sombra */
-              --sombra-container: 0 4px 6px rgba(0, 0, 0, 0.1);
+              --sombra-container: 0 0.25em 0.375em rgba(0, 0, 0, 0.1);
           }
       
           /* Reset de márgenes y paddings */
@@ -49,12 +49,14 @@
               font-family: var(--fuente-principal);
               background-color: var(--color-fondo);
               padding: var(--padding-global);
+              line-height: 1.6;
           }
       
           h1 {
               text-align: center;
               color: var(--color-texto);
               margin-bottom: var(--margin-h1);
+              font-size: var(--fuente-titulo);
           }
       
           .container {
@@ -64,13 +66,14 @@
               padding: var(--padding-container);
               border-radius: var(--border-radius);
               box-shadow: var(--sombra-container);
+              position: relative;
           }
       
           .date-picker {
               display: flex;
               flex-wrap: wrap;
               justify-content: space-between;
-              gap: 20px; /* Añadido para espaciar los elementos */
+              gap: 1.25em; /* Espaciado entre elementos */
               margin-bottom: var(--padding-section);
           }
       
@@ -78,21 +81,24 @@
               flex: 1 1 45%;
               display: flex;
               flex-direction: column;
-              /* margin-bottom: 15px; Eliminado para evitar espacios redundantes */
+              position: relative;
           }
       
           .date-section label {
-              margin-bottom: 5px;
+              margin-bottom: 0.3125em;
               color: var(--color-secundario);
               font-weight: 600;
+              font-size: 1em;
           }
       
           .date-section select {
-              padding: 10px;
+              padding: 0.625em;
               border: 1px solid #bdc3c7;
-              border-radius: 5px;
+              border-radius: 0.3125em;
               font-size: var(--fuente-texto);
               transition: border-color 0.3s ease;
+              background-color: #fff;
+              appearance: none; /* Elimina flecha nativa del select */
           }
       
           .date-section select:focus {
@@ -102,12 +108,12 @@
       
           button {
               width: 100%;
-              padding: 12px;
+              padding: 0.75em;
               background-color: var(--color-primario);
               color: white;
               border: none;
               border-radius: var(--border-radius-btn);
-              font-size: 18px;
+              font-size: 1.125em;
               cursor: pointer;
               transition: background-color 0.3s ease, transform 0.2s ease;
               margin-top: var(--margin-button);
@@ -115,19 +121,24 @@
       
           button:hover {
               background-color: var(--color-primario-hover);
-              transform: translateY(-2px);
+              transform: translateY(-0.125em);
           }
       
           .result, .error {
-              margin-top: 20px;
-              padding: 15px;
-              border-radius: 5px;
-              font-size: 18px;
+              margin-top: 1.25em;
+              padding: 0.9375em;
+              border-radius: 0.3125em;
+              font-size: 1.125em;
               text-align: center;
               opacity: 0;
               max-height: 0;
               transition: opacity 0.5s ease, max-height 0.5s ease;
               overflow: hidden;
+              position: relative;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              gap: 0.625em;
           }
       
           .result.visible, .error.visible {
@@ -149,14 +160,87 @@
       
           footer {
               text-align: center;
-              padding: 15px 0;
+              padding: 0.9375em 0;
               color: var(--color-footer);
               font-size: var(--fuente-footer);
           }
       
+          /* Breakpoints adicionales para mejorar la adaptabilidad */
+          @media (max-width: 1200px) {
+              .container {
+                  max-width: 90%;
+              }
+          }
+      
           @media (max-width: 800px) {
+              .date-picker {
+                  gap: 1em;
+              }
+      
               .date-section {
                   flex: 1 1 100%;
+              }
+          }
+      
+          @media (max-width: 600px) {
+              h1 {
+                  font-size: 1.5em;
+              }
+      
+              .date-section label {
+                  font-size: 0.95em;
+              }
+      
+              .date-section select {
+                  font-size: 0.95em;
+              }
+      
+              button {
+                  font-size: 1em;
+                  padding: 0.6em;
+              }
+      
+              .result, .error {
+                  font-size: 1em;
+                  padding: 0.8em;
+                  gap: 0.5em;
+              }
+      
+              footer {
+                  font-size: 0.8em;
+              }
+          }
+      
+          @media (max-width: 400px) {
+              h1 {
+                  font-size: 1.25em;
+              }
+      
+              .date-picker {
+                  gap: 0.75em;
+              }
+      
+              .date-section label {
+                  font-size: 0.9em;
+              }
+      
+              .date-section select {
+                  font-size: 0.9em;
+              }
+      
+              button {
+                  font-size: 0.95em;
+                  padding: 0.5em;
+              }
+      
+              .result, .error {
+                  font-size: 0.95em;
+                  padding: 0.7em;
+                  gap: 0.4em;
+              }
+      
+              footer {
+                  font-size: 0.75em;
               }
           }
       </style>
@@ -168,22 +252,22 @@
      <div class="container">
           <div class="date-picker">
                <div class="date-section">
-                    <label for="from-year">📆 Desde Año:</label>
+                    <label for="from-year">Desde Año:</label>
                     <select id="from-year"></select>
                </div>
                <div class="date-section">
-                    <label for="from-month">📆 Desde Mes:</label>
+                    <label for="from-month">Desde Mes:</label>
                     <select id="from-month"></select>
                </div>
           </div>
 
           <div class="date-picker">
                <div class="date-section">
-                    <label for="to-year">📆 Hasta Año:</label>
+                    <label for="to-year">Hasta Año:</label>
                     <select id="to-year"></select>
                </div>
                <div class="date-section">
-                    <label for="to-month">📆 Hasta Mes:</label>
+                    <label for="to-month">Hasta Mes:</label>
                     <select id="to-month"></select>
                </div>
           </div>
