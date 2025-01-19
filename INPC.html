@@ -4,246 +4,246 @@
      <meta charset="UTF-8">
      <title>Consulta de INPC Histórico</title>
      <style>
-          :root {
-              /* Colores */
-              --color-fondo: #f0f4f8;
-              --color-primario: #2980b9;
-              --color-primario-hover: #1f6391;
-              --color-texto: #2c3e50;
-              --color-secundario: #34495e;
-              --color-exito-fondo: #e8f5e9;
-              --color-exito-texto: #2e7d32;
-              --color-exito-borde: #a5d6a7;
-              --color-error-fondo: #ffebee;
-              --color-error-texto: #c62828;
-              --color-error-borde: #ef9a9a;
-              --color-footer: #6c757d;
-      
-              /* Espaciados */
-              --padding-global: 2em;
-              --padding-container: 2em;
-              --padding-section: 1em;
-              --margin-h1: 1.5em;
-              --margin-button: 1em;
-              --border-radius: 0.625em;
-              --border-radius-btn: 0.3125em;
-      
-              /* Tipografía */
-              --fuente-principal: 'Poppins', Tahoma, Geneva, Verdana, sans-serif;
-              --fuente-titulo: 1.125em;
-              --fuente-texto: 1em;
-              --fuente-footer: 0.875em;
-      
-              /* Sombra */
-              --sombra-container: 0 0.25em 0.375em rgba(0, 0, 0, 0.1);
-          }
-      
-          /* Reset de márgenes y paddings */
-          * {
-              margin: 0;
-              padding: 0;
-              box-sizing: border-box;
-          }
-      
-          body {
-              font-family: var(--fuente-principal);
-              background-color: var(--color-fondo);
-              padding: var(--padding-global);
-              line-height: 1.6;
-          }
-      
-          h1 {
-              text-align: center;
-              color: var(--color-texto);
-              margin-bottom: var(--margin-h1);
-              font-size: var(--fuente-titulo);
-          }
-      
-          .container {
-              max-width: 800px;
-              margin: 0 auto;
-              background: #ffffff;
-              padding: var(--padding-container);
-              border-radius: var(--border-radius);
-              box-shadow: var(--sombra-container);
-              position: relative;
-          }
-      
-          .date-picker {
-              display: flex;
-              flex-wrap: wrap;
-              justify-content: space-between;
-              gap: 1.25em; /* Espaciado entre elementos */
-              margin-bottom: var(--padding-section);
-          }
-      
-          .date-section {
-              flex: 1 1 45%;
-              display: flex;
-              flex-direction: column;
-              position: relative;
-          }
-      
-          .date-section label {
-              margin-bottom: 0.3125em;
-              color: var(--color-secundario);
-              font-weight: 600;
-              font-size: 1em;
-          }
-      
-          .date-section select {
-              padding: 0.625em;
-              border: 1px solid #bdc3c7;
-              border-radius: 0.3125em;
-              font-size: var(--fuente-texto);
-              transition: border-color 0.3s ease;
-              background-color: #fff;
-              appearance: none; /* Elimina flecha nativa del select */
-          }
-      
-          .date-section select:focus {
-              border-color: var(--color-primario);
-              outline: none;
-          }
-      
-          button {
-              width: 100%;
-              padding: 0.75em;
-              background-color: var(--color-primario);
-              color: white;
-              border: none;
-              border-radius: var(--border-radius-btn);
-              font-size: 1.125em;
-              cursor: pointer;
-              transition: background-color 0.3s ease, transform 0.2s ease;
-              margin-top: var(--margin-button);
-          }
-      
-          button:hover {
-              background-color: var(--color-primario-hover);
-              transform: translateY(-0.125em);
-          }
-      
-          .result, .error {
-              margin-top: 1.25em;
-              padding: 0.9375em;
-              border-radius: 0.3125em;
-              font-size: 1.125em;
-              text-align: center;
-              opacity: 0;
-              max-height: 0;
-              transition: opacity 0.5s ease, max-height 0.5s ease;
-              overflow: hidden;
-              position: relative;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              gap: 0.625em;
-          }
-      
-          .result.visible, .error.visible {
-              opacity: 1;
-              max-height: 200px; /* Ajusta según el contenido */
-          }
-      
-          .result {
-              background-color: var(--color-exito-fondo);
-              color: var(--color-exito-texto);
-              border: 1px solid var(--color-exito-borde);
-          }
-      
-          .error {
-              background-color: var(--color-error-fondo);
-              color: var(--color-error-texto);
-              border: 1px solid var(--color-error-borde);
-          }
-      
-          footer {
-              text-align: center;
-              padding: 0.9375em 0;
-              color: var(--color-footer);
-              font-size: var(--fuente-footer);
-          }
-      
-          /* Breakpoints adicionales para mejorar la adaptabilidad */
-          @media (max-width: 1200px) {
-              .container {
-                  max-width: 90%;
-              }
-          }
-      
-          @media (max-width: 800px) {
-              .date-picker {
-                  gap: 1em;
-              }
-      
-              .date-section {
-                  flex: 1 1 100%;
-              }
-          }
-      
-          @media (max-width: 600px) {
-              h1 {
-                  font-size: 1.5em;
-              }
-      
-              .date-section label {
-                  font-size: 0.95em;
-              }
-      
-              .date-section select {
-                  font-size: 0.95em;
-              }
-      
-              button {
-                  font-size: 1em;
-                  padding: 0.6em;
-              }
-      
-              .result, .error {
-                  font-size: 1em;
-                  padding: 0.8em;
-                  gap: 0.5em;
-              }
-      
-              footer {
-                  font-size: 0.8em;
-              }
-          }
-      
-          @media (max-width: 400px) {
-              h1 {
-                  font-size: 1.25em;
-              }
-      
-              .date-picker {
-                  gap: 0.75em;
-              }
-      
-              .date-section label {
-                  font-size: 0.9em;
-              }
-      
-              .date-section select {
-                  font-size: 0.9em;
-              }
-      
-              button {
-                  font-size: 0.95em;
-                  padding: 0.5em;
-              }
-      
-              .result, .error {
-                  font-size: 0.95em;
-                  padding: 0.7em;
-                  gap: 0.4em;
-              }
-      
-              footer {
-                  font-size: 0.75em;
-              }
-          }
-      </style>
+        :root {
+            /* Colores */
+            --color-fondo: #f0f4f8;
+            --color-primario: #2980b9;
+            --color-primario-hover: #1f6391;
+            --color-texto: #2c3e50;
+            --color-secundario: #34495e;
+            --color-exito-fondo: #e8f5e9;
+            --color-exito-texto: #2e7d32;
+            --color-exito-borde: #a5d6a7;
+            --color-error-fondo: #ffebee;
+            --color-error-texto: #c62828;
+            --color-error-borde: #ef9a9a;
+            --color-footer: #6c757d;
+
+            /* Espaciados */
+            --padding-global: 2em;
+            --padding-container: 2em;
+            --padding-section: 1em;
+            --margin-h1: 1.5em;
+            --margin-button: 1em;
+            --border-radius: 0.625em;
+            --border-radius-btn: 0.3125em;
+
+            /* Tipografía */
+            --fuente-principal: 'Poppins', Tahoma, Geneva, Verdana, sans-serif;
+            --fuente-titulo: 1.125em;
+            --fuente-texto: 1em;
+            --fuente-footer: 0.875em;
+
+            /* Sombra */
+            --sombra-container: 0 0.25em 0.375em rgba(0, 0, 0, 0.1);
+        }
+
+        /* Reset de márgenes y paddings */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--fuente-principal);
+            background-color: var(--color-fondo);
+            padding: var(--padding-global);
+            line-height: 1.6;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--color-texto);
+            margin-bottom: var(--margin-h1);
+            font-size: var(--fuente-titulo);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: var(--padding-container);
+            border-radius: var(--border-radius);
+            box-shadow: var(--sombra-container);
+            position: relative;
+        }
+
+        .date-picker {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 1.25em; /* Espaciado entre elementos */
+            margin-bottom: var(--padding-section);
+        }
+
+        .date-section {
+            flex: 1 1 45%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .date-section label {
+            margin-bottom: 0.3125em;
+            color: var(--color-secundario);
+            font-weight: 600;
+            font-size: 1em;
+        }
+
+        .date-section select {
+            padding: 0.625em;
+            border: 1px solid #bdc3c7;
+            border-radius: 0.3125em;
+            font-size: var(--fuente-texto);
+            transition: border-color 0.3s ease;
+            background-color: #fff;
+            appearance: none; /* Elimina flecha nativa del select */
+        }
+
+        .date-section select:focus {
+            border-color: var(--color-primario);
+            outline: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 0.75em;
+            background-color: var(--color-primario);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-btn);
+            font-size: 1.125em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin-top: var(--margin-button);
+        }
+
+        button:hover {
+            background-color: var(--color-primario-hover);
+            transform: translateY(-0.125em);
+        }
+
+        .result, .error {
+            margin-top: 1.25em;
+            padding: 0.9375em;
+            border-radius: 0.3125em;
+            font-size: 1.125em;
+            text-align: center;
+            opacity: 0;
+            max-height: 0;
+            transition: opacity 0.5s ease, max-height 0.5s ease;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.625em;
+        }
+
+        .result.visible, .error.visible {
+            opacity: 1;
+            max-height: 200px; /* Ajusta según el contenido */
+        }
+
+        .result {
+            background-color: var(--color-exito-fondo);
+            color: var(--color-exito-texto);
+            border: 1px solid var(--color-exito-borde);
+        }
+
+        .error {
+            background-color: var(--color-error-fondo);
+            color: var(--color-error-texto);
+            border: 1px solid var(--color-error-borde);
+        }
+
+        footer {
+            text-align: center;
+            padding: 0.9375em 0;
+            color: var(--color-footer);
+            font-size: var(--fuente-footer);
+        }
+
+        /* Breakpoints adicionales para mejorar la adaptabilidad */
+        @media (max-width: 1200px) {
+            .container {
+                max-width: 90%;
+            }
+        }
+
+        @media (max-width: 800px) {
+            .date-picker {
+                gap: 1em;
+            }
+
+            .date-section {
+                flex: 1 1 100%;
+            }
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.5em;
+            }
+
+            .date-section label {
+                font-size: 0.95em;
+            }
+
+            .date-section select {
+                font-size: 0.95em;
+            }
+
+            button {
+                font-size: 1em;
+                padding: 0.6em;
+            }
+
+            .result, .error {
+                font-size: 1em;
+                padding: 0.8em;
+                gap: 0.5em;
+            }
+
+            footer {
+                font-size: 0.8em;
+            }
+        }
+
+        @media (max-width: 400px) {
+            h1 {
+                font-size: 1.25em;
+            }
+
+            .date-picker {
+                gap: 0.75em;
+            }
+
+            .date-section label {
+                font-size: 0.9em;
+            }
+
+            .date-section select {
+                font-size: 0.9em;
+            }
+
+            button {
+                font-size: 0.95em;
+                padding: 0.5em;
+            }
+
+            .result, .error {
+                font-size: 0.95em;
+                padding: 0.7em;
+                gap: 0.4em;
+            }
+
+            footer {
+                font-size: 0.75em;
+            }
+        }
+    </style>
             
      </head>
      <body>
