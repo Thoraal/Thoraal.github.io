@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Rifas Flexible</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .numero {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fff;
+            position: relative;
+            min-height: 80px;
+        }
+
+        .vendido {
+            background-color: #e8ffe8;
+            border-color: #4CAF50;
+        }
+
+        .vaquita {
+            background-color: #fff3cd;
+            border-color: #ffc107;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        input, button, select {
+            padding: 8px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 200px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .compradores-list {
+            margin-top: 5px;
+            font-size: 0.9em;
+        }
+
+        .porcentaje {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            font-size: 0.8em;
+            background: rgba(0,0,0,0.1);
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+
+        .precio-section {
+            background-color: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .tipo-venta {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .tipo-venta label {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Control de Rifas Flexible</h1>
+        
+        <div class="precio-section">
+            <div class="form-group">
+                <input type="number" id="precio-boleto" placeholder="Precio total del boleto">
+                <button onclick="establecerPrecio()">Establecer Precio</button>
+                <div id="precio-info" style="display: none;">
+                    <p>Precio fijado: $<span id="precio-mostrado">0</span></p>
+                    <p>Media venta: $<span id="media-venta">0</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group" id="form-venta" style="display: none;">
+            <input type="number" id="numero" placeholder="Número (1-100)" min="1" max="100">
+            <input type="text" id="nombre" placeholder="Nombre del comprador">
+            <div class="tipo-venta">
+                <label>
+                    <input type="radio" name="tipoVenta" value="50" checked> Media Venta (50%)
+                </label>
+                <label>
+                    <input type="radio" name="tipoVenta" value="100"> Venta Completa (100%)
+                </label>
+            </div>
+            <button onclick="agregarCompra()">Registrar Venta</button>
+        </div>
+
+        <h2>Números del 01 al 100</h2>
+        <div class="grid-container" id="numeros-grid"></div>
+    </div>
+
+    <script>
+        let precioBoleto = localStorage.getItem('precioBoleto') ? parseFloat(localStorage.getItem('precioBoleto')) : null;
+        let numeros = JSON.parse(localStorage.getItem('rifa')) || Array(100).fill().map((_, i) => ({
+            numero: (i + 1).toString().padStart(2, '0'),
+            compradores: [],
+            porcentajeVendido: 0
+        }));
+
+        function establecerPrecio() {
+            const precioInput = document.getElementById('precio-boleto').value;
+            if (!precioInput || isNaN(precioInput)) {
+                alert('Ingresa un precio válido');
+                return;
+            }
+            
+            precioBoleto = parseFloat(precioInput);
+            localStorage.setItem('precioBoleto', precioBoleto);
+            
+            document.getElementById('precio-info').style.display = 'block';
+            document.getElementById('precio-mostrado').textContent = precioBoleto.toFixed(2);
+            document.getElementById('media-venta').textContent = (precioBoleto / 2).toFixed(2);
+            document.getElementById('form-venta').style.display = 'block';
+            document.getElementById('precio-boleto').disabled = true;
+            
+            renderNumeros();
+        }
+
+        function actualizarStorage() {
+            localStorage.setItem('rifa', JSON.stringify(numeros));
+        }
+
+        function renderNumeros() {
+            const grid = document.getElementById('numeros-grid');
+            grid.innerHTML = '';
+            
+            numeros.forEach(num => {
+                const div = document.createElement('div');
+                div.className = `numero ${num.porcentajeVendido === 100 ? 'vendido' : 
+                                num.porcentajeVendido === 50 ? 'vaquita' : ''}`;
+                
+                div.innerHTML = `
+                    <div class="porcentaje">${num.porcentajeVendido}%</div>
+                    <strong>N° ${num.numero}</strong>
+                    <div class="compradores-list">
+                        ${num.compradores.map(c => `
+                            <div>${c.nombre} - ${c.porcentaje}% - $${c.monto}</div>
+                        `).join('')}
+                    </div>
+                    ${num.porcentajeVendido === 0 ? '<em>Disponible</em>' : ''}
+                `;
+                
+                grid.appendChild(div);
+            });
+        }
+
+        function agregarCompra() {
+            if (!precioBoleto) {
+                alert('Primero establece el precio del boleto');
+                return;
+            }
+            
+            const numeroInput = document.getElementById('numero').value.padStart(2, '0');
+            const nombre = document.getElementById('nombre').value.trim();
+            const tipoVenta = document.querySelector('input[name="tipoVenta"]:checked').value;
+            const porcentaje = parseInt(tipoVenta);
+
+            if (!numeroInput || !nombre) {
+                alert('Completa todos los campos');
+                return;
+            }
+            
+            const numeroIndex = numeros.findIndex(n => n.numero === numeroInput);
+            if (numeroIndex === -1) {
+                alert('Número inválido');
+                return;
+            }
+            
+            const numeroObj = numeros[numeroIndex];
+            
+            if ((numeroObj.porcentajeVendido + porcentaje) > 100) {
+                alert('No hay suficiente porcentaje disponible en este número');
+                return;
+            }
+            
+            // Calcular monto
+            const monto = (precioBoleto * (porcentaje / 100)).toFixed(2);
+            
+            // Registrar venta
+            numeroObj.compradores.push({
+                nombre: nombre,
+                porcentaje: porcentaje,
+                monto: monto
+            });
+            
+            numeroObj.porcentajeVendido += porcentaje;
+            
+            // Limpiar formulario
+            document.getElementById('numero').value = '';
+            document.getElementById('nombre').value = '';
+            
+            actualizarStorage();
+            renderNumeros();
+        }
+
+        // Carga inicial
+        if (precioBoleto) {
+            document.getElementById('precio-info').style.display = 'block';
+            document.getElementById('precio-mostrado').textContent = precioBoleto.toFixed(2);
+            document.getElementById('media-venta').textContent = (precioBoleto / 2).toFixed(2);
+            document.getElementById('form-venta').style.display = 'block';
+            document.getElementById('precio-boleto').disabled = true;
+        }
+        
+        renderNumeros();
+    </script>
+</body>
+</html>
