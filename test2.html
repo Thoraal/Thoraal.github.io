@@ -3,189 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Rifa Premium Pro</title>
+    <title>Rifa Premium Pro+</title>
     <style>
-        :root {
-            --color-disponible: #bdc3c7;
-            --color-vendido: #27ae60;
-            --color-reservado: #e67e22;
-            --color-pendiente: #f1c40f;
-        }
+        /* ... (mantener los estilos anteriores iguales) ... */
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 15px;
-            background-color: #ecf0f1;
-            color: #2c3e50;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
-        }
-
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 8px;
-            margin: 20px 0;
-        }
-
-        .numero {
-            padding: 12px;
-            border: 2px solid;
-            border-radius: 6px;
-            position: relative;
-            background: white;
-            min-height: 80px;
-            transition: all 0.2s;
-        }
-
-        .numero.disponible { border-color: var(--color-disponible); }
-        .numero.vendido { border-color: var(--color-vendido); background: #e8f6ef; }
-        .numero.reservado { border-color: var(--color-reservado); background: #fbeee6; }
-        .numero.pendiente { border-color: var(--color-pendiente); background: #fcf3cf; }
-
-        .form-group {
-            margin-bottom: 15px;
+        .compradores-list div {
             display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
+            justify-content: space-between;
+            align-items: center;
+            margin: 3px 0;
+            padding: 2px;
         }
 
-        input, button, select {
-            padding: 10px;
-            border: 2px solid #bdc3c7;
-            border-radius: 6px;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        button {
-            background: #3498db;
-            color: white;
-            border: none;
+        .eliminar-comprador {
+            color: #e74c3c;
             cursor: pointer;
-            transition: opacity 0.3s;
-        }
-
-        button:active { opacity: 0.8; }
-
-        .btn-danger { background: #e74c3c; }
-        .btn-success { background: #27ae60; }
-
-        .compradores-list {
-            font-size: 0.85em;
-            margin-top: 8px;
-            color: #7f8c8d;
-        }
-
-        .estado-container {
-            display: flex;
-            gap: 5px;
-            margin-top: 5px;
-        }
-
-        .reservas-pendientes {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
-        }
-
-        @media (min-width: 768px) {
-            .form-group { flex-wrap: nowrap; }
-            input, select { width: auto; flex-grow: 1; }
-            .grid-container { grid-template-columns: repeat(10, 1fr); }
-        }
-
-        @media (max-width: 480px) {
-            .container { padding: 10px; }
-            .grid-container { grid-template-columns: repeat(5, 1fr); }
-            .numero { min-height: 70px; padding: 8px; }
+            margin-left: 5px;
+            font-weight: bold;
+            background: none;
+            border: none;
+            padding: 0 5px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🏆 Control de Rifas Pro</h1>
-        
-        <div class="precio-section">
-            <div class="form-group">
-                <input type="number" id="precio-boleto" placeholder="Precio total ($)">
-                <button onclick="establecerPrecio()">Fijar Precio</button>
-            </div>
-            <div id="precio-info" style="display: none;">
-                <p>💰 Precio total: $<span id="precio-mostrado">0</span></p>
-                <p>🎫 Media venta: $<span id="media-venta">0</span></p>
-            </div>
-        </div>
-
-        <div class="form-group" id="form-venta" style="display: none;">
-            <input type="number" id="numero" placeholder="Número" min="1" max="100">
-            <input type="text" id="nombre" placeholder="Nombre">
-            <select id="tipo-accion">
-                <option value="vender-50">Vender 50%</option>
-                <option value="vender-100">Vender 100%</option>
-                <option value="reservar">Reservar</option>
-            </select>
-            <button onclick="manejarAccion()">Ejecutar</button>
-        </div>
-
-        <h2>🔢 Números 01-100</h2>
-        <div class="grid-container" id="numeros-grid"></div>
-
-        <div class="reservas-pendientes">
-            <h3>⏳ Reservas Pendientes</h3>
-            <div id="lista-reservas"></div>
-        </div>
-
-        <div class="reset-section">
-            <button class="btn-danger" onclick="iniciarReset()">🔒 Resetear Sistema</button>
-        </div>
-    </div>
-
+    <!-- Mantener el HTML anterior igual -->
+    
     <script>
-        const CLAVE_RESET = '1234';
-        let precioBoleto = localStorage.getItem('precioBoleto') ? 
-            parseFloat(localStorage.getItem('precioBoleto')) : null;
-        
-        let numeros = JSON.parse(localStorage.getItem('rifa')) || 
-            Array.from({length: 100}, (_, i) => ({
-                numero: (i + 1).toString().padStart(2, '0'),
-                compradores: [],
-                porcentajeVendido: 0,
-                estado: 'disponible',
-                pagado: false
-            }));
-
-        function secureSave() {
-            localStorage.setItem('precioBoleto', precioBoleto);
-            localStorage.setItem('rifa', JSON.stringify(numeros));
-        }
-
-        function establecerPrecio() {
-            const precioInput = document.getElementById('precio-boleto').value;
-            if (!precioInput || precioInput < 1) {
-                alert('Ingrese un precio válido');
-                return;
-            }
-            
-            precioBoleto = parseFloat(precioInput);
-            document.getElementById('precio-info').style.display = 'block';
-            document.getElementById('precio-mostrado').textContent = precioBoleto.toFixed(2);
-            document.getElementById('media-venta').textContent = (precioBoleto / 2).toFixed(2);
-            document.getElementById('form-venta').style.display = 'flex';
-            document.getElementById('precio-boleto').disabled = true;
-            
-            secureSave();
-            renderNumeros();
-        }
+        // ... (mantener las funciones anteriores iguales hasta renderNumeros) ... 
 
         function renderNumeros() {
             const grid = document.getElementById('numeros-grid');
@@ -199,11 +44,19 @@
                     <div class="porcentaje">${num.porcentajeVendido}%</div>
                     <strong>${num.numero}</strong>
                     <div class="compradores-list">
-                        ${num.compradores.map(c => `
-                            <div>${c.nombre} - ${c.porcentaje}% ${c.pagado ? '✅' : '❌'}</div>
+                        ${num.compradores.map((c, index) => `
+                            <div>
+                                <span>${c.nombre} - ${c.porcentaje}% ${c.pagado ? '✅' : '❌'}</span>
+                                <button class="eliminar-comprador" 
+                                    onclick="eliminarComprador('${num.numero}', ${index})">X</button>
+                            </div>
                         `).join('')}
                     </div>
-                    ${num.estado === 'reservado' ? '<div class="estado-container"><button class="btn-success" onclick="marcarComoPagado(\'${num.numero}\')">Pagar</button><button class="btn-danger" onclick="cancelarReserva(\'${num.numero}\')">X</button></div>' : ''}
+                    ${num.estado === 'reservado' ? 
+                        `<div class="estado-container">
+                            <button class="btn-success" onclick="marcarComoPagado('${num.numero}')">Pagar</button>
+                            <button class="btn-danger" onclick="cancelarReserva('${num.numero}')">X</button>
+                        </div>` : ''}
                 `;
                 
                 grid.appendChild(div);
@@ -212,126 +65,33 @@
             actualizarListaReservas();
         }
 
-        function manejarAccion() {
-            const accion = document.getElementById('tipo-accion').value;
-            const numero = document.getElementById('numero').value.padStart(2, '0');
-            const nombre = document.getElementById('nombre').value.trim();
-
-            if (!numero || !nombre || numero < 1 || numero > 100) {
-                alert('Datos incompletos o inválidos');
-                return;
-            }
-
+        function eliminarComprador(numero, indexComprador) {
+            if (!confirm('¿Eliminar este comprador?')) return;
+            
             const index = numeros.findIndex(n => n.numero === numero);
+            const comprador = numeros[index].compradores[indexComprador];
             
-            if (accion.startsWith('vender')) {
-                const porcentaje = parseInt(accion.split('-')[1]);
-                venderNumero(index, nombre, porcentaje);
-            } else if (accion === 'reservar') {
-                reservarNumero(index, nombre);
-            }
+            // Restaurar porcentaje
+            numeros[index].porcentajeVendido -= comprador.porcentaje;
             
-            document.getElementById('numero').value = '';
-            document.getElementById('nombre').value = '';
-            secureSave();
-            renderNumeros();
-        }
-
-        function venderNumero(index, nombre, porcentaje) {
-            if (numeros[index].estado !== 'disponible') {
-                alert('El número no está disponible para venta');
-                return;
-            }
-
-            if (numeros[index].porcentajeVendido + porcentaje > 100) {
-                alert('Porcentaje no disponible');
-                return;
-            }
-
-            numeros[index].compradores.push({
-                nombre: nombre,
-                porcentaje: porcentaje,
-                monto: (precioBoleto * (porcentaje/100)).toFixed(2),
-                pagado: true
-            });
+            // Eliminar comprador
+            numeros[index].compradores.splice(indexComprador, 1);
             
-            numeros[index].porcentajeVendido += porcentaje;
-            numeros[index].estado = numeros[index].porcentajeVendido === 100 ? 'vendido' : 'pendiente';
-        }
-
-        function reservarNumero(index, nombre) {
-            if (numeros[index].estado !== 'disponible') {
-                alert('El número no está disponible para reserva');
-                return;
-            }
-
-            numeros[index].compradores.push({
-                nombre: nombre,
-                porcentaje: 100,
-                monto: precioBoleto.toFixed(2),
-                pagado: false
-            });
-            
-            numeros[index].estado = 'reservado';
-            numeros[index].porcentajeVendido = 100;
-        }
-
-        function marcarComoPagado(numero) {
-            const index = numeros.findIndex(n => n.numero === numero);
-            numeros[index].compradores.forEach(c => c.pagado = true);
-            numeros[index].estado = 'vendido';
-            secureSave();
-            renderNumeros();
-        }
-
-        function cancelarReserva(numero) {
-            const index = numeros.findIndex(n => n.numero === numero);
-            if (confirm('¿Cancelar esta reserva?')) {
-                numeros[index] = {
-                    numero: numero,
-                    compradores: [],
-                    porcentajeVendido: 0,
-                    estado: 'disponible',
-                    pagado: false
-                };
-                secureSave();
-                renderNumeros();
-            }
-        }
-
-        function actualizarListaReservas() {
-            const reservas = numeros.filter(n => n.estado === 'reservado');
-            const lista = document.getElementById('lista-reservas');
-            lista.innerHTML = reservas.map(n => `
-                <div class="reserva-item">
-                    ${n.numero} - ${n.compradores[0].nombre} 
-                    (${n.compradores[0].monto}$) - ${n.compradores[0].pagado ? 'Pagado' : 'Pendiente'}
-                </div>
-            `).join('');
-        }
-
-        function iniciarReset() {
-            const clave = prompt('Ingrese la clave de seguridad:');
-            if (clave === CLAVE_RESET) {
-                if (confirm('¿Borrar TODOS los datos permanentemente?')) {
-                    localStorage.clear();
-                    location.reload();
-                }
+            // Actualizar estado
+            if (numeros[index].compradores.length === 0) {
+                numeros[index].estado = 'disponible';
+                numeros[index].porcentajeVendido = 0;
             } else {
-                alert('Clave incorrecta');
+                numeros[index].estado = numeros[index].porcentajeVendido === 100 ? 
+                    (numeros[index].compradores.some(c => !c.pagado) ? 'reservado' : 'vendido') : 
+                    'pendiente';
             }
+            
+            secureSave();
+            renderNumeros();
         }
 
-        // Inicialización
-        if (precioBoleto) {
-            document.getElementById('precio-info').style.display = 'block';
-            document.getElementById('precio-mostrado').textContent = precioBoleto.toFixed(2);
-            document.getElementById('media-venta').textContent = (precioBoleto / 2).toFixed(2);
-            document.getElementById('form-venta').style.display = 'flex';
-            document.getElementById('precio-boleto').disabled = true;
-        }
-        
-        renderNumeros();
+        // ... (mantener el resto de funciones igual) ...
     </script>
 </body>
 </html>
