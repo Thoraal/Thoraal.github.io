@@ -79,6 +79,7 @@
         button:active { opacity: 0.8; }
         .btn-danger { background: #e74c3c; }
         .btn-success { background: #27ae60; }
+        .btn-warning { background: #f39c12; }
 
         .compradores-list {
             font-size: 0.85em;
@@ -107,6 +108,13 @@
             border-radius: 3px;
         }
 
+        .vaquita-icon {
+            position: absolute;
+            bottom: 3px;
+            right: 3px;
+            font-size: 1.2em;
+        }
+
         .reset-section {
             margin-top: 25px;
             padding-top: 15px;
@@ -132,10 +140,11 @@
         
         <div class="form-group">
             <input type="number" id="precio-boleto" placeholder="Precio total ($)">
-            <button onclick="establecerPrecio()">Fijar Precio</button>
+            <button onclick="establecerPrecio()">Fijar/Editar Precio</button>
         </div>
         <div id="precio-info" style="display: none;">
-            <p>💰 Precio total: $<span id="precio-mostrado">0</span></p>
+            <p>💰 Precio actual: $<span id="precio-mostrado">0</span>
+            <button class="btn-warning" onclick="editarPrecio()">✏️ Editar</button></p>
             <p>🎫 Media venta: $<span id="media-venta">0</span></p>
         </div>
 
@@ -177,14 +186,28 @@
             localStorage.setItem('rifa', JSON.stringify(numeros));
         }
 
+        function editarPrecio() {
+            document.getElementById('precio-boleto').disabled = false;
+            document.getElementById('precio-boleto').focus();
+        }
+
         function establecerPrecio() {
-            const precioInput = document.getElementById('precio-boleto').value;
-            if (!precioInput || precioInput < 1) {
+            const nuevoPrecio = document.getElementById('precio-boleto').value;
+            if (!nuevoPrecio || nuevoPrecio < 1) {
                 alert('Ingrese un precio válido');
                 return;
             }
             
-            precioBoleto = parseFloat(precioInput);
+            // Actualizar montos existentes con nuevo precio
+            if(precioBoleto && precioBoleto != nuevoPrecio) {
+                numeros.forEach(num => {
+                    num.compradores.forEach(comprador => {
+                        comprador.monto = (nuevoPrecio * (comprador.porcentaje/100)).toFixed(2);
+                    });
+                });
+            }
+            
+            precioBoleto = parseFloat(nuevoPrecio);
             document.getElementById('precio-info').style.display = 'block';
             document.getElementById('precio-mostrado').textContent = precioBoleto.toFixed(2);
             document.getElementById('media-venta').textContent = (precioBoleto / 2).toFixed(2);
@@ -222,9 +245,13 @@
             numeros.forEach(num => {
                 const div = document.createElement('div');
                 div.className = `numero ${num.estado}`;
+                
+                // Verificar si tiene vaquitas (50%)
+                const tieneVaquitas = num.compradores.some(c => c.porcentaje === 50);
                                
                 div.innerHTML = `
                     <div class="porcentaje">${num.porcentajeVendido}%</div>
+                    ${tieneVaquitas ? '<div class="vaquita-icon">🐮</div>' : ''}
                     <strong>${num.numero}</strong>
                     <div class="compradores-list">
                         ${num.compradores.map((c, index) => `
