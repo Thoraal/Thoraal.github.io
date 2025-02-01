@@ -351,7 +351,7 @@ tbody tr:hover {
                 <span class="slider"></span>
             </label>
         <div class="input-container">
-            <input type="number" id="numero" placeholder="Monto máximo $35,000" oninput="validarMaximo(); fraccionarNumero(); actualizarMinimo(); fetchDataForDate(); mostrarTipoCambio();" aria-label="Ingresar un número a fraccionar" />
+            <input type="number" id="numero" placeholder="Monto máximo $34,000" oninput="validarMaximo(); fraccionarNumero(); actualizarMinimo(); fetchDataForDate(); mostrarTipoCambio();" aria-label="Ingresar un número a fraccionar" />
             <select id="moneda" onchange="mostrarTipoCambio(); actualizarMinimo(); fraccionarNumero(); fetchDataForDate();">
                 <option value="usd">Dólar americano</option>
                 <option value="eur">Euro</option>
@@ -421,9 +421,9 @@ tbody tr:hover {
         function validarMaximo() {
             const numeroInput = document.getElementById("numero");
             const verificacionMensaje = document.getElementById("verificacionMensaje");
-            if (parseInt(numeroInput.value) > 35000) {
-                verificacionMensaje.textContent = "Error: El monto no puede exceder $35,000.";
-                numeroInput.value = 35000;
+            if (parseInt(numeroInput.value) > 34000) {
+                verificacionMensaje.textContent = "Error: El monto no puede exceder $34,000.";
+                numeroInput.value = 34000;
             } else {
                 verificacionMensaje.textContent = "";
             }
