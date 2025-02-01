@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Retiro de divisas</title>
+    <title>Retiro de Divisas</title>
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -23,9 +23,9 @@
             margin-bottom: 15px;
         }
         .container {
-            width: 220px;
+            width: 300px;
             background: #ffffffb6;
-            padding: 15px;
+            padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.466);
         }
@@ -37,12 +37,11 @@
             font-weight: bold;
         }
         select, input {
-            width: 100%;
             margin-bottom: 10px;
             padding: 10px;
             border-radius: 6px;
             border: 2px solid #bdc3c7;
-            font-size: .8rem;
+            font-size: 0.8rem;
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
         select:focus, input:focus {
@@ -52,12 +51,6 @@
         }
         select:hover, input:hover {
             border-color: #00ffbf;
-        }
-        select {
-            transition: transform 0.3s ease;
-        }
-        select:focus {
-            transform: scale(1.05);
         }
         .denomination-container {
             display: flex;
@@ -81,42 +74,12 @@
             box-shadow: 0 0 8px rgba(52, 152, 219, 0.5);
             outline: none;
         }
-        .denomination-input-container input:hover {
-            border-color: #00ffbf;
-        }
         .total {
             font-weight: bold;
             color: #363f47;
             text-align: center;
             margin-top: 15px;
             font-size: 1.2rem;
-        }
-        #user-input {
-            width: 90%;
-        }
-        #sucursal-input {
-            width: 90%;
-        }
-        #tc-input {
-            width: 90%;
-        }
-        #currency-key {
-            width: 48%;
-            margin-right: 4%;
-            margin-bottom: 10px;
-            padding: 8px;
-            border-radius: 6px;
-            border: 2px solid #bdc3c7;
-            font-size: 0.8rem;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-        #currency-key:focus {
-            border-color: #3498db;
-            box-shadow: 0 0 8px rgba(52, 152, 219, 0.5);
-            outline: none;
-        }
-        #currency-key:hover {
-            border-color: #00ffbf;
         }
         .error {
             border-color: #e74c3c !important;
@@ -127,34 +90,52 @@
             margin-top: -10px;
             margin-bottom: 10px;
         }
+        .hidden {
+            display: none;
+        }
+        .button {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+            margin: 5px;
+        }
+        .button:hover {
+            background-color: #2980b9;
+        }
+        .button.print {
+            background-color: #2ecc71;
+        }
+        .button.print:hover {
+            background-color: #27ae60;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Retiro de divisas</h1>
+        <h1>Retiro de Divisas</h1>
         <div id="date-time" style="font-size: 0.8rem; color: #003cff; margin-bottom: 10px;"></div>
         <hr style="border-color:#4d46a7;">
-        <input type="text" id="user-input" placeholder="Ingrese su nombre de usuario 👨🏻" />
+        <input type="text" id="user-input" placeholder="Ingrese su nombre de usuario 👨🏻" aria-label="Nombre de usuario" />
+        <div id="user-error" class="error-message hidden">El nombre de usuario es requerido.</div>
         <hr style="border-color:#4d46a7;">
-        <select id="sucursal" onchange="toggleSucursalInput()">
-        <option>--- Seleccione una sucursal ---</option>
-        <option value="ADO">ADO</option>
-        <option value="COBA">COBA</option>
-        <option value="OTRA">OTRA SUCURSAL</option>
+        <select id="sucursal" aria-label="Seleccione una sucursal" onchange="toggleSucursalInput()">
+            <option value="">--- Seleccione una sucursal ---</option>
+            <option value="ADO">ADO</option>
+            <option value="COBA">COBA</option>
+            <option value="OTRA">OTRA SUCURSAL</option>
         </select>
-        <input type="text" id="sucursal-input" placeholder="Ingresa el nombre de otra sucursal" style="display: none;" />
+        <input type="text" id="sucursal-input" placeholder="Ingresa el nombre de otra sucursal" class="hidden" aria-label="Nombre de sucursal" />
+        <div id="sucursal-error" class="error-message hidden">La sucursal es requerida.</div>
         <hr style="border-color:#4d46a7;">
-        <select id="accion" onchange="toggletcInput()">
-            <option value="RETIRO">Retiro de divisas</option>
-            <option value="COMPRA">Compra de divisas</option>
-            <option value="VENTA">Venta de divisas</option>
-          </select>
-          <input type="text" id="tc-input" placeholder="Tipo de cambio" style="display: none;" />
-        <hr style="border-color:#4d46a7;">
-        <input type="number" id="currency-key" placeholder="Clave divisa 🔑" oninput="selectCurrencyByKey()" />
-        <div id="currency-key-error" class="error-message" style="display: none;">Clave de divisa no válida</div>
-        <select id="currency" onchange="updateCurrencyKey()">
-          <option value="S/N">--- Seleccione una divisa ---</option>
+        <input type="number" id="currency-key" placeholder="Clave divisa 🔑" aria-label="Clave de divisa" oninput="selectCurrencyByKey()" />
+        <div id="currency-key-error" class="error-message hidden">Clave de divisa no válida.</div>
+        <select id="currency" aria-label="Seleccione una divisa" onchange="updateCurrencyKey()">
+            <option value="">--- Seleccione una divisa ---</option>
             <option value="MXN">Moneda Nacional (MXN)</option>
             <option value="USD">Dólar Americano (USD)</option>
             <option value="CAD">Canada (CAD)</option>
@@ -185,17 +166,10 @@
         </select>
         <div id="denominations-container"></div>
         <div class="total" id="total">Monto total: $0.00</div>
+        <button class="button print" onclick="printForm()">Imprimir</button>
     </div>
     <script>
-        function updateDateTime() {
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
-            const now = new Date().toLocaleString('es-ES', options);
-            document.getElementById('date-time').textContent = now;
-        }
-
-        updateDateTime();
-        setInterval(updateDateTime, 1000);
-
+        // Datos de denominaciones por divisa
         const denominationsByCurrency = {
             MXN: [1000, 500, 200, 100, 50, 20, 10, 5, 2, 1, 0.5],
             USD: [100, 50, 20, 10, 5, 2, 1],
@@ -226,6 +200,7 @@
             SEK: [1000, 500, 200, 100, 50, 20]
         };
 
+        // Mapa de claves de divisa
         const currencyMap = {
             4: 'CAD', 2: 'USD', 7: 'EUR', 9: 'GBP', 8: 'BRL', 18: 'COP', 1: 'MXN', 6: 'AUD', 19: 'BZD', 20: 'CLP',
             21: 'CNY', 32: 'KRW', 33: 'CRC', 11: 'CUP', 22: 'DKK', 30: 'SCO', 23: 'GTQ', 24: 'HKD', 25: 'ILS', 10: 'JPY',
@@ -233,44 +208,59 @@
             29: 'SEK', 5: 'CHF', 34: 'TRY'
         };
 
+        // Actualiza la fecha y hora
+        function updateDateTime() {
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+            const now = new Date().toLocaleString('es-ES', options);
+            document.getElementById('date-time').textContent = now;
+        }
+
+        // Muestra u oculta el campo de sucursal
+        function toggleSucursalInput() {
+            const sucursalSelect = document.getElementById('sucursal');
+            const sucursalInput = document.getElementById('sucursal-input');
+            const sucursalError = document.getElementById('sucursal-error');
+
+            if (sucursalSelect.value === 'OTRA') {
+                sucursalInput.classList.remove('hidden');
+                sucursalError.classList.add('hidden');
+            } else {
+                sucursalInput.classList.add('hidden');
+                sucursalInput.value = "";
+                sucursalError.classList.add('hidden');
+            }
+        }
+
+        // Actualiza las denominaciones según la divisa seleccionada
         function updateDenominations() {
             const currency = document.getElementById('currency').value;
             const denominations = denominationsByCurrency[currency];
             const denominationsContainer = document.getElementById('denominations-container');
 
-            while (denominationsContainer.firstChild) {
-                denominationsContainer.removeChild(denominationsContainer.firstChild);
-            }
+            denominationsContainer.innerHTML = ""; // Limpia el contenedor
 
             if (!denominations) return;
 
             denominations.forEach(denomination => {
-                const denominationRow = document.createElement('div');
-                denominationRow.className = 'denomination-container';
+                const row = document.createElement('div');
+                row.className = 'denomination-container';
 
                 const label = document.createElement('label');
                 label.textContent = `${denomination}:`;
-
-                const inputContainer = document.createElement('div');
-                inputContainer.className = 'denomination-input-container';
 
                 const input = document.createElement('input');
                 input.type = 'number';
                 input.setAttribute('data-denomination', denomination);
                 input.placeholder = '-';
-                input.addEventListener('change', updateSubtotal);
+                input.addEventListener('input', updateTotal);
 
-                inputContainer.appendChild(input);
-                denominationRow.appendChild(label);
-                denominationRow.appendChild(inputContainer);
-                denominationsContainer.appendChild(denominationRow);
+                row.appendChild(label);
+                row.appendChild(input);
+                denominationsContainer.appendChild(row);
             });
         }
 
-        function updateSubtotal() {
-            updateTotal();
-        }
-
+        // Calcula y actualiza el monto total
         function updateTotal() {
             let total = 0;
             const inputs = document.querySelectorAll('.denomination-container input');
@@ -279,57 +269,221 @@
                 const value = parseInt(input.value) || 0;
                 total += denomination * value;
             });
-            document.getElementById('total').textContent = 'Monto total: ' + total.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
+            document.getElementById('total').textContent = `Monto total: ${total.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}`;
         }
 
+        // Selecciona la divisa por clave
         function selectCurrencyByKey() {
             const key = parseInt(document.getElementById('currency-key').value);
-            const currency = currencyMap[key] ? currencyMap[key] : "";
+            const currency = currencyMap[key] || "";
             const currencyKeyInput = document.getElementById('currency-key');
             const errorMessage = document.getElementById('currency-key-error');
 
             if (currency) {
                 document.getElementById('currency').value = currency;
                 currencyKeyInput.classList.remove('error');
-                errorMessage.style.display = 'none';
+                errorMessage.classList.add('hidden');
                 updateDenominations();
             } else {
                 currencyKeyInput.classList.add('error');
-                errorMessage.style.display = 'block';
+                errorMessage.classList.remove('hidden');
             }
         }
 
+        // Actualiza la clave de divisa según la selección
         function updateCurrencyKey() {
             const currency = document.getElementById('currency').value;
             const key = Object.keys(currencyMap).find(key => currencyMap[key] === currency);
-            document.getElementById('currency-key').value = key ? key : "";
+            document.getElementById('currency-key').value = key || "";
+            updateDenominations();
         }
-        function toggleSucursalInput() {
-            const sucursalSelect = document.getElementById('sucursal');
-            const sucursalInput = document.getElementById('sucursal-input');
+        function validateForm() {
+    let isValid = true;
 
-            if (sucursalSelect.value === 'OTRA') {
-                sucursalInput.style.display = 'block';
-            } else {
-                sucursalInput.style.display = 'none';
-                sucursalInput.value = ""; // Clear the input to avoid confusion
-            }
+    // Validar nombre de usuario
+    const userInput = document.getElementById('user-input').value.trim();
+    const userError = document.getElementById('user-error');
+    if (userInput === "") {
+        userError.classList.remove('hidden');
+        isValid = false;
+    } else {
+        userError.classList.add('hidden');
+    }
+
+    // Validar sucursal
+    const sucursalSelect = document.getElementById('sucursal').value;
+    const sucursalInput = document.getElementById('sucursal-input').value.trim();
+    const sucursalError = document.getElementById('sucursal-error');
+    if (sucursalSelect === "") {
+        sucursalError.textContent = "La sucursal es requerida.";
+        sucursalError.classList.remove('hidden');
+        isValid = false;
+    } else if (sucursalSelect === "OTRA" && sucursalInput === "") {
+        sucursalError.textContent = "El nombre de la sucursal es requerido.";
+        sucursalError.classList.remove('hidden');
+        isValid = false;
+    } else {
+        sucursalError.classList.add('hidden');
+    }
+
+    // Validar clave de divisa o divisa seleccionada
+    const currencyKey = document.getElementById('currency-key').value.trim();
+    const currencySelect = document.getElementById('currency').value;
+    const currencyKeyError = document.getElementById('currency-key-error');
+    if (currencyKey === "" && currencySelect === "") {
+        currencyKeyError.textContent = "La clave de divisa o la divisa seleccionada es requerida.";
+        currencyKeyError.classList.remove('hidden');
+        isValid = false;
+    } else {
+        currencyKeyError.classList.add('hidden');
+    }
+
+    // Validar al menos una denominación con valor mayor a 0
+    const denominationInputs = document.querySelectorAll('.denomination-container input');
+    let hasValidDenomination = false;
+    denominationInputs.forEach(input => {
+        if (parseInt(input.value) > 0) {
+            hasValidDenomination = true;
         }
+    });
+    if (!hasValidDenomination) {
+        alert("Debe ingresar al menos una denominación con un valor mayor a 0.");
+        isValid = false;
+    }
 
-        function toggletcInput() {
-        const accionSelect = document.getElementById('accion');
-        const accionInput = document.getElementById('tc-input');
+    return isValid;
+}
 
-        if (accionSelect.value === 'RETIRO') {
-            accionInput.style.display = 'none';
-            accionInput.value = "";
-        } else {
-            accionInput.style.display = 'block';
+        // Imprime el comprobante de retiro
+        function printForm() {
+            if (!validateForm()) {
+        return; // Detener la impresión si hay errores
+    }
+            const transaction = {
+                user: document.getElementById('user-input').value.trim(),
+                sucursal: document.getElementById('sucursal').value === 'OTRA' ? document.getElementById('sucursal-input').value.trim() : document.getElementById('sucursal').value,
+                currency: document.getElementById('currency').value,
+                total: document.getElementById('total').textContent,
+                dateTime: new Date().toLocaleString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }),
+                denominations: []
+            };
+
+            // Obtener las denominaciones ingresadas
+            const inputs = document.querySelectorAll('.denomination-container input');
+            inputs.forEach(input => {
+                const denomination = parseFloat(input.getAttribute('data-denomination'));
+                const value = parseInt(input.value) || 0;
+                if (value > 0) {
+                    transaction.denominations.push({ denomination, value });
+                }
+            });
+
+            // Generar el contenido del comprobante
+const printContent = `
+    <div style="font-family: Arial, sans-serif; width: 80mm; padding: 5px; font-size: 12px;">
+        <h1 style="text-align: center; font-size: 18px; margin: 5px 0; color: #000;">Retiro de Divisas</h1>
+        
+        <!-- Línea divisoria -->
+        <div style="text-align: center; margin: 10px 0;">
+            <hr style="border: 0; border-top: 2px dashed #ccc; margin: 5px 0;">
+        </div>
+        
+        <div style="margin-bottom: 5px;">
+            <p style="margin: 4px 0; font-size: 14px;"><strong>Fecha y Hora:</strong> ${transaction.dateTime}</p>
+            <p style="margin: 4px 0; font-size: 14px;"><strong>Usuario:</strong> ${transaction.user}</p>
+            <p style="margin: 4px 0; font-size: 14px;"><strong>Sucursal:</strong> ${transaction.sucursal}</p>
+            <p style="margin: 4px 0; font-size: 14px;"><strong>Divisa:</strong> ${getCurrencyFullName(transaction.currency)}</p>
+        </div>
+        
+        <!-- Línea divisoria -->
+        <div style="text-align: center; margin: 10px 0;">
+            <hr style="border: 0; border-top: 2px dashed #ccc; margin: 5px 0;">
+        </div>
+        
+        <div style="margin-bottom: 5px;">
+            <h3 style="font-size: 16px; margin: 5px 0; color: #000; text-align: center;">Detalle de Denominaciones:</h3>
+            <ul style="list-style-type: none; padding: 0; margin: 0;">
+                ${transaction.denominations.map(d => `
+                    <li style="margin: 3px 0; padding: 4px; background-color: #f4f4f4; border-radius: 3px; font-size: 14px; text-align: center;">
+                        ${d.value} de ${d.denomination}
+                    </li>
+                `).join('')}
+            </ul>
+        </div>
+        
+        <!-- Línea divisoria -->
+        <div style="text-align: center; margin: 10px 0;">
+            <hr style="border: 0; border-top: 2px dashed #ccc; margin: 5px 0;">
+        </div>
+        
+        <div style="text-align: center; font-size: 18px; font-weight: bold; margin-top: 5px;">
+            ${transaction.total}
+        </div>
+        
+        <!-- Línea divisoria -->
+        <div style="text-align: center; margin: 10px 0;">
+            <hr style="border: 0; border-top: 2px dashed #ccc; margin: 5px 0;">
+        </div>
+        
+        <div style="text-align: center; margin-top: 5px; font-size: 10px; color: #555;">
+            <p>Desarrollado por Alejandro Toral</p>
+        </div>
+    </div>
+`;
+
+// Función para obtener el nombre completo de la divisa
+function getCurrencyFullName(currencyCode) {
+    const currencyNames = {
+        MXN: "Moneda Nacional (MXN)",
+        USD: "Dólar Americano (USD)",
+        CAD: "Dólar Canadiense (CAD)",
+        CHF: "Franco Suizo (CHF)",
+        AUD: "Dólar Australiano (AUD)",
+        EUR: "Euro (EUR)",
+        BRL: "Real Brasileño (BRL)",
+        GBP: "Libra Esterlina (GBP)",
+        JPY: "Yen Japonés (JPY)",
+        CUP: "Peso Cubano Convertible (CUP)",
+        MOR_USD: "Morralla Americana (MOR_USD)",
+        MOR_CAD: "Morralla Canadiense (MOR_CAD)",
+        MOR_EUR: "Morralla Euro (MOR_EUR)",
+        MOR_GBP: "Morralla Libra Esterlina (MOR_GBP)",
+        ARS: "Peso Argentino (ARS)",
+        COP: "Peso Colombiano (COP)",
+        BZD: "Dólar Beliceño (BZD)",
+        CLP: "Peso Chileno (CLP)",
+        CNY: "Yuan Chino (CNY)",
+        DKK: "Corona Danesa (DKK)",
+        GTQ: "Quetzal Guatemalteco (GTQ)",
+        HKD: "Dólar de Hong Kong (HKD)",
+        ILS: "Nuevo Shekel Israelí (ILS)",
+        NOK: "Corona Noruega (NOK)",
+        PEN: "Sol Peruano (PEN)",
+        RUB: "Rublo Ruso (RUB)",
+        SEK: "Corona Sueca (SEK)"
+    };
+    return currencyNames[currencyCode] || currencyCode; // Si no se encuentra, devuelve el código original
+}
+
+            // Abrir una ventana de impresión
+            const printWindow = window.open('', '', 'width=600,height=600');
+            printWindow.document.write(printContent);
+            printWindow.document.close();
+            printWindow.print();
+            resetForm();
         }
-        }
+        // Función para reiniciar el formulario
+function resetForm() {
+    document.getElementById('currency-key').value = "";
+    document.getElementById('currency').value = "";
+    document.getElementById('denominations-container').innerHTML = "";
+    document.getElementById('total').textContent = "Monto total: $0.00";
+    updateDenominations();
+}
 
-        document.getElementById('sucursal-input').style.display = 'none';
-        document.getElementById('tc-input').style.display = 'none';
+        // Inicialización
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
         updateDenominations();
     </script>
 </body>
