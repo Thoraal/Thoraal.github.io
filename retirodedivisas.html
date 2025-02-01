@@ -15,6 +15,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            flex-direction: column;
         }
         h1 {
             color: #2a3e52;
@@ -24,7 +25,7 @@
         }
         .container {
             width: 300px;
-            background: #ffffffb6;
+            background: rgba(255, 255, 255, 0.3);
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.466);
@@ -35,6 +36,19 @@
             display: block;
             margin-bottom: 6px;
             font-weight: bold;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9rem;
+            color: #fff;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: fit-content;
+            margin: 40px auto 0;
+            border: 1px solid rgb(255, 255, 255);
         }
         select, input {
             margin-bottom: 10px;
@@ -168,6 +182,10 @@
         <div class="total" id="total">Monto total: $0.00</div>
         <button class="button print" onclick="printForm()">Imprimir</button>
     </div>
+<footer style="text-align: center; margin-top: 20px; font-size: 0.9rem; color: #555;">
+    Creado por Alejandro Toral 🚀
+</footer>
+</body>
     <script>
         // Datos de denominaciones por divisa
         const denominationsByCurrency = {
@@ -380,7 +398,7 @@
 
             // Generar el contenido del comprobante
 const printContent = `
-    <div style="font-family: Arial, sans-serif; width: 80mm; padding: 5px; font-size: 12px;">
+    <div style="font-family: Consolas, sans-serif; width: 80mm; padding: 5px; font-size: 12px;">
         <h1 style="text-align: center; font-size: 18px; margin: 5px 0; color: #000;">Retiro de Divisas</h1>
         
         <!-- Línea divisoria -->
