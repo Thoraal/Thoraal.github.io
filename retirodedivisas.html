@@ -484,13 +484,20 @@ function getCurrencyFullName(currencyCode) {
     return currencyNames[currencyCode] || currencyCode; // Si no se encuentra, devuelve el código original
 }
 
+    // Abrir una ventana de impresión
+    const printWindow = window.open('', '', 'width=600,height=600');
+    printWindow.document.write(printContent);
+    printWindow.document.close();
+
+    // Imprimir utilizando el cuadro de diálogo del sistema y repetir la impresión dos veces
     printWindow.print();
     setTimeout(() => {
         printWindow.print();
         printWindow.close();
     }, 1000); // Espera 1 segundo antes de la segunda impresión
-            resetForm();
-        }
+
+    resetForm();
+}
         // Función para reiniciar el formulario
 function resetForm() {
     document.getElementById('currency-key').value = "";
