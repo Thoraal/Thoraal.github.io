@@ -420,15 +420,15 @@ const printContent = `
         </div>
         
         <div style="margin-bottom: 5px;">
-            <h3 style="font-size: 16px; margin: 5px 0; color: #000; text-align: left;">Detalle de Denominaciones:</h3>
-            <ul style="list-style-type: none; padding: 0; margin: 0;">
-                ${transaction.denominations.map(d => `
-                    <li style="margin: 3px 0; padding: 4px; background-color: #f4f4f4; border-radius: 3px; font-size: 14px; text-align: center;">
-                        ${d.value} de ${d.denomination}
-                    </li>
-                `).join('')}
-            </ul>
-        </div>
+    <h3 style="font-size: 16px; margin: 5px 0; color: #000; text-align: left;">Detalle de Denominaciones:</h3>
+    <ul style="list-style-type: none; padding: 0; margin: 0; text-align: left;">
+        ${transaction.denominations.map(d => `
+            <li style="margin: 3px 0; padding: 4px; background-color: #f4f4f4; border-radius: 3px; font-size: 14px; text-align: left;">
+                ${d.value} de ${d.denomination}
+            </li>
+        `).join('')}
+    </ul>
+</div>
         
         <!-- Línea divisoria -->
         <div style="text-align: center; margin: 10px 0;">
