@@ -1,249 +1,853 @@
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sorteo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Gestor Completo de Rifas</title>
     <style>
+        :root {
+            --color-disponible: #bdc3c7;
+            --color-vendido: #27ae60;
+            --color-reservado: #e67e22;
+            --color-parcial: #9b59b6;
+            --color-pendiente: #f1c40f;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f4f4f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 15px;
+            background-color: #ecf0f1;
+            color: #2c3e50;
         }
-        h1 {
-            text-align: center;
-            color: #333;
-        }
+
         .container {
-            max-width: 600px;
+            max-width: 1200px;
             margin: 0 auto;
-            background: #fff;
+            background: white;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
         }
-        .form-group {
+
+        .config-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
             margin-bottom: 15px;
         }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+
+        .modalidad-options {
+            display: flex;
+            gap: 20px;
+            margin: 10px 0;
+            flex-wrap: wrap;
         }
-        select, input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
+
+        .modalidad-options label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
             cursor: pointer;
-            margin-bottom: 10px;
         }
-        button:hover {
-            background-color: #0056b3;
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 8px;
+            margin: 20px 0;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: center;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        .occupied {
-            background-color: gold;
-            color: black;
-            font-weight: bold;
+
+        .numero {
+            padding: 12px;
+            border: 2px solid;
+            border-radius: 6px;
             position: relative;
+            background: white;
+            min-height: 80px;
+            transition: all 0.2s;
         }
-        .occupied::after {
-            content: " 🍀";
+
+        .numero.disponible {
+            border-color: var(--color-disponible);
+        }
+
+        .numero.vendido {
+            border-color: var(--color-vendido);
+            background: #e8f6ef;
+        }
+
+        .numero.reservado {
+            border-color: var(--color-reservado);
+            background: #fbeee6;
+        }
+
+        .numero.parcial {
+            border-color: var(--color-parcial);
+            background: #f5eef8;
+        }
+
+        .numero.pendiente {
+            border-color: var(--color-pendiente);
+            background: #fcf3cf;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        input,
+        button,
+        select {
+            padding: 10px;
+            border: 2px solid #bdc3c7;
+            border-radius: 6px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        button:active {
+            opacity: 0.8;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+        }
+
+        .btn-success {
+            background: #27ae60;
+        }
+
+        .btn-warning {
+            background: #f39c12;
+        }
+
+        .compradores-list {
+            font-size: 0.85em;
+            margin-top: 8px;
+            color: #7f8c8d;
+        }
+
+        .acciones-comprador {
+            display: flex;
+            gap: 3px;
+            margin-top: 3px;
+        }
+
+        .btn-pequeno {
+            padding: 3px 6px;
+            font-size: 0.8em;
+        }
+
+        .porcentaje {
             position: absolute;
-            right: 8px;
+            top: 3px;
+            right: 3px;
+            font-size: 0.75em;
+            background: rgba(0, 0, 0, 0.1);
+            padding: 2px 6px;
+            border-radius: 3px;
         }
-        .available {
-            background-color: #d3d3d3;
-            color: #555;
+
+        .vaquita-icon {
+            position: absolute;
+            bottom: 3px;
+            right: 3px;
+            font-size: 1.2em;
+        }
+
+        .reset-section {
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 2px solid #eee;
+        }
+
+        .grid-simple-container {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 2px;
+            margin: 20px 0;
+            max-width: 600px;
+            background: #fff;
+            border: 2px solid #ccc;
+        }
+
+        .celda {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #eee;
+            font-size: 12px;
+            border: 1px solid #ccc;
+        }
+
+        .celda.ocupada {
+            background: #000;
+            border-color: #000;
+        }
+
+        .export-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        /* Añadir estas reglas al existing style */
+        .btn-modalidad {
+            background: #9b59b6;
+            /* Color de las vaquitas */
+            color: white;
+            border: 2px solid #8e44ad;
+            transition: all 0.3s ease;
+            margin: 5px 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-modalidad:hover {
+            background: #8e44ad;
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-modalidad:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        /* Para el icono del botón */
+        .btn-modalidad::before {
+            content: '🔄';
+            font-size: 1.1em;
+            filter: brightness(1.2);
+        }
+
+        .banner-upload input[type="file"] {
+            display: none;
+        }
+
+        .banner-upload label {
+            background: #3498db;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: inline-block;
+            margin: 10px 0;
+            transition: background 0.3s;
+        }
+
+        .banner-upload label:hover {
+            background: #2980b9;
+        }
+
+        .banner-upload label::before {
+            content: '📁 ';
+            margin-right: 8px;
+        }
+
+        @media (min-width: 768px) {
+            .form-group {
+                flex-wrap: nowrap;
+            }
+
+            input,
+            select {
+                width: auto;
+                flex-grow: 1;
+            }
+
+            .grid-container {
+                grid-template-columns: repeat(10, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+
+            .grid-container {
+                grid-template-columns: repeat(5, 1fr);
+            }
+
+            .numero {
+                min-height: 70px;
+                padding: 8px;
+            }
+        }
+
+        /* Nuevos estilos añadidos */
+        .resumen-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .resumen-item {
+            text-align: center;
+            padding: 10px;
+            border-radius: 6px;
+            background: white;
+        }
+
+        .busqueda-section {
+            margin: 15px 0;
+        }
+
+        #buscar-input {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .numero.seleccionado {
+            box-shadow: 0 0 0 3px #3498db;
+        }
+
+        @media (hover: hover) {
+            .numero:hover {
+                transform: scale(1.05);
+                cursor: pointer;
+            }
         }
     </style>
 </head>
+
 <body>
-    <h1>Sorteo</h1>
     <div class="container">
-        <div class="form-group">
-            <label for="number">Selecciona un número</label>
-            <select id="number">
-                <option value="">-- Selecciona un número --</option>
-            </select>
+        <h1>🏆 Gestor Completo de Rifas</h1>
+        <!-- Nueva sección de resumen -->
+        <div class="resumen-section" id="resumen">
+            <div class="resumen-item" style="border-left: 4px solid var(--color-vendido)">
+                <h3>Total Vendido</h3>
+                <p id="total-vendido">$0.00</p>
+            </div>
+            <div class="resumen-item" style="border-left: 4px solid var(--color-reservado)">
+                <h3>Total Reservado</h3>
+                <p id="total-reservado">$0.00</p>
+            </div>
+            <div class="resumen-item" style="border-left: 4px solid var(--color-pendiente)">
+                <h3>Números Disponibles</h3>
+                <p id="numeros-disponibles">100</p>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="name">Nombre del participante</label>
-            <input type="text" id="name" placeholder="Ingresa el nombre">
+
+        <!-- Nueva sección de búsqueda -->
+        <div class="busqueda-section">
+            <input type="text" id="buscar-input" placeholder="🔍 Buscar por nombre o número"
+                oninput="filtrarNumeros(this.value)">
         </div>
-        <button onclick="registerNumber()">Registrar</button>
-        <button onclick="exportToExcel()">Exportar a Excel</button>
-        <button onclick="importFromExcel()">Importar desde Excel</button>
-        <button onclick="resetData()">Resetear Memoria</button>
+        <div class="config-section" id="config-inicial">
+            <h3>⚙️ Configuración Inicial</h3>
+            <div class="modalidad-options">
+                <label>
+                    <input type="radio" name="modalidad" value="vaquitas" checked>
+                    Con Vaquitas (medias ventas)
+                </label>
+                <label>
+                    <input type="radio" name="modalidad" value="completos">
+                    Números Completos
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="number" id="precio-boleto" placeholder="Precio total ($)">
+                <button onclick="establecerConfiguracion()">Iniciar
+                    Rifa</button>
+            </div>
+        </div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Número</th>
-                    <th>Nombre</th>
-                </tr>
-            </thead>
-            <tbody id="numberTable">
-                <!-- Las filas se generarán dinámicamente -->
-            </tbody>
-        </table>
-    </div>
+        <div id="precio-info" style="display: none;">
+            <p>💰 Precio actual: $<span id="precio-mostrado">0</span>
+                <button class="btn-warning" onclick="editarPrecio()">✏️
+                    Editar</button>
+            </p>
+            <button onclick="cambiarModalidad()" class="btn-modalidad">Cambiar Modalidad</button>
+            <p id="media-venta-texto" style="display: none;">🎫 Media venta:
+                $<span id="media-venta">0</span></p>
+        </div>
 
-    <script>
-        const numberSelect = document.getElementById('number');
-        const numberTable = document.getElementById('numberTable');
-        const totalNumbers = 100;
-        const storageKey = 'sorteoData';
+        <div class="form-group" id="form-venta" style="display: none;">
+            <input type="number" id="numero" placeholder="Número" min="1" max="100">
+            <input type="text" id="nombre" placeholder="Nombre">
+            <select id="tipo-accion"></select>
+            <button onclick="manejarAccion()">Registrar</button>
+        </div>
 
-        // Cargar datos guardados en localStorage
-        const savedData = JSON.parse(localStorage.getItem(storageKey)) || {};
+        <h2>🔢 Números 01-100</h2>
+        <div class="grid-container" id="numeros-grid"></div>
 
-        // Inicializar opciones de números
-        for (let i = 0; i < totalNumbers; i++) {
-            const numberStr = i.toString().padStart(2, '0');
-            const option = document.createElement('option');
-            option.value = numberStr;
-            option.textContent = numberStr;
+        <div class="export-section">
+            <h3>🔳 Vista Simplificada</h3>
+            <div class="grid-simple-container" id="grid-simple"></div>
+            <button onclick="exportarGrid()" style="margin-top:15px;">⬇️
+                Exportar como PNG</button>
+            <div class="banner-upload">
+                <input type="file" id="banner-input" accept="image/*" onchange="cargarBanner(event)">
+                <label for="banner-input">🎨 Seleccionar banner
+                    personalizado</label>
+            </div>
 
-            const row = document.createElement('tr');
-            const numberCell = document.createElement('td');
-            numberCell.textContent = numberStr;
-            const nameCell = document.createElement('td');
-            nameCell.textContent = savedData[numberStr] || '';
-            nameCell.dataset.number = numberStr;
+            <div class="reset-section">
+                <button class="btn-danger" onclick="iniciarReset()">🔒
+                    Resetear Sistema</button>
+            </div>
+        </div>
 
-            if (savedData[numberStr]) {
-                nameCell.classList.add('occupied');
-                option.disabled = true;
-            } else {
-                nameCell.classList.add('available');
-                numberSelect.appendChild(option);
+        <script>
+            const CLAVE_RESET = '1234';
+            let configuracion = JSON.parse(localStorage.getItem('configRifa')) || null;
+            let numeros = JSON.parse(localStorage.getItem('rifa')) || Array.from({ length: 100 }, (_, i) => ({
+                numero: (i + 1).toString().padStart(2, '0'),
+                compradores: [],
+                porcentajeVendido: 0,
+                estado: 'disponible'
+            }));
+            let filtroActual = '';
+
+            function establecerConfiguracion() {
+                const modalidad = document.querySelector('input[name="modalidad"]:checked').value;
+                const nuevoPrecio = document.getElementById('precio-boleto').value;
+
+                if (!nuevoPrecio || nuevoPrecio < 1) {
+                    alert('Ingrese un precio válido');
+                    return;
+                }
+
+                configuracion = {
+                    vaquitasPermitidas: modalidad === 'vaquitas',
+                    precio: parseFloat(nuevoPrecio)
+                };
+
+                actualizarOpcionesTransaccion();
+                document.getElementById('config-inicial').style.display = 'none';
+                document.getElementById('precio-info').style.display = 'block';
+                document.getElementById('precio-mostrado').textContent = configuracion.precio.toFixed(2);
+                document.getElementById('media-venta').textContent = (configuracion.precio / 2).toFixed(2);
+                document.getElementById('media-venta-texto').style.display = configuracion.vaquitasPermitidas ? 'block' : 'none';
+                document.getElementById('form-venta').style.display = 'flex';
+
+                secureSave();
+                renderNumeros();
             }
+            function cambiarModalidad() {
+                if (!configuracion) {
+                    alert('Primero configura la rifa');
+                    return;
+                }
 
-            row.appendChild(numberCell);
-            row.appendChild(nameCell);
-            numberTable.appendChild(row);
-        }
+                const nuevaModalidad = confirm(`¿Cambiar a modo ${configuracion.vaquitasPermitidas ? 'COMPLETOS' : 'MEDIAS VENTAS'}?\n
+Esta acción afectará:\n
+1. ${configuracion.vaquitasPermitidas ? 'Se eliminarán todas las medias ventas existentes' : 'Se permitirán ventas parciales'}
+2. Los números con ${configuracion.vaquitasPermitidas ? 'medias ventas serán reseteados' : 'ventas completas se mantendrán'}
+3. El comportamiento de nuevos registros cambiará`)
 
-        function formatName(name) {
-            return name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
-        }
+                if (nuevaModalidad) {
+                    if (configuracion.vaquitasPermitidas) {
+                        // Verificar si hay medias ventas existentes
+                        const numerosConVaquitas = numeros.filter(num =>
+                            num.compradores.some(c => c.porcentaje === 50)
+                        );
 
-        function registerNumber() {
-            const selectedNumber = numberSelect.value;
-            const rawName = document.getElementById('name').value.trim();
+                        if (numerosConVaquitas.length > 0) {
+                            const confirmarReset = confirm(`⚠️ ADVERTENCIA: Hay ${numerosConVaquitas.length} números con medias ventas.\n¿Deseas eliminarlas todas y resetear esos números?`);
 
-            if (!selectedNumber) {
-                alert('Por favor, selecciona un número.');
-                return;
-            }
+                            if (!confirmarReset) return;
 
-            if (!rawName) {
-                alert('Por favor, ingresa un nombre.');
-                return;
-            }
-
-            const participantName = formatName(rawName);
-            const nameCell = document.querySelector(`[data-number='${selectedNumber}']`);
-
-            if (nameCell.textContent) {
-                alert('Este número ya ha sido registrado.');
-                return;
-            }
-
-            nameCell.textContent = participantName;
-            nameCell.classList.remove('available');
-            nameCell.classList.add('occupied');
-
-            // Guardar en localStorage
-            savedData[selectedNumber] = participantName;
-            localStorage.setItem(storageKey, JSON.stringify(savedData));
-
-            numberSelect.querySelector(`option[value='${selectedNumber}']`).remove();
-            document.getElementById('name').value = '';
-        }
-
-        function exportToExcel() {
-            const rows = [['Número', 'Nombre']];
-
-            for (let i = 0; i < totalNumbers; i++) {
-                const numberStr = i.toString().padStart(2, '0');
-                const name = savedData[numberStr] || '';
-                rows.push([numberStr, name]);
-            }
-
-            let csvContent = "data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n");
-
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement('a');
-            link.setAttribute('href', encodedUri);
-            link.setAttribute('download', 'sorteo_data.csv');
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-
-        function importFromExcel() {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.csv';
-            input.onchange = (event) => {
-                const file = event.target.files[0];
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const text = e.target.result;
-                    const rows = text.split("\n");
-                    rows.shift(); // Remove header row
-
-                    for (const row of rows) {
-                        const [number, name] = row.split(',');
-                        if (number && name) {
-                            savedData[number.trim()] = name.trim();
+                            numeros.forEach(num => {
+                                num.compradores = num.compradores.filter(c => c.porcentaje === 100);
+                                num.porcentajeVendido = num.compradores.reduce((sum, c) => sum + c.porcentaje, 0);
+                                actualizarEstado(num);
+                            });
                         }
                     }
 
-                    localStorage.setItem(storageKey, JSON.stringify(savedData));
-                    location.reload();
-                };
-                reader.readAsText(file);
-            };
-            input.click();
-        }
+                    // Cambiar modalidad
+                    configuracion.vaquitasPermitidas = !configuracion.vaquitasPermitidas;
 
-        function resetData() {
-            const password = prompt("Introduce la clave para resetear:");
+                    // Actualizar interfaz
+                    actualizarOpcionesTransaccion();
+                    document.getElementById('media-venta-texto').style.display = configuracion.vaquitasPermitidas ? 'block' : 'none';
+                    secureSave();
+                    renderNumeros();
 
-            if (password === '1654') {
-                localStorage.removeItem(storageKey);
-                alert("Datos reseteados correctamente.");
-                location.reload();
-            } else {
-                alert("Clave incorrecta.");
+                    alert(`Modo cambiado a: ${configuracion.vaquitasPermitidas ? 'MEDIAS VENTAS' : 'NÚMEROS COMPLETOS'}`);
+                }
             }
-        }
-    </script>
+
+
+            function actualizarOpcionesTransaccion() {
+                const select = document.getElementById('tipo-accion');
+                select.innerHTML = configuracion.vaquitasPermitidas
+                    ? `<option value="vender-50">Vender 50%</option>
+           <option value="vender-100">Vender 100%</option>
+           <option value="reservar-50">Reservar 50%</option>
+           <option value="reservar-100">Reservar 100%</option>`
+                    : `<option value="vender-100">Vender Número Completo</option>
+           <option value="reservar-100">Reservar Número Completo</option>`;
+
+                // Actualizar texto del botón de cambio
+                const botones = document.querySelectorAll('button[onclick="cambiarModalidad()"]');
+                if (botones.length > 0) {
+                    botones[0].innerHTML = configuracion.vaquitasPermitidas
+                        ? '🔓 Cambiar a Números Completos'
+                        : '🔓 Cambiar a Medias Ventas';
+                }
+            }
+
+            function secureSave() {
+                localStorage.setItem('configRifa', JSON.stringify(configuracion));
+                localStorage.setItem('rifa', JSON.stringify(numeros));
+            }
+
+            function editarPrecio() {
+                const nuevoPrecio = prompt('Nuevo precio:', configuracion.precio);
+                if (nuevoPrecio && !isNaN(nuevoPrecio) && nuevoPrecio > 0) {
+                    if (confirm(`¿Actualizar precio de $${configuracion.precio} a $${nuevoPrecio}? Esto afectará todos los montos existentes.`)) {
+                        configuracion.precio = parseFloat(nuevoPrecio);
+                        numeros.forEach(num => {
+                            num.compradores.forEach(c => {
+                                c.monto = (configuracion.precio * (c.porcentaje / 100)).toFixed(2);
+                            });
+                        });
+                        document.getElementById('precio-mostrado').textContent = configuracion.precio.toFixed(2);
+                        document.getElementById('media-venta').textContent = (configuracion.precio / 2).toFixed(2);
+                        secureSave();
+                        renderNumeros();
+                    }
+                }
+            }
+
+            function actualizarEstado(numeroObj) {
+                const totalPagado = numeroObj.compradores.reduce((sum, c) => c.pagado ? sum + c.porcentaje : sum, 0);
+                const totalReservado = numeroObj.compradores.reduce((sum, c) => !c.pagado ? sum + c.porcentaje : sum, 0);
+
+                numeroObj.estado = totalPagado === 100 ? 'vendido' :
+                    totalReservado > 0 ? (totalPagado > 0 ? 'parcial' : 'reservado') :
+                        numeroObj.porcentajeVendido > 0 ? 'pendiente' : 'disponible';
+            }
+
+            function renderNumeros() {
+                const grid = document.getElementById('numeros-grid');
+                grid.innerHTML = '';
+
+                numeros.filter(num => {
+                    if (!filtroActual) return true;
+                    return num.numero.includes(filtroActual) ||
+                        num.compradores.some(c => c.nombre.toLowerCase().includes(filtroActual));
+                }).forEach(num => {
+                    const div = document.createElement('div');
+                    div.className = `numero ${num.estado} ${num.numero === document.getElementById('numero').value.padStart(2, '0') ? 'seleccionado' : ''}`;
+                    const tieneVaquitas = configuracion.vaquitasPermitidas && num.compradores.some(c => c.porcentaje === 50);
+
+                    div.innerHTML = `
+            <div class="porcentaje">${num.porcentajeVendido}%</div>
+            ${tieneVaquitas ? '<div class="vaquita-icon">🐮</div>' : ''}
+            <strong>${num.numero}</strong>
+            <div class="compradores-list">
+                ${num.compradores.map((c, index) => `
+                    <div>
+                        <span>${c.nombre} - ${c.porcentaje}% ${c.pagado ? '✅' : '❌'}</span>
+                        <div class="acciones-comprador">
+                            ${!c.pagado ?
+                            `<button class="btn-success btn-pequeno" onclick="marcarComoPagado('${num.numero}', ${index})">Pagar</button>` : ''}
+                            <button class="btn-danger btn-pequeno" onclick="eliminarComprador('${num.numero}', ${index})">X</button>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>`;
+
+                    div.addEventListener('click', () => seleccionarNumero(num.numero));
+                    grid.appendChild(div);
+                });
+
+                actualizarResumen();
+                actualizarGridSimple();
+            }
+
+            function actualizarResumen() {
+                let totalVendido = 0;
+                let totalReservado = 0;
+                let disponibles = 0;
+
+                numeros.forEach(num => {
+                    num.compradores.forEach(c => {
+                        if (c.pagado) {
+                            totalVendido += parseFloat(c.monto);
+                        } else {
+                            totalReservado += parseFloat(c.monto);
+                        }
+                    });
+                    if (num.porcentajeVendido === 0) disponibles++;
+                });
+
+                document.getElementById('total-vendido').textContent = `$${totalVendido.toFixed(2)}`;
+                document.getElementById('total-reservado').textContent = `$${totalReservado.toFixed(2)}`;
+                document.getElementById('numeros-disponibles').textContent = disponibles;
+            }
+
+            function actualizarGridSimple() {
+                const grid = document.getElementById('grid-simple');
+                grid.innerHTML = '';
+                numeros.forEach(num => {
+                    const celda = document.createElement('div');
+                    celda.className = `celda ${num.porcentajeVendido > 0 ? 'ocupada' : ''}`;
+                    celda.textContent = num.porcentajeVendido > 0 ? '' : num.numero;
+                    grid.appendChild(celda);
+                });
+            }
+
+            // Variable global para almacenar la imagen del banner
+            let bannerImage = null;
+
+            // Función para cargar la imagen del banner desde un input de archivo
+            function cargarBanner(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        bannerImage = new Image();
+                        bannerImage.src = e.target.result;
+                        bannerImage.onload = () => {
+                            console.log('Banner cargado correctamente');
+                        };
+                        bannerImage.onerror = () => {
+                            console.error('Error al cargar el banner');
+                        };
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+
+            // Función principal de exportación
+            async function exportarGrid(formato = 'png') {
+                if (formato === 'csv') {
+                    // Generar contenido CSV
+                    const csvContent = numeros.map(num =>
+                        `${num.numero},${num.estado},${num.compradores.map(c =>
+                            `${c.nombre} (${c.porcentaje}% - ${c.pagado ? 'Pagado' : 'Pendiente'})`
+                        ).join(';')}`
+                    ).join('\n');
+
+                    // Crear y descargar archivo CSV
+                    const blob = new Blob([csvContent], { type: 'text/csv' });
+                    const link = document.createElement('a');
+                    link.download = 'rifa-export.csv';
+                    link.href = URL.createObjectURL(blob);
+                    link.click();
+                } else {
+                    // Configuración inicial del canvas
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const size = 600; // Tamaño base del grid
+                    const maxBannerHeight = 200; // Altura máxima permitida para el banner
+                    const cellSize = size / 10; // Tamaño de cada celda
+
+                    // Cargar y verificar el banner
+                    let bannerCargado = false;
+                    if (bannerImage) {
+                        try {
+                            await new Promise((resolve, reject) => {
+                                bannerImage.onload = resolve;
+                                bannerImage.onerror = reject;
+                                // Forzar reload si ya estaba cargada
+                                if (bannerImage.complete) resolve();
+                            });
+                            bannerCargado = true;
+                        } catch (error) {
+                            console.error('Error al cargar el banner:', error);
+                            bannerCargado = false;
+                        }
+                    }
+
+                    // Calcular dimensiones del banner
+                    let alturaBanner = 0;
+                    if (bannerCargado) {
+                        const relacionAspecto = bannerImage.naturalWidth / bannerImage.naturalHeight;
+                        alturaBanner = Math.min(
+                            maxBannerHeight,
+                            size / relacionAspecto // Mantener proporción
+                        );
+                    }
+
+                    // Configurar dimensiones del canvas
+                    canvas.width = size;
+                    canvas.height = size + alturaBanner;
+
+                    // Dibujar el banner
+                    if (bannerCargado) {
+                        // Escalar imagen para que ocupe todo el ancho
+                        ctx.drawImage(
+                            bannerImage,
+                            0, 0, // Coordenadas de origen
+                            bannerImage.naturalWidth, bannerImage.naturalHeight, // Tamaño original
+                            0, 0, // Posición en canvas
+                            size, alturaBanner // Tamaño final
+                        );
+                    } else {
+                        // Banner por defecto si no hay imagen
+                        ctx.fillStyle = '#2c3e50';
+                        ctx.fillRect(0, 0, size, 80);
+                        ctx.fillStyle = '#ecf0f1';
+                        ctx.font = 'bold 28px Arial';
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText('RIFA', size / 2, 40);
+                        alturaBanner = 80;
+                    }
+
+                    // Dibujar fondo del grid
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, alturaBanner, size, size);
+
+                    // Dibujar cada número en el grid
+                    numeros.forEach(num => {
+                        const columna = (parseInt(num.numero) - 1) % 10;
+                        const fila = Math.floor((parseInt(num.numero) - 1) / 10);
+                        const yPos = fila * cellSize + alturaBanner;
+
+                        // Color de fondo de la celda
+                        ctx.fillStyle = num.porcentajeVendido > 0 ? '#2c3e50' : '#bdc3c7';
+                        ctx.fillRect(columna * cellSize, yPos, cellSize, cellSize);
+
+                        // Texto del número (solo en celdas disponibles)
+                        if (num.porcentajeVendido === 0) {
+                            ctx.fillStyle = '#ffffff';
+                            ctx.font = `bold ${cellSize * 0.4}px Arial`;
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'middle';
+                            ctx.fillText(
+                                num.numero,
+                                columna * cellSize + cellSize / 2,
+                                yPos + cellSize / 2
+                            );
+                        }
+                    });
+
+                    // Crear y descargar la imagen
+                    const link = document.createElement('a');
+                    link.download = `rifa-${new Date().toISOString().split('T')[0]}.png`;
+                    link.href = canvas.toDataURL('image/png', 1.0);
+                    link.click();
+                }
+            }
+
+            function filtrarNumeros(texto) {
+                filtroActual = texto.toLowerCase();
+                renderNumeros();
+            }
+
+            function seleccionarNumero(numero) {
+                document.getElementById('numero').value = numero;
+                document.getElementById('form-venta').scrollIntoView({ behavior: 'smooth' });
+                renderNumeros();
+            }
+
+            function manejarAccion() {
+                const numero = document.getElementById('numero').value.padStart(2, '0');
+                const nombre = document.getElementById('nombre').value.trim();
+                const [accion, porcentaje] = document.getElementById('tipo-accion').value.split('-');
+
+                if (!numero || numero < 1 || numero > 100 || !nombre) {
+                    alert('Datos inválidos');
+                    return;
+                }
+
+                const index = numeros.findIndex(n => n.numero === numero);
+                const porcentajeNum = parseInt(porcentaje);
+
+                if (!configuracion.vaquitasPermitidas && porcentajeNum !== 100) {
+                    alert('Solo números completos');
+                    return;
+                }
+
+                if ((numeros[index].porcentajeVendido + porcentajeNum) > 100) {
+                    alert('Porcentaje no disponible');
+                    return;
+                }
+
+                numeros[index].compradores.push({
+                    nombre: nombre,
+                    porcentaje: porcentajeNum,
+                    monto: (configuracion.precio * (porcentajeNum / 100)).toFixed(2),
+                    pagado: accion === 'vender'
+                });
+
+                numeros[index].porcentajeVendido += porcentajeNum;
+                actualizarEstado(numeros[index]);
+
+                document.getElementById('numero').value = '';
+                document.getElementById('nombre').value = '';
+                secureSave();
+                renderNumeros();
+            }
+
+            function marcarComoPagado(numero, indexComprador) {
+                const index = numeros.findIndex(n => n.numero === numero);
+                numeros[index].compradores[indexComprador].pagado = true;
+                actualizarEstado(numeros[index]);
+                secureSave();
+                renderNumeros();
+            }
+
+            function eliminarComprador(numero, indexComprador) {
+                if (!confirm('¿Eliminar transacción?')) return;
+
+                const index = numeros.findIndex(n => n.numero === numero);
+                const comprador = numeros[index].compradores[indexComprador];
+
+                numeros[index].porcentajeVendido -= comprador.porcentaje;
+                numeros[index].compradores.splice(indexComprador, 1);
+                actualizarEstado(numeros[index]);
+
+                secureSave();
+                renderNumeros();
+            }
+
+            function iniciarReset() {
+                const clave = prompt('Clave de seguridad:');
+                if (clave === CLAVE_RESET && confirm('¿Borrar todo?')) {
+                    localStorage.clear();
+                    location.reload();
+                } else if (clave !== CLAVE_RESET) {
+                    alert('Clave incorrecta');
+                }
+            }
+
+            // Inicialización
+            if (configuracion) {
+                document.getElementById('config-inicial').style.display = 'none';
+                document.getElementById('precio-info').style.display = 'block';
+                document.getElementById('precio-mostrado').textContent = configuracion.precio.toFixed(2);
+                document.getElementById('media-venta-texto').style.display = configuracion.vaquitasPermitidas ? 'block' : 'none';
+                document.getElementById('form-venta').style.display = 'flex';
+                actualizarOpcionesTransaccion();
+            }
+            renderNumeros();
+        </script>
 </body>
+
 </html>
