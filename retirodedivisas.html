@@ -484,11 +484,11 @@ function getCurrencyFullName(currencyCode) {
     return currencyNames[currencyCode] || currencyCode; // Si no se encuentra, devuelve el código original
 }
 
-            // Abrir una ventana de impresión
-            const printWindow = window.open('', '', 'width=600,height=600');
-            printWindow.document.write(printContent);
-            printWindow.document.close();
-            printWindow.print();
+    printWindow.print();
+    setTimeout(() => {
+        printWindow.print();
+        printWindow.close();
+    }, 1000); // Espera 1 segundo antes de la segunda impresión
             resetForm();
         }
         // Función para reiniciar el formulario
