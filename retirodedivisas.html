@@ -6,128 +6,271 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Retiro de Divisas</title>
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-            background-color: #cdd1d3bb;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            flex-direction: column;
-        }
-        h1 {
-            color: #2a3e52;
-            font-size: 1.4rem;
-            font-weight: 700;
-            margin-bottom: 15px;
-        }
-        .container {
-            width: 300px;
-            background: rgba(255, 255, 255, 0.3);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.466);
-        }
-        label {
-            font-size: 1rem;
-            color: #000000;
-            display: block;
-            margin-bottom: 6px;
-            font-weight: bold;
-        }
-        footer {
-            text-align: center;
-            padding: 20px;
-            font-size: 0.9rem;
-            color: #fff;
-            background: rgba(255, 255, 255, 0.3);
-            backdrop-filter: blur(10px);
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            width: fit-content;
-            margin: 40px auto 0;
-            border: 1px solid rgb(255, 255, 255);
-        }
-        select, input {
-            margin-bottom: 10px;
-            padding: 10px;
-            border-radius: 6px;
-            border: 2px solid #bdc3c7;
-            font-size: 0.8rem;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-        select:focus, input:focus {
-            border-color: #3498db;
-            box-shadow: 0 0 8px rgba(52, 152, 219, 0.5);
-            outline: none;
-        }
-        select:hover, input:hover {
-            border-color: #00ffbf;
-        }
-        .denomination-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-            width: 100%;
-            border-radius: 6px;
-        }
-        .denomination-input-container input {
-            width: 50%;
-            padding: 6px;
-            border-radius: 6px;
-            border: 2px solid #bdc3c7;
-            text-align: center;
-            font-size: 0.8rem;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-        .denomination-input-container input:focus {
-            border-color: #3498db;
-            box-shadow: 0 0 8px rgba(52, 152, 219, 0.5);
-            outline: none;
-        }
-        .total {
-            font-weight: bold;
-            color: #363f47;
-            text-align: center;
-            margin-top: 15px;
-            font-size: 1.2rem;
-        }
-        .error {
-            border-color: #e74c3c !important;
-        }
-        .error-message {
-            color: #e74c3c;
-            font-size: 0.8rem;
-            margin-top: -10px;
-            margin-bottom: 10px;
-        }
-        .hidden {
-            display: none;
-        }
-        .button {
-            background-color: #3498db;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: background-color 0.3s ease;
-            margin: 5px;
-        }
-        .button:hover {
-            background-color: #2980b9;
-        }
-        .button.print {
-            background-color: #2ecc71;
-        }
-        .button.print:hover {
-            background-color: #27ae60;
-        }
+    /* =====================================
+    1. VARIABLES & GLOBAL SETTINGS
+    ===================================== */
+    :root {
+    /* Paleta de colores estilo iOS */
+    --color-bg: #f7f8fa;               /* Fondo general */
+    --color-primary: #007aff;          /* Azul iOS */
+    --color-primary-hover: #006add;    /* Hover azul más oscuro */
+    --color-secondary: #34c759;        /* Verde estilo iOS */
+    --color-secondary-hover: #2aa94d;
+    --color-highlight: #00ffbf;        /* Por si deseas resaltar algo */
+    --color-error: #ff3b30;            /* Rojo de error iOS */
+
+    --color-title: #1c1c1e;
+    --color-text: #3a3a3c;
+    --color-text-dark: #111;
+    --color-white: #fff;
+
+    /* Sombras y transparencias */
+    --shadow-main: 0 6px 18px rgba(0, 0, 0, 0.08);
+    --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.12); /* Sombra un poco más intensa en hover */
+    --shadow-footer: 0 4px 10px rgba(0, 0, 0, 0.05);
+    --bg-overlay: rgba(255, 255, 255, 0.6);
+
+    /* Efecto de desenfoque */
+    --blur-radius: 14px;
+
+    /* Tipografía y tamaños */
+    --font-family-base: 'Poppins', sans-serif;
+    --font-size-base: 0.9rem;
+
+    /* Radios y transiciones */
+    --border-radius-base: 12px;        /* Bordes más redondeados estilo iOS */
+    --transition-base: all 0.3s ease;  /* Transición suave */
+
+    /* Duración animaciones */
+    --animation-duration: 0.6s;
+    }
+
+    /* =====================================
+    2. GLOBAL RESET & BODY
+    ===================================== */
+    html, body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-family-base);
+    text-align: center;
+    }
+
+    body {
+    background-color: var(--color-bg);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    }
+
+    /* =====================================
+    3. ANIMACIONES
+    ===================================== */
+    @keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    }
+
+    /* =====================================
+    4. TIPOGRAFÍA
+    ===================================== */
+    h1 {
+    color: var(--color-title);
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    /* Pequeña animación de entrada */
+    animation: fadeInUp var(--animation-duration) ease forwards;
+    }
+
+    label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text-dark);
+    }
+
+    .error-message {
+    color: var(--color-error);
+    font-size: 0.8rem;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    }
+
+    .total {
+    margin-top: 15px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--color-text);
+    }
+
+    /* =====================================
+    5. CONTAINERS & LAYOUT
+    ===================================== */
+    .container {
+    width: 320px;
+    padding: 20px;
+    background-color: var(--bg-overlay);
+    border-radius: var(--border-radius-base);
+    box-shadow: var(--shadow-main);
+    backdrop-filter: blur(var(--blur-radius));
+    transition: var(--transition-base);
+    /* Animación de entrada suave */
+    animation: fadeInUp var(--animation-duration) ease forwards;
+    }
+
+    /* 
+    HOVER en el .container:
+    - Pequeño "scale" para dar efecto
+    - Sombra ligeramente más marcada 
+    */
+    .container:hover {
+    transform: scale(1.02);
+    box-shadow: var(--shadow-hover);
+    }
+
+    .denomination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    width: 100%;
+    border-radius: var(--border-radius-base);
+    }
+
+    /* =====================================
+    6. FORMULARIOS & INPUTS
+    ===================================== */
+    select,
+    input {
+    margin-bottom: 10px;
+    padding: 12px;
+    font-size: var(--font-size-base);
+    border: 1.5px solid #d1d1d6; 
+    border-radius: var(--border-radius-base);
+    transition: var(--transition-base);
+    background-color: var(--color-white);
+    /* Se añade un leve "escalado" en hover */
+    }
+
+    select:hover,
+    input:hover {
+    border-color: var(--color-primary-hover);
+    transform: scale(1.01);
+    }
+
+    /* :focus, cuando el usuario hace clic */
+    select:focus,
+    input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 6px rgba(0, 122, 255, 0.3);
+    }
+
+    /* Inputs dentro de la denominación */
+    .denomination-input-container input {
+    width: 50%;
+    padding: 10px;
+    font-size: var(--font-size-base);
+    text-align: center;
+    border: 1.5px solid #d1d1d6;
+    border-radius: var(--border-radius-base);
+    transition: var(--transition-base);
+    background-color: var(--color-white);
+    }
+
+    .denomination-input-container input:hover {
+    transform: scale(1.01);
+    border-color: var(--color-primary-hover);
+    }
+
+    .denomination-input-container input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 6px rgba(0, 122, 255, 0.3);
+    }
+
+    /* =====================================
+    7. BOTONES
+    ===================================== */
+    .button {
+    margin: 5px;
+    padding: 10px 20px;
+    font-size: var(--font-size-base);
+    color: var(--color-white);
+    background-color: var(--color-primary);
+    border: none;
+    border-radius: var(--border-radius-base);
+    cursor: pointer;
+    transition: var(--transition-base);
+    }
+
+    /*
+    BOTONES: 
+    - Sutil escalado en hover
+    - Cambio de color a var(--color-primary-hover)
+    */
+    .button:hover {
+    background-color: var(--color-primary-hover);
+    transform: scale(1.03);
+    }
+
+    .button.print {
+    background-color: var(--color-secondary);
+    }
+
+    .button.print:hover {
+    background-color: var(--color-secondary-hover);
+    transform: scale(1.03);
+    }
+
+    /* =====================================
+    8. UTILIDADES
+    ===================================== */
+    .error {
+    border-color: var(--color-error) !important;
+    }
+
+    .hidden {
+    display: none;
+    }
+
+    /* =====================================
+    9. FOOTER
+    ===================================== */
+    footer {
+    margin: 40px auto 0;
+    padding: 20px;
+    width: fit-content;
+    font-size: 0.9rem;
+    color: var(--color-white);
+    text-align: center;
+    background-color: var(--bg-overlay);
+    backdrop-filter: blur(var(--blur-radius));
+    border-radius: var(--border-radius-base);
+    box-shadow: var(--shadow-footer);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    animation: fadeInUp var(--animation-duration) ease forwards;
+    transition: var(--transition-base);
+    }
+
+    /* 
+    HOVER en el footer:
+    - Ligero cambio de escala y sombra
+    */
+    footer:hover {
+    transform: scale(1.02);
+    box-shadow: var(--shadow-main);
+    }
+
     </style>
 </head>
 <body>
@@ -151,33 +294,40 @@
         <div id="currency-key-error" class="error-message hidden">Clave de divisa no válida.</div>
         <select id="currency" aria-label="Seleccione una divisa" onchange="updateCurrencyKey()">
             <option value="">--- Seleccione una divisa ---</option>
+            <!-- PRIMERO: Moneda Nacional y las más usadas -->
             <option value="MXN">Moneda Nacional (MXN)</option>
             <option value="USD">Dólar Americano (USD)</option>
-            <option value="CAD">Canada (CAD)</option>
-            <option value="CHF">Suiza (CHF)</option>
-            <option value="AUD">Australia (AUD)</option>
             <option value="EUR">Euro (EUR)</option>
-            <option value="BRL">Brasil (BRL)</option>
+            <option value="CAD">Canada (CAD)</option>
             <option value="GBP">Inglaterra (GBP)</option>
-            <option value="JPY">Japón (JPY)</option>
-            <option value="CUP">Cuba Convertible (CUP)</option>
+            <option value="BRL">Brasil (BRL)</option>
             <option value="MOR_USD">Morralla Americana (MOR_USD)</option>
             <option value="MOR_CAD">Morralla Canada (MOR_CAD)</option>
             <option value="MOR_EUR">Morralla Euro (MOR_EUR)</option>
             <option value="MOR_GBP">Morralla Sterlina (MOR_GBP)</option>
-            <option value="ARS">Pesos Argentinos (ARS)</option>
-            <option value="COP">Colombia (COP)</option>
+            <!-- RESTO DE DIVISAS EN ORDEN ALFABÉTICO POR NOMBRE -->
+            <option value="AUD">Australia (AUD)</option>
             <option value="BZD">Belice (BZD)</option>
             <option value="CLP">Chile (CLP)</option>
             <option value="CNY">China (CNY)</option>
+            <option value="COP">Colombia (COP)</option>
+            <option value="KRW">Corea del Sur (KRW)</option>
+            <option value="CRC">Costa Rica (CRC)</option>
+            <option value="CUP">Cuba Convertible (CUP)</option>
             <option value="DKK">Dinamarca (DKK)</option>
+            <option value="SGBP">Escocia (SGBP)</option> 
             <option value="GTQ">Guatemala (GTQ)</option>
             <option value="HKD">Hong Kong (HKD)</option>
             <option value="ILS">Israel (ILS)</option>
+            <option value="JPY">Japón (JPY)</option>
             <option value="NOK">Noruega (NOK)</option>
+            <option value="NZD">Nueva Zelanda (NZD)</option>
             <option value="PEN">Perú (PEN)</option>
+            <option value="ARS">Pesos Argentinos (ARS)</option>
             <option value="RUB">Rusia (RUB)</option>
             <option value="SEK">Suecia (SEK)</option>
+            <option value="CHF">Suiza (CHF)</option>
+            <option value="TRY">Turquia (TRY)</option>
         </select>
         <div id="denominations-container"></div>
         <div class="total" id="total">Monto total: $0.00</div>
@@ -189,44 +339,76 @@
 </body>
     <script>
         // Datos de denominaciones por divisa
-        const denominationsByCurrency = {
-            MXN: [1000, 500, 200, 100, 50, 20, 10, 5, 2, 1, 0.5],
-            USD: [100, 50, 20, 10, 5, 2, 1],
-            CAD: [100, 50, 20, 10, 5],
-            CHF: [1000, 200, 100, 50, 20, 10, 5],
-            AUD: [100, 50, 20, 10, 5],
-            EUR: [500, 200, 100, 50, 20, 10, 5],
-            BRL: [200, 100, 50, 20, 10, 5, 2, 1],
-            GBP: [50, 20, 10, 5],
-            JPY: [10000, 5000, 2000, 1000],
-            CUP: [100, 50, 20, 10, 5, 3, 1],
-            MOR_USD: [1, 0.5, 0.25, 0.1, 0.05],
-            MOR_CAD: [2, 1],
-            MOR_EUR: [2, 1, 0.5],
-            MOR_GBP: [2, 1],
-            ARS: [1000, 500, 200, 100, 50, 20, 10, 5, 2],
-            COP: [100000, 50000, 20000, 10000, 5000, 2000, 1000],
-            BZD: [100, 50, 20, 10, 5, 2, 1],
-            CLP: [20000, 10000, 5000, 2000, 1000],
-            CNY: [100, 50, 20, 10, 5],
-            DKK: [1000, 500, 200, 100, 50],
-            GTQ: [200, 100, 50, 20, 10, 5],
-            HKD: [1000, 500, 100, 50, 20, 10],
-            ILS: [200, 100, 50, 20],
-            NOK: [1000, 500, 200, 100, 50],
-            PEN: [200, 100, 50, 20, 10],
-            RUB: [5000, 2000, 1000, 500, 200, 100, 50, 10, 5],
-            SEK: [1000, 500, 200, 100, 50, 20]
-        };
+    const denominationsByCurrency = {
+    MXN: [1000, 500, 200, 100, 50, 20, 10, 5, 2, 1, 0.5],
+    USD: [100, 50, 20, 10, 5, 2, 1],
+    CAD: [100, 50, 20, 10, 5],
+    CHF: [1000, 200, 100, 50, 20, 10, 5],
+    AUD: [100, 50, 20, 10, 5],
+    EUR: [500, 200, 100, 50, 20, 10, 5],
+    BRL: [200, 100, 50, 20, 10, 5, 2, 1],
+    GBP: [50, 20, 10, 5],
+    JPY: [10000, 5000, 2000, 1000],
+    CUP: [100, 50, 20, 10, 5, 3, 1],
+    MOR_USD: [1, 0.5, 0.25, 0.1, 0.05],
+    MOR_CAD: [2, 1],
+    MOR_EUR: [2, 1, 0.5],
+    MOR_GBP: [2, 1],
+    ARS: [1000, 500, 200, 100, 50, 20, 10, 5, 2],
+    COP: [100000, 50000, 20000, 10000, 5000, 2000, 1000],
+    BZD: [100, 50, 20, 10, 5, 2, 1],
+    CLP: [20000, 10000, 5000, 2000, 1000],
+    CNY: [100, 50, 20, 10, 5],
+    DKK: [1000, 500, 200, 100, 50],
+    GTQ: [200, 100, 50, 20, 10, 5],
+    HKD: [1000, 500, 100, 50, 20, 10],
+    ILS: [200, 100, 50, 20],
+    NOK: [1000, 500, 200, 100, 50],
+    PEN: [200, 100, 50, 20, 10],
+    RUB: [5000, 2000, 1000, 500, 200, 100, 50, 10, 5],
+    SEK: [1000, 500, 200, 100, 50, 20],
+    CRC: [20000, 10000, 5000, 2000, 1000],
+    KRW: [50000, 10000, 5000, 2000, 1000],
+    NZD: [100, 50, 20, 10, 5],
+    TRY: [200, 100, 50, 20, 10, 5],
+    SGBP: [100, 50, 20, 10, 5]
+    };
 
-        // Mapa de claves de divisa
-        const currencyMap = {
-            4: 'CAD', 2: 'USD', 7: 'EUR', 9: 'GBP', 8: 'BRL', 18: 'COP', 1: 'MXN', 6: 'AUD', 19: 'BZD', 20: 'CLP',
-            21: 'CNY', 32: 'KRW', 33: 'CRC', 11: 'CUP', 22: 'DKK', 30: 'SCO', 23: 'GTQ', 24: 'HKD', 25: 'ILS', 10: 'JPY',
-            12: 'MOR_USD', 13: 'MOR_CAD', 14: 'MOR_EUR', 15: 'MOR_GBP', 26: 'NOK', 31: 'NZD', 27: 'PEN', 17: 'ARS', 28: 'RUB',
-            29: 'SEK', 5: 'CHF', 34: 'TRY'
-        };
-
+    // Mapa de claves de divisa
+    const currencyMap = {
+    4: 'CAD',
+    2: 'USD',
+    7: 'EUR',
+    9: 'GBP',
+    8: 'BRL',
+    18: 'COP',
+    1: 'MXN',
+    6: 'AUD',
+    19: 'BZD',
+    20: 'CLP',
+    21: 'CNY',
+    32: 'KRW',
+    33: 'CRC',
+    11: 'CUP',
+    22: 'DKK',
+    30: 'SGBP',
+    23: 'GTQ',
+    24: 'HKD',
+    25: 'ILS',
+    10: 'JPY',
+    12: 'MOR_USD',
+    13: 'MOR_CAD',
+    14: 'MOR_EUR',
+    15: 'MOR_GBP',
+    26: 'NOK',
+    31: 'NZD',
+    27: 'PEN',
+    17: 'ARS',
+    28: 'RUB',
+    29: 'SEK',
+    5: 'CHF',
+    34: 'TRY'
+    };
         // Actualiza la fecha y hora
         function updateDateTime() {
             const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
@@ -452,37 +634,44 @@ const printContent = `
 
 // Función para obtener el nombre completo de la divisa
 function getCurrencyFullName(currencyCode) {
-    const currencyNames = {
-        MXN: "Moneda Nacional (MXN)",
-        USD: "Dólar Americano (USD)",
-        CAD: "Dólar Canadiense (CAD)",
-        CHF: "Franco Suizo (CHF)",
-        AUD: "Dólar Australiano (AUD)",
-        EUR: "Euro (EUR)",
-        BRL: "Real Brasileño (BRL)",
-        GBP: "Libra Esterlina (GBP)",
-        JPY: "Yen Japonés (JPY)",
-        CUP: "Peso Cubano Convertible (CUP)",
-        MOR_USD: "Morralla Americana (MOR_USD)",
-        MOR_CAD: "Morralla Canadiense (MOR_CAD)",
-        MOR_EUR: "Morralla Euro (MOR_EUR)",
-        MOR_GBP: "Morralla Libra Esterlina (MOR_GBP)",
-        ARS: "Peso Argentino (ARS)",
-        COP: "Peso Colombiano (COP)",
-        BZD: "Dólar Beliceño (BZD)",
-        CLP: "Peso Chileno (CLP)",
-        CNY: "Yuan Chino (CNY)",
-        DKK: "Corona Danesa (DKK)",
-        GTQ: "Quetzal Guatemalteco (GTQ)",
-        HKD: "Dólar de Hong Kong (HKD)",
-        ILS: "Nuevo Shekel Israelí (ILS)",
-        NOK: "Corona Noruega (NOK)",
-        PEN: "Sol Peruano (PEN)",
-        RUB: "Rublo Ruso (RUB)",
-        SEK: "Corona Sueca (SEK)"
+  const currencyNames = {
+    MXN: "Moneda Nacional (MXN)",
+    USD: "Dólar Americano (USD)",
+    CAD: "Dólar Canadiense (CAD)",
+    CHF: "Franco Suizo (CHF)",
+    AUD: "Dólar Australiano (AUD)",
+    EUR: "Euro (EUR)",
+    BRL: "Real Brasileño (BRL)",
+    GBP: "Libra Esterlina (GBP)",
+    JPY: "Yen Japonés (JPY)",
+    CUP: "Peso Cubano Convertible (CUP)",
+    MOR_USD: "Morralla Americana (MOR_USD)",
+    MOR_CAD: "Morralla Canadiense (MOR_CAD)",
+    MOR_EUR: "Morralla Euro (MOR_EUR)",
+    MOR_GBP: "Morralla Libra Esterlina (MOR_GBP)",
+    ARS: "Peso Argentino (ARS)",
+    COP: "Peso Colombiano (COP)",
+    BZD: "Dólar Beliceño (BZD)",
+    CLP: "Peso Chileno (CLP)",
+    CNY: "Yuan Chino (CNY)",
+    DKK: "Corona Danesa (DKK)",
+    GTQ: "Quetzal Guatemalteco (GTQ)",
+    HKD: "Dólar de Hong Kong (HKD)",
+    ILS: "Nuevo Shekel Israelí (ILS)",
+    NOK: "Corona Noruega (NOK)",
+    PEN: "Sol Peruano (PEN)",
+    RUB: "Rublo Ruso (RUB)",
+    SEK: "Corona Sueca (SEK)",
+    CRC: "Colón Costarricense (CRC)",
+    KRW: "Won Surcoreano (KRW)",
+    NZD: "Dólar Neozelandés (NZD)",
+    TRY: "Lira Turca (TRY)",
+    SGBP: "Libra Esterlina Escocesa (SGBP)"
     };
-    return currencyNames[currencyCode] || currencyCode; // Si no se encuentra, devuelve el código original
-}
+
+    return currencyNames[currencyCode] || currencyCode;
+    }
+
 
     // Abrir una ventana de impresión
     const printWindow = window.open('', '', 'width=600,height=600');
