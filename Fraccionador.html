@@ -8,350 +8,275 @@
     <title>Fraccionador de números</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-/* =============================================
-   1) VARIABLES GLOBALES & FUENTE BASE ADAPTABLE
-   ============================================= */
-   :root {
-  --color-bg: #f3f1fc;             /* Fondo principal de la página */
-  --color-white: #ffffff;          /* Blanco */
-  --color-primary: #5641b6;        /* Color principal (morado) */
-  --color-primary-light: #6c63ff;  /* Versión más clara del color principal */
-  --color-dark: #333;             /* Color texto principal */
-  --color-gray: #afafaf;          /* Gris para placeholders */
-  --shadow-light: rgba(0, 0, 0, 0.1);
-  --shadow-medium: rgba(0, 0, 0, 0.2);
-  --transition-speed: 0.2s;
+        /* General Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: #a7a7a7;
+            padding: 0 20px;
+            box-sizing: border-box;
+            color: #333;
+        }
 
-  /* 
-    Ajuste de fuente base con clamp:
-    - Mínimo: 14px
-    - Escala fluida: 2vw
-    - Máximo: 18px
-   */
-  font-size: clamp(14px, 2vw, 18px);
-}
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            max-height: 90vh;
+            overflow-y: auto;
+            width: 100%;
+            max-width: 920px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
 
-/* =============================================
-   2) ESTILOS BÁSICOS / BODY
-   ============================================= */
-body {
-  font-family: 'Poppins', sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
-  background: var(--color-bg);
-  padding: 0 20px;
-  box-sizing: border-box;
-  color: var(--color-dark);
-}
+        h2 {
+            color: #337bac;
+            font-weight: 600;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
 
-/* =============================================
-   3) CONTENEDOR PRINCIPAL
-   ============================================= */
-.container {
-  background: var(--color-white);
-  padding: 40px;
-  border-radius: 20px;
-  box-shadow: 0 4px 15px var(--shadow-light);
-  text-align: center;
-  max-height: 90vh;
-  overflow-y: auto;
-  width: 100%;
-  max-width: 920px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-}
+        /* Input Styles */
+        .input-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: stretch;
+            gap: 20px;
+            margin-bottom: 15px;
+            width: 100%;
+        }
 
-/* =============================================
-   4) TITULARES (h2 ADAPTABLE)
-   ============================================= */
-h2 {
-  /* 
-    h2 fluido entre ~1.5rem y 2.4rem
-    (ajusta según tu preferencia)
-  */
-  font-size: clamp(1.5rem, 4vw, 2.4rem);
-  color: var(--color-primary);
-  font-weight: 600;
-  margin-bottom: 20px;
-}
+        .input-container input[type="number"],
+        .input-container select,
+        .input-container button,
+        .input-container input[type="text"] {
+            padding: 15px;
+            border: 0px solid #4e4f9c;
+            border-radius: 10px;
+            font-size: 1em;
+            box-shadow: 0 4px 10px rgb(0, 0, 0);
+            outline: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            flex: 1 1 auto;
+            min-width: 200px;
+        }
 
-/* =============================================
-   5) INPUTS, SELECTS, BOTONES, ETC.
-   ============================================= */
-.input-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;  /* Alineación horizontal de inputs y botones */
-  align-items: center;       /* Alineación vertical */
-  gap: 20px;
-  margin-bottom: 15px;
-  width: 100%;
-}
+        .input-container input:focus,
+        .input-container select:focus,
+        .input-container button:focus,
+        .input-container input[type="text"]:focus {
+            transform: scale(1.10);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.514);
+        }
 
-/* Inputs y selects */
-.input-container input[type="number"],
-.input-container select,
-.input-container input[type="text"] {
-  padding: 15px;
-  border: none;
-  border-radius: 10px;
-  font-size: 1rem; /* 1rem se basa en el clamp definido en :root */
-  box-shadow: 0 4px 10px var(--shadow-light);
-  outline: none;
-  transition: transform var(--transition-speed) ease, 
-              box-shadow var(--transition-speed) ease;
-  flex: 1 1 auto;
-  min-width: 200px;
-  color: var(--color-dark);
-}
+        .input-container input::placeholder {
+            color: #afafaf;
+            font-weight: bold;
+        }
 
-.input-container input::placeholder {
-  color: var(--color-gray);
-  font-weight: bold;
-}
+        .input-container button {
+            background: linear-gradient(to right, #7e6fff, #35039194);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.2s ease;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
 
-.input-container input:focus,
-.input-container select:focus,
-.input-container input[type="text"]:focus {
-  transform: scale(1.05);
-  box-shadow: 0 6px 20px var(--shadow-medium);
-}
+        .input-container button:hover {
+            transform: scale(1.10);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
 
-/* Botones */
-.input-container button {
-  font-size: 1rem;
-  background: linear-gradient(to right, var(--color-primary-light), var(--color-primary));
-  color: var(--color-white);
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s, transform var(--transition-speed) ease;
-  box-shadow: 0 4px 10px var(--shadow-light);
-  padding: 15px;
-  border-radius: 10px;
-  min-width: 180px; /* Para darles ancho parecido y alineación */
-}
+        /* Toggle Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 25px;
+        }
 
-.input-container button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 12px var(--shadow-medium);
-}
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
 
-/* =============================================
-   6) TOGGLE SWITCH
-   ============================================= */
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 50px;
-  height: 25px;
-}
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 25px;
+        }
 
-.switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
 
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-color: #ccc;
-  transition: 0.4s;
-  border-radius: 25px;
-}
+        input:checked + .slider {
+            background-color: #302ebf;
+        }
 
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 18px;
-  width: 18px;
-  left: 3px;
-  bottom: 3px;
-  background-color: var(--color-white);
-  transition: 0.4s;
-  border-radius: 50%;
-  box-shadow: 0 2px 4px var(--shadow-medium);
-}
+        input:checked + .slider:before {
+            transform: translateX(25px);
+        }
 
-input:checked + .slider {
-  background-color: var(--color-primary);
-}
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
 
-input:checked + .slider:before {
-  transform: translateX(25px);
-}
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 15px;
+            text-align: center;
+            white-space: nowrap;
+            font-size: 1em;
+        }
 
-/* =============================================
-   7) TABLA DE RESULTADOS
-   ============================================= */
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-  text-align: center;
-  box-shadow: 0 4px 10px var(--shadow-light);
-}
+        th {
+            background-color: #5641b6;
+            color: white;
+            font-weight: 700;
+        }
 
-th,
-td {
-  border: 1px solid #ddd;
-  padding: 15px;
-  text-align: center;
-  white-space: nowrap;
-  font-size: 1rem; /* Depende de la base clamp */
-}
+        tbody tr:nth-child(odd) {
+            background-color: #f3f4f6;
+        }
 
-/* Encabezado de la tabla */
-th {
-  background-color: var(--color-primary);
-  color: var(--color-white);
-  font-weight: 700;
-}
+        tbody tr:nth-child(even) {
+            background-color: #e1e8f0;
+        }
 
-/* Filas alternadas */
-tbody tr:nth-child(odd) {
-  background-color: var(--color-bg);
-}
-tbody tr:nth-child(even) {
-  background-color: #eae6fb;
-}
+        tbody tr:hover {
+            background-color: #d3f9e3;
+            transition: background-color 0.2s;
+        }
 
-/* Hover fila */
-tbody tr:hover {
-  background-color: #ded7f7;
-  transition: background-color 0.2s;
-}
+        /* Miscellaneous Styles */
+        .sum-result {
+            margin-top: 20px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 1.2em;
+            color: #333;
+        }
 
-/* =============================================
-   8) CONTENEDORES DE LABELS / INFO
-   ============================================= */
-.labels-container,
-.labels-container-tc {
-  margin-top: 20px;
-  text-align: left;
-  font-size: 1rem; /* Igual a la base clamp */
-  color: #6b6b6b;
-  font-weight: bold;
-  border-radius: 12px;
-  padding: 15px;
-  box-shadow: 0 4px 12px var(--shadow-light);
-  background: rgba(255, 255, 255, 0.9);
-  width: 100%;
-  max-width: 350px;
-}
+        .labels-container,
+        .labels-container-tc {
+            margin-top: 20px;
+            text-align: left;
+            font-size: 1em;
+            color: #6b6b6b;
+            font-weight: bold;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.671);
+            background: rgba(255, 255, 255, 0.8);
+            width: 100%;
+            max-width: 350px;
+        }
 
-/* Toggle Container: oculto por defecto */
-.labels-container-tc {
-  opacity: 0;
-  max-height: 0;
-  overflow: hidden;
-  transition: opacity 0.4s ease, max-height 0.4s ease;
-  font-size: 0.9rem; /* lig. más pequeña */
-  color: #555;
-  font-style: italic;
-}
+        .labels-container-tc {
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: opacity 0.4s ease, max-height 0.4s ease;
+            font-size: 0.9em;
+            color: #555;
+            font-style: italic;
+        }
 
-.labels-container-tc.show {
-  opacity: 1;
-  max-height: 350px;
-}
+        .labels-container-tc.show {
+            opacity: 1;
+            max-height: 350px;
+        }
 
-/* =============================================
-   9) MENSAJES DE ERROR / ÉXITO
-   ============================================= */
-.error-message {
-  color: #d9534f;
-  font-weight: bold;
-  margin-top: 20px;
-}
+        .error-message {
+            color: #d9534f;
+            font-weight: bold;
+            margin-top: 20px;
+        }
 
-.success-message {
-  color: #5cb85c;
-  font-weight: bold;
-  margin-top: 10px;
-}
+        .success-message {
+            color: #5cb85c;
+            font-weight: bold;
+            margin-top: 10px;
+        }
 
-/* =============================================
-   10) LOGO
-   ============================================= */
-.logo {
-  width: 100px;
-  height: auto;
-}
+        .logo {
+            width: 100px;
+            height: auto;
+        }
 
-/* =============================================
-   11) ESTILOS DE IMPRESIÓN
-   ============================================= */
-@media print {
-  table {
-    border: 1px solid black;
-    border-collapse: collapse;
-    width: 100%;
-  }
+        @media print {
+            table {
+                border: 1px solid black;
+                border-collapse: collapse;
+                width: 100%;
+            }
 
-  th,
-  td {
-    border: 1px solid black;
-    padding: 10px;
-    box-sizing: border-box;
-  }
+            th,
+            td {
+                border: 1px solid black;
+                padding: 10px;
+                box-sizing: border-box;
+            }
 
-  th {
-    background-color: #d3d3d3 !important;
-    -webkit-print-color-adjust: exact;
-  }
+            th {
+                background-color: #d3d3d3 !important;
+                -webkit-print-color-adjust: exact;
+            }
 
-  tbody tr:nth-child(odd) {
-    background-color: #f0f0f0 !important;
-    -webkit-print-color-adjust: exact;
-  }
+            tbody tr:nth-child(odd) {
+                background-color: #f0f0f0 !important;
+                -webkit-print-color-adjust: exact;
+            }
 
-  tbody tr:nth-child(even) {
-    background-color: #ffffff !important;
-    -webkit-print-color-adjust: exact;
-  }
-}
-  @media (max-width: 600px) {
-  .input-container {
-    flex-direction: column;   /* Apilar en columna */
-    align-items: stretch;     /* Que cada item tome todo el ancho del contenedor */
-  }
-
-  /* Para que los botones ocupen todo el ancho */
-  .input-container button {
-    width: 100%;
-    min-width: unset;         /* Quitamos el min-width si deseas */
-  }
-
-  /* Lo mismo con inputs y selects para que queden anchos */
-  .input-container input[type="number"],
-  .input-container select,
-  .input-container input[type="text"] {
-    width: 100%;
-    flex: none;               /* Dejamos que tomen el 100% */
-    min-width: unset;
-  }
-}
-      </style>
+            tbody tr:nth-child(even) {
+                background-color: #ffffff !important;
+                -webkit-print-color-adjust: exact;
+            }
+        }
+    </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 </head>
 
 <body>
     <div class="container">
         <h2>Fraccionador de números</h2>
-        <label class="switch">
-                <input type="checkbox" onclick="toggleLabelsContainerTc()">
-                <span class="slider"></span>
-            </label>
         <div class="input-container">
-            <input type="number" id="numero" placeholder="Monto máximo $34,000" oninput="validarMaximo(); fraccionarNumero(); actualizarMinimo(); fetchDataForDate(); mostrarTipoCambio();" aria-label="Ingresar un número a fraccionar" />
+            <input type="number" id="numero" placeholder="Monto máximo $35,000" oninput="validarMaximo(); fraccionarNumero(); actualizarMinimo(); fetchDataForDate(); mostrarTipoCambio();" aria-label="Ingresar un número a fraccionar" />
             <select id="moneda" onchange="mostrarTipoCambio(); actualizarMinimo(); fraccionarNumero(); fetchDataForDate();">
                 <option value="usd">Dólar americano</option>
                 <option value="eur">Euro</option>
@@ -363,7 +288,10 @@ tbody tr:hover {
             <button id="imprimirBtn" onclick="imprimirPDF()" title="Elija la impresora Brother" disabled>Imprimir</button>
             <button id="imprimirRolloBtn" onclick="imprimirRolloTermico()" title="Elija la impresora Epson o Tickets">Imprimir en ticket</button>
             <button onclick="borrarTodo()">Borrar Todo</button>
-
+            <label class="switch">
+                <input type="checkbox" onclick="toggleLabelsContainerTc()">
+                <span class="slider"></span>
+            </label>
         </div>
         <div class="labels-container">
             <div class="logo-container">
@@ -399,37 +327,24 @@ tbody tr:hover {
             </thead>
             <tbody></tbody>
         </table>
-        <div id="footer" style="text-align: center; margin-top: 20px; font-size: 0.9rem; color: #555;">
-            <a href="https://wa.me/9982358520?text=¡Hola!%20Vi%20tu%20trabajo%20y%20me%20encantaría%20contactarte"
-               target="_blank"
-               rel="noopener noreferrer"
-               style="color: inherit; text-decoration: none;">
-               Creado por Alejandro Toral 📱
-            </a>
+        <div id="footer">
+            Developed by <a href="https://thoraal.github.io/#work" target="_blank">Alejandro Toral</a>
         </div>
-        
     </div>
     <script>
         // JavaScript functions for handling various actions
         document.addEventListener("DOMContentLoaded", () => {
-  const numero = document.getElementById("numero");
-
-  numero.addEventListener("input", () => {
-    validarMaximo();
-    fraccionarNumero();
-    actualizarMinimo();
-    fetchDataForDate();
-    mostrarTipoCambio();
-  });
-});
-
+            const currentDate = new Date();
+            currentDate.setMinutes(currentDate.getMinutes() - currentDate.getTimezoneOffset());
+            document.getElementById("fechaTipoCambio").value = currentDate.toISOString().split("T")[0];
+        });
 
         function validarMaximo() {
             const numeroInput = document.getElementById("numero");
             const verificacionMensaje = document.getElementById("verificacionMensaje");
-            if (parseInt(numeroInput.value) > 34000) {
-                verificacionMensaje.textContent = "Error: El monto no puede exceder $34,000.";
-                numeroInput.value = 34000;
+            if (parseInt(numeroInput.value) > 35000) {
+                verificacionMensaje.textContent = "Error: El monto no puede exceder $35,000.";
+                numeroInput.value = 35000;
             } else {
                 verificacionMensaje.textContent = "";
             }
@@ -468,10 +383,8 @@ tbody tr:hover {
             }
         }
 
-        // =====================================================
-        // =           FUNCIÓN PRINCIPAL: FRACCIONAR           =
-        // =====================================================
         function fraccionarNumero() {
+            // Handle number fractionation logic
             const numero = document.getElementById("numero").value;
             const tipoCambio = document.getElementById("tipoCambio").value;
             const estadoMensaje = document.getElementById("estadoMensaje");
@@ -488,7 +401,6 @@ tbody tr:hover {
             const numeroInt = parseInt(numero);
             const tipoCambioFloat = parseFloat(tipoCambio);
 
-            // Validaciones:
             if (!validarNumero(numeroInt) || !validarTipoCambio(tipoCambioFloat)) {
                 limpiarResultado();
                 return;
@@ -499,30 +411,26 @@ tbody tr:hover {
             document.getElementById("labelTipoCambio").textContent = `${tipoCambioFloat.toFixed(2)}`;
             document.getElementById("labelTotal").textContent = `$${totalMonedaNacional}`;
 
-            // ---------------------------------------
-            // AQUÍ GENERAMOS EL ARREGLO DE FRACCIONES
-            // ---------------------------------------
-            const seed = numeroInt; // Semilla
+            const seed = numeroInt;
             const randomGenerator = xoshiro128ss(seed);
+            let partes = new Set();
             let restante = numeroInt;
-            let partes = [];  // Usamos array, no Set, para permitir reordenar
             const min = parseInt(document.getElementById('minimoValor').textContent) || 400;
             const max = parseInt(document.getElementById('maximoValor').textContent) || 990;
             const maxPartes = 44;
 
-            while (restante > 0 && partes.length < maxPartes) {
+            while (restante > 0 && partes.size < maxPartes) {
                 let fraccion = Math.floor(randomGenerator() * (max - min + 1)) + min;
-                // Ajustamos a múltiplos de 5
                 fraccion = Math.round(fraccion / 5) * 5;
-                // No superar lo restante
                 fraccion = Math.min(fraccion, restante);
 
-                partes.push(fraccion);
-                restante -= fraccion;
+                if (!partes.has(fraccion) && fraccion <= restante) {
+                    partes.add(fraccion);
+                    restante -= fraccion;
+                }
             }
 
-            // Verificar si la suma coincide
-            if (partes.reduce((a, b) => a + b, 0) !== numeroInt) {
+            if (Array.from(partes).reduce((a, b) => a + b, 0) !== numeroInt) {
                 verificacionMensaje.textContent = "Error: La suma de las fracciones no coincide con el número a fraccionar 😫";
                 estadoMensaje.textContent = "";
                 limpiarResultado();
@@ -532,61 +440,15 @@ tbody tr:hover {
             verificacionMensaje.textContent = "";
             estadoMensaje.textContent = "Todo correcto 😊";
             document.getElementById("imprimirBtn").disabled = false;
-
-            // =================================================
-            // = REORDENAR PARA EVITAR VALORES CONSECUTIVOS     =
-            // = MUY PARECIDOS (p.ej. diferencia < 20)          =
-            // =================================================
-            const umbral = 20; // Ajusta según tu criterio
-            partes = reordenarNoConsecutivos(partes, umbral);
-
-            // Finalmente mostramos
-            mostrarResultado(partes, numeroInt);
+            mostrarResultado(Array.from(partes), numeroInt);
         }
 
         function validarNumero(numero) {
-            return !isNaN(numero) && numero > 0 && numero <= 34000 && Number.isInteger(numero);
+            return !isNaN(numero) && numero > 0 && numero <= 35000 && Number.isInteger(numero);
         }
 
         function validarTipoCambio(tipoCambio) {
             return !isNaN(tipoCambio) && tipoCambio > 0 && tipoCambio <= 1000;
-        }
-
-        // =====================================================
-        // = FUNCIÓN: REORDENAR PARTES PARA EVITAR CONSECUTIVOS =
-        // =====================================================
-        function reordenarNoConsecutivos(originalPartes, umbral) {
-            // Hacemos copia para no mutar el arreglo original
-            const partes = [...originalPartes];
-
-            // Intentamos mezclar hasta 1000 veces
-            for (let i = 0; i < 1000; i++) {
-                fisherYatesShuffle(partes);
-                if (esValido(partes, umbral)) {
-                    return partes; // Si está bien, terminamos
-                }
-            }
-            // Si no encontramos un orden válido tras varios intentos,
-            // devolvemos el original (o aplica otro fallback).
-            return originalPartes;
-        }
-
-        // Mezcla aleatoria (Fisher-Yates)
-        function fisherYatesShuffle(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-        }
-
-        // Verifica que no haya elementos consecutivos con diferencia < umbral
-        function esValido(partes, umbral) {
-            for (let i = 0; i < partes.length - 1; i++) {
-                if (Math.abs(partes[i] - partes[i + 1]) < umbral) {
-                    return false; // No es válido
-                }
-            }
-            return true;
         }
 
         function mostrarResultado(partes, numeroInicial) {
@@ -671,6 +533,8 @@ tbody tr:hover {
             doc.autoPrint();
             window.open(doc.output('bloburl'), '_blank');
         }
+        
+        
 function imprimirRolloTermico() {
     const tabla = document.getElementById("resultado");
     const filas = Array.from(tabla.getElementsByTagName("tbody")[0].rows);
@@ -786,6 +650,7 @@ function printTextInThermal(text) {
         }
 
         function limpiarResultado() {
+            document.getElementById("sumaResultado").textContent = "";
             document.getElementById("resultado").getElementsByTagName("tbody")[0].innerHTML = "";
             document.getElementById("labelMonto").textContent = "";
             document.getElementById("labelTipoCambio").textContent = "";
@@ -826,118 +691,54 @@ function printTextInThermal(text) {
             return fecha.toLocaleDateString('es-ES', opciones);
         }
 
+        async function fetchDataForDate() {
+            const selectedDate = document.getElementById('fechaTipoCambio').value || new Date().toISOString().split('T')[0];
+            const tokens = [
+                '812a7355fa14f189ea64e3112c255d3993069dee78d526892de342526057c6ad',
+                'ea9e2067b75621dad3e50a21cd6f7f094060da2f1d0c6d6d4a65520c2e29459b'
+            ];
+            const today = selectedDate;
 
-  // =========================================================
-  // =             FUNCIÓN PARA OBTENER TC BANXICO           =
-  // =   (buscando hasta 7 días atrás si no hay publicación) =
-  // =========================================================
-  async function fetchDataForDate() {
-    // Tomamos la fecha seleccionada en el input "fechaTipoCambio"
-    const selectedDate = document.getElementById('fechaTipoCambio').value 
-                        || new Date().toISOString().split('T')[0];
-    
-    // Convertimos a objeto Date
-    let dateToCheck = new Date(selectedDate);
-    
-    // Tus tokens de Banxico (ajusta si es necesario)
-    const tokens = [
-      '812a7355fa14f189ea64e3112c255d3993069dee78d526892de342526057c6ad',
-      'ea9e2067b75621dad3e50a21cd6f7f094060da2f1d0c6d6d4a65520c2e29459b'
-    ];
-    
-    // Intentaremos hasta 7 días atrás
-    let maxAttempts = 7;
-    let foundData = false;
-    
-    while (maxAttempts > 0 && !foundData) {
-      // Formato YYYY-MM-DD
-      const today = dateToCheck.toISOString().split('T')[0];
-      
-      // Probamos cada token
-      for (let i = 0; i < tokens.length; i++) {
-        const token = tokens[i];
-        
-        // Endpoint Banxico
-        const url = `https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF60653/datos/${today}/${today}/?token=${token}`;
-        
-        try {
-          const response = await fetch(url);
-          if (!response.ok) throw new Error('Error en la respuesta de la API');
-          
-          const data = await response.json();
-          const serieData = data.bmx.series[0].datos;
-          
-          // Verificamos si hay datos en esa fecha
-          if (serieData && serieData.length > 0) {
-            // Dato disponible
-            const datoEncontrado = serieData[0];
-            
-            // Mostramos en la página
-            document.getElementById('tipoDeCambio').innerHTML =
-              ` ${datoEncontrado.fecha} TC: ${datoEncontrado.dato}`;
-            
-            // Calcula el valor adicional (depende de tu TC usuario)
-            actualizarCalculoAdicional(datoEncontrado.dato);
-            
-            foundData = true;
-            break; // Rompe el bucle de tokens; ya encontramos dato
-          }
-        } catch (error) {
-          console.error(`Intento fallido con token: ${token}`, error);
+            for (let i = 0; i < tokens.length; i++) {
+                const token = tokens[i];
+                const url = `https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF60653/datos/${today}/${today}/?token=${token}`;
+
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error('Error en la respuesta de la API');
+                    }
+
+                    const data = await response.json();
+                    const serieData = data.bmx.series[0].datos[0];
+                    document.getElementById('tipoDeCambio').innerHTML = ` ${serieData.fecha} TC: ${serieData.dato}`;
+
+                    const tipoCambioUsuarioElement = document.getElementById("tipoCambio");
+                    if (tipoCambioUsuarioElement) {
+                        const tipoCambioUsuario = parseFloat(tipoCambioUsuarioElement.value);
+                        if (!isNaN(tipoCambioUsuario) && tipoCambioUsuario > 0) {
+                            const calculoAdicional = (parseFloat(serieData.dato) * 1000 / tipoCambioUsuario).toFixed(2);
+                            document.getElementById('calculoAdicional').innerHTML = ` ${calculoAdicional}`;
+                            const maximoElement = document.getElementById('maximoValor');
+                            if (document.getElementById('moneda').value === 'usd' && calculoAdicional > 1000) {
+                                maximoElement.innerHTML = ' 990';
+                            } else {
+                                maximoElement.innerHTML = ` ${calculoAdicional}`;
+                            }
+                        } else {
+                            document.getElementById('calculoAdicional').innerHTML = '';
+                        }
+                    }
+
+                    return;
+
+                } catch (error) {
+                    console.error(`Intento con el token fallido: ${token}`, error);
+                }
+            }
+
+            document.getElementById('data').innerHTML = `Error al obtener los datos: Todos los tokens fallaron.`;
         }
-      }
-      
-      // Si no encontramos datos, retrocedemos un día y seguimos intentando
-      if (!foundData) {
-        dateToCheck.setDate(dateToCheck.getDate() - 1);
-        maxAttempts--;
-      }
-    }
-    
-    // Si no se halló nada tras retroceder varios días
-    if (!foundData) {
-      document.getElementById('tipoDeCambio').innerHTML = 'No hay datos disponibles';
-      document.getElementById('calculoAdicional').innerHTML = '';
-      
-      const dataElem = document.getElementById('data');
-      if (dataElem) {
-        dataElem.innerHTML = 'Error al obtener datos: no se encontró TC en los días consultados.';
-      }
-    }
-  }
-
-  // =========================================================
-  // =    FUNCIÓN PARA ACTUALIZAR CÁLCULO ADICIONAL Y MÁXIMO =
-  // =========================================================
-  function actualizarCalculoAdicional(tipoCambioBanxico) {
-    const tipoCambioUsuarioElement = document.getElementById("tipoCambio");
-    if (!tipoCambioUsuarioElement) return;
-
-    // Valor que ingresa el usuario
-    const tipoCambioUsuario = parseFloat(tipoCambioUsuarioElement.value);
-
-    if (!isNaN(tipoCambioUsuario) && tipoCambioUsuario > 0) {
-      // Ajusta la fórmula según tu lógica
-      const calculoAdicional = (
-        parseFloat(tipoCambioBanxico) * 1000 / tipoCambioUsuario
-      ).toFixed(2);
-
-      // Mostrar el cálculo
-      document.getElementById('calculoAdicional').innerHTML = ` ${calculoAdicional}`;
-
-      // Ajustar "máximo"
-      const maximoElement = document.getElementById('maximoValor');
-      if (document.getElementById('moneda').value === 'usd' && calculoAdicional > 1000) {
-        maximoElement.innerHTML = '990';
-      } else {
-        maximoElement.innerHTML = `${calculoAdicional}`;
-      }
-
-    } else {
-      // Si el valor de TC usuario no es válido, limpiamos
-      document.getElementById('calculoAdicional').innerHTML = '';
-    }
-  }
 
         document.getElementById("tipoCambio").addEventListener("input", fetchDataForDate);
         document.getElementById("tipoCambio").addEventListener("input", fraccionarNumero);
@@ -951,7 +752,7 @@ function printTextInThermal(text) {
         document.getElementById("moneda").addEventListener("change", fraccionarNumero);
         document.getElementById("moneda").addEventListener("change", actualizarMinimo);
         document.getElementById("moneda").addEventListener("change", mostrarTipoCambio);
-        fetchDataForDate();
+        fetchData();
     </script>
 </body>
 
