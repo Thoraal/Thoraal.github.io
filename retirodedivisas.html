@@ -1,759 +1,713 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="assets/img/retiro.png"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="assets/img/divfr.png"/>
-    <title>Fraccionador de números</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
+    <title>Retiro de Divisas 💵</title>
     <style>
-        /* General Styles */
-        body {
-            font-family: 'Poppins', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background: #a7a7a7;
-            padding: 0 20px;
-            box-sizing: border-box;
-            color: #333;
-        }
+    /* =====================================
+    1. VARIABLES & GLOBAL SETTINGS
+    ===================================== */
+    :root {
+    /* Paleta de colores estilo iOS */
+    --color-bg: #f7f8fa;               /* Fondo general */
+    --color-primary: #007aff;          /* Azul iOS */
+    --color-primary-hover: #006add;    /* Hover azul más oscuro */
+    --color-secondary: #34c759;        /* Verde estilo iOS */
+    --color-secondary-hover: #2aa94d;
+    --color-highlight: #00ffbf;        /* Por si deseas resaltar algo */
+    --color-error: #ff3b30;            /* Rojo de error iOS */
 
-        .container {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-            text-align: center;
-            max-height: 90vh;
-            overflow-y: auto;
-            width: 100%;
-            max-width: 920px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-        }
+    --color-title: #1c1c1e;
+    --color-text: #3a3a3c;
+    --color-text-dark: #111;
+    --color-white: #fff;
 
-        h2 {
-            color: #337bac;
-            font-weight: 600;
-            margin-bottom: 20px;
-            font-size: 2em;
-        }
+    /* Sombras y transparencias */
+    --shadow-main: 0 6px 18px rgba(0, 0, 0, 0.08);
+    --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.12); /* Sombra un poco más intensa en hover */
+    --shadow-footer: 0 4px 10px rgba(0, 0, 0, 0.05);
+    --bg-overlay: rgba(255, 255, 255, 0.6);
 
-        /* Input Styles */
-        .input-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: stretch;
-            gap: 20px;
-            margin-bottom: 15px;
-            width: 100%;
-        }
+    /* Efecto de desenfoque */
+    --blur-radius: 14px;
 
-        .input-container input[type="number"],
-        .input-container select,
-        .input-container button,
-        .input-container input[type="text"] {
-            padding: 15px;
-            border: 0px solid #4e4f9c;
-            border-radius: 10px;
-            font-size: 1em;
-            box-shadow: 0 4px 10px rgb(0, 0, 0);
-            outline: none;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            flex: 1 1 auto;
-            min-width: 200px;
-        }
+    /* Tipografía y tamaños */
+    --font-family-base: 'Roboto', sans-serif;
+    --font-size-base: 0.9rem;
 
-        .input-container input:focus,
-        .input-container select:focus,
-        .input-container button:focus,
-        .input-container input[type="text"]:focus {
-            transform: scale(1.10);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.514);
-        }
+    /* Radios y transiciones */
+    --border-radius-base: 12px;        /* Bordes más redondeados estilo iOS */
+    --transition-base: all 0.3s ease;  /* Transición suave */
 
-        .input-container input::placeholder {
-            color: #afafaf;
-            font-weight: bold;
-        }
+    /* Duración animaciones */
+    --animation-duration: 0.6s;
+    }
 
-        .input-container button {
-            background: linear-gradient(to right, #7e6fff, #35039194);
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.3s, transform 0.2s ease;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
-        }
+    /* =====================================
+    2. GLOBAL RESET & BODY
+    ===================================== */
+    html, body {
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-family-base);
+    text-align: center;
+    }
 
-        .input-container button:hover {
-            transform: scale(1.10);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-        }
+    body {
+    background-color: var(--color-bg);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    }
 
-        /* Toggle Switch */
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 25px;
-        }
+    /* =====================================
+    3. ANIMACIONES
+    ===================================== */
+    @keyframes fadeInUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    }
 
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
+    /* =====================================
+    4. TIPOGRAFÍA
+    ===================================== */
+    h1 {
+    color: var(--color-title);
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    /* Pequeña animación de entrada */
+    animation: fadeInUp var(--animation-duration) ease forwards;
+    }
 
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: 0.4s;
-            border-radius: 25px;
-        }
+    label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-text-dark);
+    }
 
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
-            width: 18px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: 0.4s;
-            border-radius: 50%;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
+    .error-message {
+    color: var(--color-error);
+    font-size: 0.8rem;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    }
 
-        input:checked + .slider {
-            background-color: #302ebf;
-        }
+    .total {
+    margin-top: 15px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--color-text);
+    }
 
-        input:checked + .slider:before {
-            transform: translateX(25px);
-        }
+    /* =====================================
+    5. CONTAINERS & LAYOUT
+    ===================================== */
+    .container {
+    width: 320px;
+    padding: 20px;
+    background-color: var(--bg-overlay);
+    border-radius: var(--border-radius-base);
+    box-shadow: var(--shadow-main);
+    backdrop-filter: blur(var(--blur-radius));
+    transition: var(--transition-base);
+    /* Animación de entrada suave */
+    animation: fadeInUp var(--animation-duration) ease forwards;
+    }
 
-        /* Table Styles */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-        }
+    /* 
+    HOVER en el .container:
+    - Pequeño "scale" para dar efecto
+    - Sombra ligeramente más marcada 
+    */
+    .container:hover {
+    transform: scale(1.02);
+    box-shadow: var(--shadow-hover);
+    }
 
-        th,
-        td {
-            border: 1px solid #ddd;
-            padding: 15px;
-            text-align: center;
-            white-space: nowrap;
-            font-size: 1em;
-        }
+    .denomination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    width: 100%;
+    border-radius: var(--border-radius-base);
+    }
 
-        th {
-            background-color: #5641b6;
-            color: white;
-            font-weight: 700;
-        }
+    /* =====================================
+    6. FORMULARIOS & INPUTS
+    ===================================== */
+    select,
+    input {
+    margin-bottom: 10px;
+    padding: 12px;
+    font-size: var(--font-size-base);
+    border: 1.5px solid #d1d1d6; 
+    border-radius: var(--border-radius-base);
+    transition: var(--transition-base);
+    background-color: var(--color-white);
+    /* Se añade un leve "escalado" en hover */
+    }
 
-        tbody tr:nth-child(odd) {
-            background-color: #f3f4f6;
-        }
+    select:hover,
+    input:hover {
+    border-color: var(--color-primary-hover);
+    transform: scale(1.01);
+    }
 
-        tbody tr:nth-child(even) {
-            background-color: #e1e8f0;
-        }
+    /* :focus, cuando el usuario hace clic */
+    select:focus,
+    input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 6px rgba(0, 122, 255, 0.3);
+    }
 
-        tbody tr:hover {
-            background-color: #d3f9e3;
-            transition: background-color 0.2s;
-        }
+    /* Inputs dentro de la denominación */
+    .denomination-input-container input {
+    width: 50%;
+    padding: 10px;
+    font-size: var(--font-size-base);
+    text-align: center;
+    border: 1.5px solid #d1d1d6;
+    border-radius: var(--border-radius-base);
+    transition: var(--transition-base);
+    background-color: var(--color-white);
+    }
 
-        /* Miscellaneous Styles */
-        .sum-result {
-            margin-top: 20px;
-            font-weight: bold;
-            text-align: center;
-            font-size: 1.2em;
-            color: #333;
-        }
+    .denomination-input-container input:hover {
+    transform: scale(1.01);
+    border-color: var(--color-primary-hover);
+    }
 
-        .labels-container,
-        .labels-container-tc {
-            margin-top: 20px;
-            text-align: left;
-            font-size: 1em;
-            color: #6b6b6b;
-            font-weight: bold;
-            border-radius: 12px;
-            padding: 15px;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.671);
-            background: rgba(255, 255, 255, 0.8);
-            width: 100%;
-            max-width: 350px;
-        }
+    .denomination-input-container input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 6px rgba(0, 122, 255, 0.3);
+    }
 
-        .labels-container-tc {
-            opacity: 0;
-            max-height: 0;
-            overflow: hidden;
-            transition: opacity 0.4s ease, max-height 0.4s ease;
-            font-size: 0.9em;
-            color: #555;
-            font-style: italic;
-        }
+    /* =====================================
+    7. BOTONES
+    ===================================== */
+    .button {
+    margin: 5px;
+    padding: 10px 20px;
+    font-size: var(--font-size-base);
+    color: var(--color-white);
+    background-color: var(--color-primary);
+    border: none;
+    border-radius: var(--border-radius-base);
+    cursor: pointer;
+    transition: var(--transition-base);
+    }
 
-        .labels-container-tc.show {
-            opacity: 1;
-            max-height: 350px;
-        }
+    /*
+    BOTONES: 
+    - Sutil escalado en hover
+    - Cambio de color a var(--color-primary-hover)
+    */
+    .button:hover {
+    background-color: var(--color-primary-hover);
+    transform: scale(1.03);
+    }
 
-        .error-message {
-            color: #d9534f;
-            font-weight: bold;
-            margin-top: 20px;
-        }
+    .button.print {
+    background-color: var(--color-secondary);
+    }
 
-        .success-message {
-            color: #5cb85c;
-            font-weight: bold;
-            margin-top: 10px;
-        }
+    .button.print:hover {
+    background-color: var(--color-secondary-hover);
+    transform: scale(1.03);
+    }
 
-        .logo {
-            width: 100px;
-            height: auto;
-        }
+    /* =====================================
+    8. UTILIDADES
+    ===================================== */
+    .error {
+    border-color: var(--color-error) !important;
+    }
 
-        @media print {
-            table {
-                border: 1px solid black;
-                border-collapse: collapse;
-                width: 100%;
-            }
+    .hidden {
+    display: none;
+    }
 
-            th,
-            td {
-                border: 1px solid black;
-                padding: 10px;
-                box-sizing: border-box;
-            }
+    /* =====================================
+    9. FOOTER
+    ===================================== */
+    footer {
+    margin: 40px auto 0;
+    padding: 20px;
+    width: fit-content;
+    font-size: 0.9rem;
+    color: var(--color-white);
+    text-align: center;
+    background-color: var(--bg-overlay);
+    backdrop-filter: blur(var(--blur-radius));
+    border-radius: var(--border-radius-base);
+    box-shadow: var(--shadow-footer);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    animation: fadeInUp var(--animation-duration) ease forwards;
+    transition: var(--transition-base);
+    }
 
-            th {
-                background-color: #d3d3d3 !important;
-                -webkit-print-color-adjust: exact;
-            }
+    /* 
+    HOVER en el footer:
+    - Ligero cambio de escala y sombra
+    */
+    footer:hover {
+    transform: scale(1.02);
+    box-shadow: var(--shadow-main);
+    }
 
-            tbody tr:nth-child(odd) {
-                background-color: #f0f0f0 !important;
-                -webkit-print-color-adjust: exact;
-            }
-
-            tbody tr:nth-child(even) {
-                background-color: #ffffff !important;
-                -webkit-print-color-adjust: exact;
-            }
-        }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 </head>
-
 <body>
     <div class="container">
-        <h2>Fraccionador de números</h2>
-        <div class="input-container">
-            <input type="number" id="numero" placeholder="Monto máximo $35,000" oninput="validarMaximo(); fraccionarNumero(); actualizarMinimo(); fetchDataForDate(); mostrarTipoCambio();" aria-label="Ingresar un número a fraccionar" />
-            <select id="moneda" onchange="mostrarTipoCambio(); actualizarMinimo(); fraccionarNumero(); fetchDataForDate();">
-                <option value="usd">Dólar americano</option>
-                <option value="eur">Euro</option>
-                <option value="cad">Canadiense</option>
-                <option value="otro">Otro</option>
-            </select>
-            <input type="text" id="monedaOtro" class="tipo-cambio" placeholder="Especificar otra moneda" oninput="formatearMonedaOtro(); fraccionarNumero(); actualizarMinimo(); fetchDataForDate();" style="display: none;" />
-            <input type="number" id="tipoCambio" class="tipo-cambio" placeholder="Ingrese tipo de cambio" oninput="fraccionarNumero(); actualizarMinimo(); fetchDataForDate(); mostrarTipoCambio();" />
-            <button id="imprimirBtn" onclick="imprimirPDF()" title="Elija la impresora Brother" disabled>Imprimir</button>
-            <button id="imprimirRolloBtn" onclick="imprimirRolloTermico()" title="Elija la impresora Epson o Tickets">Imprimir en ticket</button>
-            <button onclick="borrarTodo()">Borrar Todo</button>
-            <label class="switch">
-                <input type="checkbox" onclick="toggleLabelsContainerTc()">
-                <span class="slider"></span>
-            </label>
+        <h1>Retiro de Divisas</h1>
+        <div id="date-time" style="font-size: 0.8rem; color: #003cff; margin-bottom: 10px;"></div>
+        <hr style="border-color:#4d46a7;">
+        <input type="text" id="user-input" placeholder="Nombre de usuario 👤" aria-label="Nombre de usuario" />
+        <div id="user-error" class="error-message hidden">El nombre de usuario es requerido.</div>
+        <hr style="border-color:#4d46a7;">
+        <select id="sucursal" aria-label="Seleccione una sucursal" onchange="toggleSucursalInput()">
+            <option value="">--- Seleccione una sucursal ---</option>
+            <option value="ADO">ADO</option>
+            <option value="COBA">COBA</option>
+            <option value="OTRA">OTRA SUCURSAL</option>
+        </select>
+        <input type="text" id="sucursal-input" placeholder="Ingresa el nombre de otra sucursal" class="hidden" aria-label="Nombre de sucursal" />
+        <div id="sucursal-error" class="error-message hidden">La sucursal es requerida.</div>
+        <hr style="border-color:#4d46a7;">
+        <input type="number" id="currency-key" placeholder="Clave divisa 🔑" aria-label="Clave de divisa" oninput="selectCurrencyByKey()" />
+        <div id="currency-key-error" class="error-message hidden">Clave de divisa no válida.</div>
+        <select id="currency" aria-label="Seleccione una divisa" onchange="updateCurrencyKey()">
+            <option value="">--- Seleccione una divisa ---</option>
+            <!-- PRIMERO: Moneda Nacional y las más usadas -->
+            <option value="MXN">Moneda Nacional (MXN)</option>
+            <option value="USD">Dólar Americano (USD)</option>
+            <option value="EUR">Euro (EUR)</option>
+            <option value="CAD">Canada (CAD)</option>
+            <option value="GBP">Inglaterra (GBP)</option>
+            <option value="BRL">Brasil (BRL)</option>
+            <option value="MOR_USD">Morralla Americana (MOR_USD)</option>
+            <option value="MOR_CAD">Morralla Canada (MOR_CAD)</option>
+            <option value="MOR_EUR">Morralla Euro (MOR_EUR)</option>
+            <option value="MOR_GBP">Morralla Sterlina (MOR_GBP)</option>
+            <!-- RESTO DE DIVISAS EN ORDEN ALFABÉTICO POR NOMBRE -->
+            <option value="AUD">Australia (AUD)</option>
+            <option value="BZD">Belice (BZD)</option>
+            <option value="CLP">Chile (CLP)</option>
+            <option value="CNY">China (CNY)</option>
+            <option value="COP">Colombia (COP)</option>
+            <option value="KRW">Corea del Sur (KRW)</option>
+            <option value="CRC">Costa Rica (CRC)</option>
+            <option value="CUP">Cuba Convertible (CUP)</option>
+            <option value="DKK">Dinamarca (DKK)</option>
+            <option value="SGBP">Escocia (SGBP)</option> 
+            <option value="GTQ">Guatemala (GTQ)</option>
+            <option value="HKD">Hong Kong (HKD)</option>
+            <option value="ILS">Israel (ILS)</option>
+            <option value="JPY">Japón (JPY)</option>
+            <option value="NOK">Noruega (NOK)</option>
+            <option value="NZD">Nueva Zelanda (NZD)</option>
+            <option value="PEN">Perú (PEN)</option>
+            <option value="ARS">Pesos Argentinos (ARS)</option>
+            <option value="RUB">Rusia (RUB)</option>
+            <option value="SEK">Suecia (SEK)</option>
+            <option value="CHF">Suiza (CHF)</option>
+            <option value="TRY">Turquia (TRY)</option>
+        </select>
+        <div id="denominations-container"></div>
+        <div class="total" id="total">Monto total: $0.00</div>
+        <button class="button print" onclick="printForm()">Imprimir</button>
+    </div>
+    <footer style="text-align: center; margin-top: 20px; font-size: 0.9rem; color: #555;">
+        <a 
+           href="https://wa.me/9982358520?text=¡Hola!%20Vi%20tu%20trabajo%20y%20me%20encantaría%20contactarte" 
+           target="_blank" 
+           rel="noopener noreferrer"
+           style="color: inherit; text-decoration: none;"
+        >
+            Creado por Alejandro Toral 🚀
+        </a>
+    </footer>
+    
+</body>
+    <script>
+        // Datos de denominaciones por divisa
+    const denominationsByCurrency = {
+    MXN: [1000, 500, 200, 100, 50, 20, 10, 5, 2, 1, 0.5],
+    USD: [100, 50, 20, 10, 5, 2, 1],
+    CAD: [100, 50, 20, 10, 5],
+    CHF: [1000, 200, 100, 50, 20, 10, 5],
+    AUD: [100, 50, 20, 10, 5],
+    EUR: [500, 200, 100, 50, 20, 10, 5],
+    BRL: [200, 100, 50, 20, 10, 5, 2, 1],
+    GBP: [50, 20, 10, 5],
+    JPY: [10000, 5000, 2000, 1000],
+    CUP: [100, 50, 20, 10, 5, 3, 1],
+    MOR_USD: [1, 0.5, 0.25, 0.1, 0.05],
+    MOR_CAD: [2, 1],
+    MOR_EUR: [2, 1, 0.5],
+    MOR_GBP: [2, 1],
+    ARS: [1000, 500, 200, 100, 50, 20, 10, 5, 2],
+    COP: [100000, 50000, 20000, 10000, 5000, 2000, 1000],
+    BZD: [100, 50, 20, 10, 5, 2, 1],
+    CLP: [20000, 10000, 5000, 2000, 1000],
+    CNY: [100, 50, 20, 10, 5],
+    DKK: [1000, 500, 200, 100, 50],
+    GTQ: [200, 100, 50, 20, 10, 5],
+    HKD: [1000, 500, 100, 50, 20, 10],
+    ILS: [200, 100, 50, 20],
+    NOK: [1000, 500, 200, 100, 50],
+    PEN: [200, 100, 50, 20, 10],
+    RUB: [5000, 2000, 1000, 500, 200, 100, 50, 10, 5],
+    SEK: [1000, 500, 200, 100, 50, 20],
+    CRC: [20000, 10000, 5000, 2000, 1000],
+    KRW: [50000, 10000, 5000, 2000, 1000],
+    NZD: [100, 50, 20, 10, 5],
+    TRY: [200, 100, 50, 20, 10, 5],
+    SGBP: [100, 50, 20, 10, 5]
+    };
+
+    // Mapa de claves de divisa
+    const currencyMap = {
+    4: 'CAD',
+    2: 'USD',
+    7: 'EUR',
+    9: 'GBP',
+    8: 'BRL',
+    18: 'COP',
+    1: 'MXN',
+    6: 'AUD',
+    19: 'BZD',
+    20: 'CLP',
+    21: 'CNY',
+    32: 'KRW',
+    33: 'CRC',
+    11: 'CUP',
+    22: 'DKK',
+    30: 'SGBP',
+    23: 'GTQ',
+    24: 'HKD',
+    25: 'ILS',
+    10: 'JPY',
+    12: 'MOR_USD',
+    13: 'MOR_CAD',
+    14: 'MOR_EUR',
+    15: 'MOR_GBP',
+    26: 'NOK',
+    31: 'NZD',
+    27: 'PEN',
+    17: 'ARS',
+    28: 'RUB',
+    29: 'SEK',
+    5: 'CHF',
+    34: 'TRY'
+    };
+        // Actualiza la fecha y hora
+        function updateDateTime() {
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+            const now = new Date().toLocaleString('es-ES', options);
+            document.getElementById('date-time').textContent = now;
+        }
+
+        // Muestra u oculta el campo de sucursal
+        function toggleSucursalInput() {
+            const sucursalSelect = document.getElementById('sucursal');
+            const sucursalInput = document.getElementById('sucursal-input');
+            const sucursalError = document.getElementById('sucursal-error');
+
+            if (sucursalSelect.value === 'OTRA') {
+                sucursalInput.classList.remove('hidden');
+                sucursalError.classList.add('hidden');
+            } else {
+                sucursalInput.classList.add('hidden');
+                sucursalInput.value = "";
+                sucursalError.classList.add('hidden');
+            }
+        }
+
+        // Actualiza las denominaciones según la divisa seleccionada
+        function updateDenominations() {
+            const currency = document.getElementById('currency').value;
+            const denominations = denominationsByCurrency[currency];
+            const denominationsContainer = document.getElementById('denominations-container');
+
+            denominationsContainer.innerHTML = ""; // Limpia el contenedor
+
+            if (!denominations) return;
+
+            denominations.forEach(denomination => {
+                const row = document.createElement('div');
+                row.className = 'denomination-container';
+
+                const label = document.createElement('label');
+                label.textContent = `${denomination}:`;
+
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.setAttribute('data-denomination', denomination);
+                input.placeholder = '-';
+                input.addEventListener('input', updateTotal);
+
+                row.appendChild(label);
+                row.appendChild(input);
+                denominationsContainer.appendChild(row);
+            });
+        }
+
+        // Calcula y actualiza el monto total
+        function updateTotal() {
+            let total = 0;
+            const inputs = document.querySelectorAll('.denomination-container input');
+            inputs.forEach(input => {
+                const denomination = parseFloat(input.getAttribute('data-denomination'));
+                const value = parseInt(input.value) || 0;
+                total += denomination * value;
+            });
+            document.getElementById('total').textContent = `Monto total: ${total.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}`;
+        }
+
+        // Selecciona la divisa por clave
+        function selectCurrencyByKey() {
+            const key = parseInt(document.getElementById('currency-key').value);
+            const currency = currencyMap[key] || "";
+            const currencyKeyInput = document.getElementById('currency-key');
+            const errorMessage = document.getElementById('currency-key-error');
+
+            if (currency) {
+                document.getElementById('currency').value = currency;
+                currencyKeyInput.classList.remove('error');
+                errorMessage.classList.add('hidden');
+                updateDenominations();
+            } else {
+                currencyKeyInput.classList.add('error');
+                errorMessage.classList.remove('hidden');
+            }
+        }
+
+        // Actualiza la clave de divisa según la selección
+        function updateCurrencyKey() {
+            const currency = document.getElementById('currency').value;
+            const key = Object.keys(currencyMap).find(key => currencyMap[key] === currency);
+            document.getElementById('currency-key').value = key || "";
+            updateDenominations();
+        }
+        function validateForm() {
+    let isValid = true;
+
+    // Validar nombre de usuario
+    const userInput = document.getElementById('user-input').value.trim();
+    const userError = document.getElementById('user-error');
+    if (userInput === "") {
+        userError.classList.remove('hidden');
+        isValid = false;
+    } else {
+        userError.classList.add('hidden');
+    }
+
+    // Validar sucursal
+    const sucursalSelect = document.getElementById('sucursal').value;
+    const sucursalInput = document.getElementById('sucursal-input').value.trim();
+    const sucursalError = document.getElementById('sucursal-error');
+    if (sucursalSelect === "") {
+        sucursalError.textContent = "La sucursal es requerida.";
+        sucursalError.classList.remove('hidden');
+        isValid = false;
+    } else if (sucursalSelect === "OTRA" && sucursalInput === "") {
+        sucursalError.textContent = "El nombre de la sucursal es requerido.";
+        sucursalError.classList.remove('hidden');
+        isValid = false;
+    } else {
+        sucursalError.classList.add('hidden');
+    }
+
+    // Validar clave de divisa o divisa seleccionada
+    const currencyKey = document.getElementById('currency-key').value.trim();
+    const currencySelect = document.getElementById('currency').value;
+    const currencyKeyError = document.getElementById('currency-key-error');
+    if (currencyKey === "" && currencySelect === "") {
+        currencyKeyError.textContent = "La clave de divisa o la divisa seleccionada es requerida.";
+        currencyKeyError.classList.remove('hidden');
+        isValid = false;
+    } else {
+        currencyKeyError.classList.add('hidden');
+    }
+
+    // Validar al menos una denominación con valor mayor a 0
+    const denominationInputs = document.querySelectorAll('.denomination-container input');
+    let hasValidDenomination = false;
+    denominationInputs.forEach(input => {
+        if (parseInt(input.value) > 0) {
+            hasValidDenomination = true;
+        }
+    });
+    if (!hasValidDenomination) {
+        alert("Debe ingresar al menos una denominación con un valor mayor a 0.");
+        isValid = false;
+    }
+
+    return isValid;
+}
+
+        // Imprime el comprobante de retiro
+        function printForm() {
+            if (!validateForm()) {
+        return; // Detener la impresión si hay errores
+    }
+            const transaction = {
+                user: document.getElementById('user-input').value.trim(),
+                sucursal: document.getElementById('sucursal').value === 'OTRA' ? document.getElementById('sucursal-input').value.trim() : document.getElementById('sucursal').value,
+                currency: document.getElementById('currency').value,
+                total: document.getElementById('total').textContent,
+                dateTime: new Date().toLocaleString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }),
+                denominations: []
+            };
+
+            // Obtener las denominaciones ingresadas
+            const inputs = document.querySelectorAll('.denomination-container input');
+            inputs.forEach(input => {
+                const denomination = parseFloat(input.getAttribute('data-denomination'));
+                const value = parseInt(input.value) || 0;
+                if (value > 0) {
+                    transaction.denominations.push({ denomination, value });
+                }
+            });
+
+            // Generar el contenido del comprobante
+const printContent = `
+    <div style="font-family: Arial, sans-serif; width: 80mm; padding: 2px; font-size: 11px;">
+        <h1 style="text-align: center; font-size: 18px; margin: 5px 0; color: #000;">Retiro de Divisas</h1>
+        
+        <!-- Línea divisoria -->
+        <div style="text-align: center; margin: 10px 0;">
+            <hr style="border: 0; border-top: 2px dashed #000; margin: 5px 0;">
         </div>
-        <div class="labels-container">
-            <div class="logo-container">
-                <a href="https://thoraal.github.io/">
-                    <img src="assets/img/logo.png" alt="Logo" class="logo" />
-                </a>
-            </div>
-            <p>Monto: <span id="labelMonto"></span></p>
-            <p>Tipo de cambio: <span id="labelTipoCambio"></span></p>
-            <p>Total en moneda nacional: <span id="labelTotal"></span></p>
-            <p id="estadoMensaje" class="success-message"></p>
-            <p class="error-message" id="verificacionMensaje"></p>
+        
+        <div style="margin-bottom: 5px;">
+            <p style="margin: 4px 0; font-size: 14px;"><strong>Fecha y Hora:</strong> ${transaction.dateTime}</p>
+            <p style="margin: 4px 0; font-size: 14px;"><strong>Usuario:</strong> ${transaction.user}</p>
+            <p style="margin: 4px 0; font-size: 14px;"><strong>Sucursal:</strong> ${transaction.sucursal}</p>
+            <p style="margin: 4px 0; font-size: 14px;"><strong>Divisa:</strong> ${getCurrencyFullName(transaction.currency)}</p>
         </div>
-        <div class="labels-container-tc">
-            <p>Diario Oficial de la Federación</p>
-            <p>Acuerdo que consigna la equivalencia de las monedas de los diversos países con el peso mexicano, para efectos fiscales.</p>
-            <input type="date" id="fechaTipoCambio" onchange="fetchDataForDate(); fraccionarNumero(); actualizarMinimo();" value="${new Date().toISOString().split('T')[0]}" /> <span id="tipoDeCambio"></span>
-            <p>Div/TC DOF:<span id="calculoAdicional"></span></p>
-            <p>Máximo: <span id="maximoValor"></span></p>
-            <p>Mínimo: <span id="minimoValor"></span></p>
+        
+        <!-- Línea divisoria -->
+        <div style="text-align: center; margin: 10px 0;">
+            <hr style="border: 0; border-top: 2px dashed #000; margin: 5px 0;">
         </div>
-        <table id="resultado">
-            <thead>
-                <tr>
-                    <th># Op</th>
-                    <th>Cantidad a ingresar</th>
-                    <th></th>
-                    <th>Monto (MXN)</th>
-                    <th>Restante</th>
-                    <th>Total (MXN)</th>
-                    <th>Desglosado</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-        <div id="footer">
-            Developed by <a href="https://thoraal.github.io/#work" target="_blank">Alejandro Toral</a>
+        
+        <div style="margin-bottom: 5px;">
+    <h3 style="font-size: 16px; margin: 5px 0; color: #000; text-align: left;">Detalle de Denominaciones:</h3>
+    <ul style="list-style-type: none; padding: 0; margin: 0; text-align: left;">
+        ${transaction.denominations.map(d => `
+            <li style="margin: 3px 0; padding: 4px; background-color: #f4f4f4; border-radius: 3px; font-size: 14px; text-align: left;">
+                ${d.value} de ${d.denomination}
+            </li>
+        `).join('')}
+    </ul>
+</div>
+        
+        <!-- Línea divisoria -->
+        <div style="text-align: center; margin: 10px 0;">
+            <hr style="border: 0; border-top: 2px dashed #000; margin: 5px 0;">
+        </div>
+        
+        <div style="text-align: left; font-size: 18px; font-weight: bold; margin-top: 5px;">
+            ${transaction.total}
+        </div>
+        
+        <!-- Línea divisoria -->
+        <div style="text-align: center; margin: 10px 0;">
+            <hr style="border: 0; border-top: 2px dashed #000; margin: 5px 0;">
+        </div>
+        
+        <div style="text-align: center; margin-top: 5px; font-size: 12px; color: #555;">
+            <p>Desarrollado por Toral</p>
         </div>
     </div>
-    <script>
-        // JavaScript functions for handling various actions
-        document.addEventListener("DOMContentLoaded", () => {
-            const currentDate = new Date();
-            currentDate.setMinutes(currentDate.getMinutes() - currentDate.getTimezoneOffset());
-            document.getElementById("fechaTipoCambio").value = currentDate.toISOString().split("T")[0];
-        });
+`;
 
-        function validarMaximo() {
-            const numeroInput = document.getElementById("numero");
-            const verificacionMensaje = document.getElementById("verificacionMensaje");
-            if (parseInt(numeroInput.value) > 35000) {
-                verificacionMensaje.textContent = "Error: El monto no puede exceder $35,000.";
-                numeroInput.value = 35000;
-            } else {
-                verificacionMensaje.textContent = "";
-            }
-        }
+// Función para obtener el nombre completo de la divisa
+function getCurrencyFullName(currencyCode) {
+  const currencyNames = {
+    MXN: "Moneda Nacional (MXN)",
+    USD: "Dólar Americano (USD)",
+    CAD: "Dólar Canadiense (CAD)",
+    CHF: "Franco Suizo (CHF)",
+    AUD: "Dólar Australiano (AUD)",
+    EUR: "Euro (EUR)",
+    BRL: "Real Brasileño (BRL)",
+    GBP: "Libra Esterlina (GBP)",
+    JPY: "Yen Japonés (JPY)",
+    CUP: "Peso Cubano Convertible (CUP)",
+    MOR_USD: "Morralla Americana (MOR_USD)",
+    MOR_CAD: "Morralla Canadiense (MOR_CAD)",
+    MOR_EUR: "Morralla Euro (MOR_EUR)",
+    MOR_GBP: "Morralla Libra Esterlina (MOR_GBP)",
+    ARS: "Peso Argentino (ARS)",
+    COP: "Peso Colombiano (COP)",
+    BZD: "Dólar Beliceño (BZD)",
+    CLP: "Peso Chileno (CLP)",
+    CNY: "Yuan Chino (CNY)",
+    DKK: "Corona Danesa (DKK)",
+    GTQ: "Quetzal Guatemalteco (GTQ)",
+    HKD: "Dólar de Hong Kong (HKD)",
+    ILS: "Nuevo Shekel Israelí (ILS)",
+    NOK: "Corona Noruega (NOK)",
+    PEN: "Sol Peruano (PEN)",
+    RUB: "Rublo Ruso (RUB)",
+    SEK: "Corona Sueca (SEK)",
+    CRC: "Colón Costarricense (CRC)",
+    KRW: "Won Surcoreano (KRW)",
+    NZD: "Dólar Neozelandés (NZD)",
+    TRY: "Lira Turca (TRY)",
+    SGBP: "Libra Esterlina Escocesa (SGBP)"
+    };
 
-        function actualizarMinimo() {
-            // Update the minimum value based on the input number
-            const numero = parseInt(document.getElementById("numero").value);
-            let minimo = 0;
-
-            if (numero < 5000) {
-                minimo = 50;
-            } else if (numero < 10000) {
-                minimo = 300;
-            } else if (numero < 15000) {
-                minimo = 400;
-            } else if (numero < 20000) {
-                minimo = 500;
-            } else if (numero < 25000) {
-                minimo = 550;
-            } else {
-                minimo = 600;
-            }
-
-            document.getElementById('minimoValor').textContent = minimo;
-        }
-
-        function toggleLabelsContainerTc() {
-            const labelsContainerTc = document.querySelector('.labels-container-tc');
-            const isChecked = document.querySelector('.switch input').checked;
-
-            if (isChecked) {
-                labelsContainerTc.classList.add('show');
-            } else {
-                labelsContainerTc.classList.remove('show');
-            }
-        }
-
-        function fraccionarNumero() {
-            // Handle number fractionation logic
-            const numero = document.getElementById("numero").value;
-            const tipoCambio = document.getElementById("tipoCambio").value;
-            const estadoMensaje = document.getElementById("estadoMensaje");
-            const verificacionMensaje = document.getElementById("verificacionMensaje");
-
-            if (numero === "" || tipoCambio === "") {
-                verificacionMensaje.textContent = "Error: Todos los campos deben estar llenos 😒";
-                estadoMensaje.textContent = "";
-                document.getElementById("imprimirBtn").disabled = true;
-                limpiarResultado();
-                return;
-            }
-
-            const numeroInt = parseInt(numero);
-            const tipoCambioFloat = parseFloat(tipoCambio);
-
-            if (!validarNumero(numeroInt) || !validarTipoCambio(tipoCambioFloat)) {
-                limpiarResultado();
-                return;
-            }
-
-            const totalMonedaNacional = (numeroInt * tipoCambioFloat).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            document.getElementById("labelMonto").textContent = `$${numberWithCommas(numeroInt)}`;
-            document.getElementById("labelTipoCambio").textContent = `${tipoCambioFloat.toFixed(2)}`;
-            document.getElementById("labelTotal").textContent = `$${totalMonedaNacional}`;
-
-            const seed = numeroInt;
-            const randomGenerator = xoshiro128ss(seed);
-            let partes = new Set();
-            let restante = numeroInt;
-            const min = parseInt(document.getElementById('minimoValor').textContent) || 400;
-            const max = parseInt(document.getElementById('maximoValor').textContent) || 990;
-            const maxPartes = 44;
-
-            while (restante > 0 && partes.size < maxPartes) {
-                let fraccion = Math.floor(randomGenerator() * (max - min + 1)) + min;
-                fraccion = Math.round(fraccion / 5) * 5;
-                fraccion = Math.min(fraccion, restante);
-
-                if (!partes.has(fraccion) && fraccion <= restante) {
-                    partes.add(fraccion);
-                    restante -= fraccion;
-                }
-            }
-
-            if (Array.from(partes).reduce((a, b) => a + b, 0) !== numeroInt) {
-                verificacionMensaje.textContent = "Error: La suma de las fracciones no coincide con el número a fraccionar 😫";
-                estadoMensaje.textContent = "";
-                limpiarResultado();
-                return;
-            }
-
-            verificacionMensaje.textContent = "";
-            estadoMensaje.textContent = "Todo correcto 😊";
-            document.getElementById("imprimirBtn").disabled = false;
-            mostrarResultado(Array.from(partes), numeroInt);
-        }
-
-        function validarNumero(numero) {
-            return !isNaN(numero) && numero > 0 && numero <= 35000 && Number.isInteger(numero);
-        }
-
-        function validarTipoCambio(tipoCambio) {
-            return !isNaN(tipoCambio) && tipoCambio > 0 && tipoCambio <= 1000;
-        }
-
-        function mostrarResultado(partes, numeroInicial) {
-            // Display the result in the table
-            const tipoCambio = parseFloat(document.getElementById("tipoCambio").value) || 1;
-            const resultado = document.getElementById("resultado").getElementsByTagName("tbody")[0];
-
-            let resultadoHTML = '';
-            let restante = numeroInicial;
-            let totalMXN = 0;
-            let desglosado = 0;
-            partes.forEach((parte, index) => {
-                restante -= parte;
-                const montoMXN = (parte * tipoCambio).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                totalMXN += parseFloat(montoMXN.replace(/,/g, ''));
-                desglosado += parte;
-                resultadoHTML += `
-                    <tr>
-                        <td>${(index + 1).toString().padStart(2, '0')}</td>
-                        <td>${numberWithCommas(parte)}</td>
-                        <td>[  ]====></td>
-                        <td>$${montoMXN}</td>
-                        <td>$${numberWithCommas((restante > 0 ? restante : 0).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 }))}</td>
-                        <td>$${numberWithCommas(totalMXN.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 }))}</td>
-                        <td>$${numberWithCommas(desglosado.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 }))}</td>
-                    </tr>`;
-            });
-            resultado.innerHTML = resultadoHTML;
-        }
-
-        function imprimirPDF() {
-            // Print the table to PDF using jsPDF
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF({ unit: 'pt', format: 'letter' });
-
-            const numero = parseInt(document.getElementById("numero").value);
-            const tipoCambio = parseFloat(document.getElementById("tipoCambio").value) || 1;
-            const moneda = document.getElementById("moneda").value === "otro" ? document.getElementById("monedaOtro").value : document.getElementById("moneda").options[document.getElementById("moneda").selectedIndex].text;
-            const totalMonedaNacional = (numero * tipoCambio).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-
-            doc.setFontSize(12);
-            doc.text(`Fecha: ${obtenerFechaFormateada()} | ${moneda}  $${numberWithCommas(numero)} * ${numberWithCommas(tipoCambio)} = $${totalMonedaNacional}`, 40, 60);
-
-            const xCol1 = 40;
-            const xCol2 = 80;
-            const xCol3 = 120;
-            const xCol4 = 170;
-            const xCol5 = 250;
-            const xCol6 = 330;
-            const xCol7 = 420;
-
-            let y = 100;
-
-            doc.setFontSize(12);
-            doc.setFont(undefined, 'bold');
-            doc.text("#Op", xCol1, y);
-            doc.text("Can a ingresar", xCol2, y);
-            doc.text("", xCol3, y);
-            doc.text("Monto (MXN)", xCol4, y);
-            doc.text("Restante", xCol5, y);
-            doc.text("Total (MXN)", xCol6, y);
-            doc.text("Desglosado", xCol7, y);
-            y += 20;
-
-            doc.setFont(undefined, 'normal');
-            const tabla = document.getElementById("resultado");
-
-            for (let i = 1, row; row = tabla.rows[i]; i++) {
-                const celdas = Array.from(row.cells);
-
-                doc.text(celdas[0].textContent, xCol1, y);
-                doc.text(celdas[1].textContent, xCol2, y);
-                doc.text(celdas[2].textContent, xCol3, y);
-                doc.text(celdas[3].textContent, xCol4, y);
-                doc.text(celdas[4].textContent, xCol5, y);
-                doc.text(celdas[5].textContent, xCol6, y);
-                doc.text(celdas[6].textContent, xCol7, y);
-
-                y += 15;
-            }
-
-            doc.autoPrint();
-            window.open(doc.output('bloburl'), '_blank');
-        }
-        
-        
-function imprimirRolloTermico() {
-    const tabla = document.getElementById("resultado");
-    const filas = Array.from(tabla.getElementsByTagName("tbody")[0].rows);
-	const numero = parseInt(document.getElementById("numero").value);
-    const tipoCambio = parseFloat(document.getElementById("tipoCambio").value) || 1;
-	const moneda = document.getElementById("moneda").value === "otro" ? document.getElementById("monedaOtro").value : document.getElementById("moneda").options[document.getElementById("moneda").selectedIndex].text;
-    const totalMonedaNacional = (numero * tipoCambio).toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return currencyNames[currencyCode] || currencyCode;
+    }
 
 
-    // Calcular los anchos máximos de cada columna
-    const maxLengths = [0, 0, 0, 0, 0, 0]; // Longitud máxima para 6 columnas
+    // Abrir una ventana de impresión
+    const printWindow = window.open('', '', 'width=600,height=600');
+    printWindow.document.write(printContent);
+    printWindow.document.close();
 
-    // Calcula el ancho máximo de cada columna
-    filas.forEach((fila) => {
-        const celdas = Array.from(fila.cells);
-        maxLengths[0] = Math.max(maxLengths[0], celdas[0].textContent.trim().length); // Número
-        maxLengths[1] = Math.max(maxLengths[1], celdas[1].textContent.trim().length); // Cantidad
-        maxLengths[2] = Math.max(maxLengths[2], celdas[3].textContent.replace('$', '').trim().length); // Monto
-        maxLengths[3] = Math.max(maxLengths[3], celdas[4].textContent.trim().length); // Falta
-        maxLengths[4] = Math.max(maxLengths[4], celdas[5].textContent.replace('$', '').trim().length); // Total
-        maxLengths[5] = Math.max(maxLengths[5], celdas[6].textContent.trim().length); // Desglosado
-    });
+    // Imprimir utilizando el cuadro de diálogo del sistema y repetir la impresión dos veces
+    printWindow.print();
+    setTimeout(() => {
+        printWindow.print();
+        printWindow.close();
+    }, 1000); // Espera 1 segundo antes de la segunda impresión
 
-    // Generar encabezados con anchos calculados
-    const headers = [
-        "#".padEnd(maxLengths[0], ' '),
-        "Cant".padEnd(maxLengths[1], ' '),
-        "Monto MXN".padEnd(maxLengths[2], ' '),
-        "Falta Des".padEnd(maxLengths[3], ' '),
-        "Total MXN".padEnd(maxLengths[4], ' '),
-        "Desglosado".padEnd(maxLengths[5], ' ')
-    ].join("|");
-
-    // Línea separadora ajustada al ancho total
-    const totalWidth = maxLengths.reduce((a, b) => a + b, 0) + (maxLengths.length - 1); // Incluye separadores
-    const separator = "-".repeat(totalWidth);
-
-    // Construccion del contenido
-    let contenido = "Fraccionador de numeros\n";
-    contenido += separator + "\n";
-    contenido += `Fecha: ${obtenerFechaFormateada()}\n\n`;
-	contenido += `${moneda}  $${numberWithCommas(numero)} * ${numberWithCommas(tipoCambio)} = $${totalMonedaNacional}\n\n`;
-	contenido += separator + "\n"
-    contenido += headers + "\n";
-    contenido += separator + "\n";
-
-    // Agregar filas de datos
-    filas.forEach((fila) => {
-        const celdas = Array.from(fila.cells);
-        contenido += [
-            celdas[0].textContent.trim().padEnd(maxLengths[0], ' '), // Número
-            celdas[1].textContent.trim().padEnd(maxLengths[1], ' '), // Cantidad
-            celdas[3].textContent.trim().padEnd(maxLengths[2], ' '), // Monto
-            celdas[4].textContent.replace('$', '').trim().padEnd(maxLengths[3], ' '), // Falta
-            celdas[5].textContent.trim().padEnd(maxLengths[4], ' '), // Total
-            celdas[6].textContent.replace('$', '').trim().padEnd(maxLengths[5], ' ') // Desglose
-        ].join("|") + "\n";
-    });
-
-    contenido += separator + "\n";
-
-    // Llamar a la función de impresión térmica
-    printTextInThermal(contenido);
+    resetForm();
+}
+        // Función para reiniciar el formulario
+function resetForm() {
+    document.getElementById('currency-key').value = "";
+    document.getElementById('currency').value = "";
+    document.getElementById('denominations-container').innerHTML = "";
+    document.getElementById('total').textContent = "Monto total: $0.00";
+    updateDenominations();
 }
 
-function printTextInThermal(text) {
-    const newWindow = window.open('', '', 'width=1000,height=600');
-    newWindow.document.write(`
-        <style>
-            @page {
-                margin: 14px; / Sin márgenes /
-            }
-            body {
-                margin: 0; / Sin márgenes internos /
-                padding: 0;
-                font-size: 13px;
-                font-family: monospace;
-            }
-            pre {
-                margin: 0;
-            }
-        </style>
-        <pre>${text}</pre>
-    `);
-    newWindow.document.close();
-    newWindow.print();
-}
-
-
-        function mostrarTipoCambio() {
-            const tipoCambioInput = document.getElementById("tipoCambio");
-            const monedaOtroInput = document.getElementById("monedaOtro");
-            if (document.getElementById("moneda").value === "otro") {
-                monedaOtroInput.style.display = "block";
-            } else {
-                monedaOtroInput.style.display = "none";
-                monedaOtroInput.value = "";
-            }
-            tipoCambioInput.style.display = "block";
-            fraccionarNumero();
-        }
-
-        function formatearMonedaOtro() {
-            const monedaOtroInput = document.getElementById("monedaOtro");
-            monedaOtroInput.value = monedaOtroInput.value.charAt(0).toUpperCase() + monedaOtroInput.value.slice(1).toLowerCase();
-        }
-
-        function borrarTodo() {
-            document.getElementById("numero").value = "";
-            document.getElementById("tipoCambio").value = "";
-            document.getElementById("monedaOtro").value = "";
-            limpiarResultado();
-        }
-
-        function limpiarResultado() {
-            document.getElementById("sumaResultado").textContent = "";
-            document.getElementById("resultado").getElementsByTagName("tbody")[0].innerHTML = "";
-            document.getElementById("labelMonto").textContent = "";
-            document.getElementById("labelTipoCambio").textContent = "";
-            document.getElementById("labelTotal").textContent = "";
-            document.getElementById("verificacionMensaje").textContent = "";
-            document.getElementById("estadoMensaje").textContent = "";
-            document.getElementById("imprimirBtn").disabled = true;
-            document.getElementById("calculoAdicional").textContent = "";
-            document.getElementById("minimoValor").textContent = "";
-        }
-
-        function xoshiro128ss(a) {
-            let s = new Uint32Array(4);
-            s[0] = a >>> 0;
-            s[1] = (a * 0x9e3779bb) >>> 0;
-            s[2] = (a * 0x85ebca6b) >>> 0;
-            s[3] = (a * 0xc2b2ae35) >>> 0;
-            return function () {
-                const result = (s[0] + s[3]) >>> 0;
-                const t = s[1] << 9;
-                s[2] ^= s[0];
-                s[3] ^= s[1];
-                s[1] ^= s[2];
-                s[0] ^= s[3];
-                s[2] ^= t;
-                s[3] = (s[3] << 11) | (s[3] >>> 21);
-                return result / 0x100000000;
-            };
-        }
-
-        function numberWithCommas(x) {
-            return x.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        }
-
-        function obtenerFechaFormateada() {
-            const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            const fecha = new Date();
-            return fecha.toLocaleDateString('es-ES', opciones);
-        }
-
-        async function fetchDataForDate() {
-            const selectedDate = document.getElementById('fechaTipoCambio').value || new Date().toISOString().split('T')[0];
-            const tokens = [
-                '812a7355fa14f189ea64e3112c255d3993069dee78d526892de342526057c6ad',
-                'ea9e2067b75621dad3e50a21cd6f7f094060da2f1d0c6d6d4a65520c2e29459b'
-            ];
-            const today = selectedDate;
-
-            for (let i = 0; i < tokens.length; i++) {
-                const token = tokens[i];
-                const url = `https://www.banxico.org.mx/SieAPIRest/service/v1/series/SF60653/datos/${today}/${today}/?token=${token}`;
-
-                try {
-                    const response = await fetch(url);
-                    if (!response.ok) {
-                        throw new Error('Error en la respuesta de la API');
-                    }
-
-                    const data = await response.json();
-                    const serieData = data.bmx.series[0].datos[0];
-                    document.getElementById('tipoDeCambio').innerHTML = ` ${serieData.fecha} TC: ${serieData.dato}`;
-
-                    const tipoCambioUsuarioElement = document.getElementById("tipoCambio");
-                    if (tipoCambioUsuarioElement) {
-                        const tipoCambioUsuario = parseFloat(tipoCambioUsuarioElement.value);
-                        if (!isNaN(tipoCambioUsuario) && tipoCambioUsuario > 0) {
-                            const calculoAdicional = (parseFloat(serieData.dato) * 1000 / tipoCambioUsuario).toFixed(2);
-                            document.getElementById('calculoAdicional').innerHTML = ` ${calculoAdicional}`;
-                            const maximoElement = document.getElementById('maximoValor');
-                            if (document.getElementById('moneda').value === 'usd' && calculoAdicional > 1000) {
-                                maximoElement.innerHTML = ' 990';
-                            } else {
-                                maximoElement.innerHTML = ` ${calculoAdicional}`;
-                            }
-                        } else {
-                            document.getElementById('calculoAdicional').innerHTML = '';
-                        }
-                    }
-
-                    return;
-
-                } catch (error) {
-                    console.error(`Intento con el token fallido: ${token}`, error);
-                }
-            }
-
-            document.getElementById('data').innerHTML = `Error al obtener los datos: Todos los tokens fallaron.`;
-        }
-
-        document.getElementById("tipoCambio").addEventListener("input", fetchDataForDate);
-        document.getElementById("tipoCambio").addEventListener("input", fraccionarNumero);
-        document.getElementById("tipoCambio").addEventListener("input", actualizarMinimo);
-        document.getElementById("tipoCambio").addEventListener("input", mostrarTipoCambio);
-        document.getElementById("numero").addEventListener("input", fetchDataForDate);
-        document.getElementById("numero").addEventListener("input", fraccionarNumero);
-        document.getElementById("numero").addEventListener("input", actualizarMinimo);
-        document.getElementById("numero").addEventListener("input", mostrarTipoCambio);
-        document.getElementById("moneda").addEventListener("change", fetchDataForDate);
-        document.getElementById("moneda").addEventListener("change", fraccionarNumero);
-        document.getElementById("moneda").addEventListener("change", actualizarMinimo);
-        document.getElementById("moneda").addEventListener("change", mostrarTipoCambio);
-        fetchData();
+        // Inicialización
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+        updateDenominations();
     </script>
 </body>
-
 </html>
