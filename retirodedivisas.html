@@ -612,7 +612,7 @@ const printContent = `
     <h3 style="font-size: 16px; margin: 5px 0; color: #000; text-align: left;">Detalle de Denominaciones:</h3>
     <ul style="list-style-type: none; padding: 0; margin: 0; text-align: left;">
         ${transaction.denominations.map(d => `
-            <li style="margin: 6px 0; padding: 8px; font-size: 13px; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 6px; color: #333; display: flex; justify-content: space-between; align-items: center;">
+            <li style="margin: 6px 0; padding: 8px; font-size: 13px; background-color: #f9f9f9; border: 1.5px solid #000; border-radius: 6px; color: #000; display: flex; justify-content: space-between; align-items: center;">
                         <span>${d.value} de ${d.denomination}</span>
                         <span style="font-weight: bold; color: #007aff;">${(d.value * d.denomination).toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</span>
                     </li>
