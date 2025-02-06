@@ -586,44 +586,48 @@
                     transaction.denominations.push({ denomination, value });
                 }
             });
-
 const printContent = `
-    <div style="font-family: 'Courier', monospace; width: 80mm; padding: 5px; font-size: 14px; background-color: #fff; line-height: 1.4;">
+    <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 80mm; padding: 10px; font-size: 14px; background-color: #fff; line-height: 1.4;">
         <!-- Encabezado -->
         <div style="text-align: center; margin-bottom: 10px;">
-            <h1 style="font-size: 20px; margin: 0; font-weight: bold; background-color: #000; color: #fff; padding: 5px; border-radius: 5px;">
+            <h1 style="font-size: 20px; margin: 0; font-weight: bold; background-color: #000; color: #fff; padding: 10px; border-radius: 8px;">
                 RETIRO DE DIVISAS
             </h1>
-            <p style="font-size: 12px; margin: 5px 0;">══════════════════════</p>
+            <!-- Línea divisoria -->
+            <div style="text-align: center; margin: 10px 0;">
+                <hr style="border: 0; border-top: 2px dashed #000; margin: 5px 0;">
+            </div>
         </div>
 
         <!-- Información de la transacción -->
         <div style="margin-bottom: 10px;">
-            <p style="margin: 6px 0; font-size: 13px;">
+            <p style="margin: 8px 0; font-size: 13px; color: #333;">
                 <strong>Fecha y Hora:</strong> ${transaction.dateTime}
             </p>
-            <p style="margin: 6px 0; font-size: 13px;">
+            <p style="margin: 8px 0; font-size: 13px; color: #333;">
                 <strong>Usuario:</strong> ${transaction.user}
             </p>
-            <p style="margin: 6px 0; font-size: 13px;">
+            <p style="margin: 8px 0; font-size: 13px; color: #333;">
                 <strong>Sucursal:</strong> ${transaction.sucursal}
             </p>
-            <p style="margin: 6px 0; font-size: 13px;">
+            <p style="margin: 8px 0; font-size: 13px; color: #333;">
                 <strong>Divisa:</strong> ${getCurrencyFullName(transaction.currency)}
             </p>
         </div>
 
         <!-- Línea divisoria -->
-        <p style="font-size: 12px; margin: 5px 0;">────────────────────────</p>
+        <div style="text-align: center; margin: 10px 0;">
+            <hr style="border: 0; border-top: 2px dashed #000; margin: 5px 0;">
+        </div>
 
         <!-- Detalle de denominaciones -->
         <div style="margin-bottom: 10px;">
-            <h3 style="font-size: 16px; margin: 0 0 5px; font-weight: bold; background-color: #000; color: #fff; padding: 5px; border-radius: 5px;">
+            <h3 style="font-size: 16px; margin: 0 0 10px; font-weight: bold; background-color: #000; color: #fff; padding: 8px; border-radius: 6px;">
                 DETALLE DE DENOMINACIONES
             </h3>
             <ul style="list-style-type: none; padding: 0; margin: 0;">
                 ${transaction.denominations.map(d => `
-                    <li style="margin: 6px 0; padding: 8px; font-size: 13px; border: 1px solid #000; border-radius: 5px;">
+                    <li style="margin: 8px 0; padding: 8px; font-size: 13px; background-color: #f9f9f9; border: 1px solid #ddd; border-radius: 6px; color: #333;">
                         <span>${d.value} x ${d.denomination}</span>
                         <span style="float: right; font-weight: bold;">${(d.value * d.denomination).toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</span>
                     </li>
@@ -632,22 +636,26 @@ const printContent = `
         </div>
 
         <!-- Línea divisoria -->
-        <p style="font-size: 12px; margin: 5px 0;">────────────────────────</p>
+        <div style="text-align: center; margin: 10px 0;">
+            <hr style="border: 0; border-top: 2px dashed #000; margin: 5px 0;">
+        </div>
 
         <!-- Total -->
         <div style="text-align: right; margin-bottom: 10px;">
-            <p style="font-size: 16px; font-weight: bold; background-color: #000; color: #fff; padding: 5px; border-radius: 5px; display: inline-block;">
+            <p style="font-size: 16px; font-weight: bold; background-color: #000; color: #fff; padding: 10px; border-radius: 8px; display: inline-block;">
                 TOTAL: ${transaction.total}
             </p>
         </div>
 
         <!-- Línea divisoria -->
-        <p style="font-size: 12px; margin: 5px 0;">══════════════════════</p>
+        <div style="text-align: center; margin: 10px 0;">
+            <hr style="border: 0; border-top: 2px dashed #000; margin: 5px 0;">
+        </div>
 
         <!-- Pie de página -->
         <div style="text-align: center; margin-top: 10px;">
-            <p style="font-size: 12px; margin: 0;">
-                Desarrollado por <strong>Toral</strong>
+            <p style="font-size: 12px; margin: 0; color: #777;">
+                Desarrollado por <strong style="color: #000;">Toral</strong>
             </p>
         </div>
     </div>
