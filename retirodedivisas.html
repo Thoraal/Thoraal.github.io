@@ -588,39 +588,43 @@
             });
 
 const printContent = `
-    <div style="font-family: Arial, sans-serif; width: 80mm; padding: 5px; font-size: 12px; background-color: #fff; line-height: 1.4;">
+    <div style="font-family: Arial, sans-serif; width: 80mm; padding: 5px; font-size: 14px; background-color: #fff; line-height: 1.4;">
         <!-- Encabezado -->
         <div style="text-align: center; margin-bottom: 10px;">
-            <h1 style="font-size: 18px; margin: 0; font-weight: bold;">RETIRO DE DIVISAS</h1>
-            <p style="font-size: 10px; margin: 5px 0;">━━━━━━━━━━━━━━━━━━━━</p>
+            <h1 style="font-size: 20px; margin: 0; font-weight: bold; background-color: #000; color: #fff; padding: 5px; border-radius: 5px;">
+                RETIRO DE DIVISAS
+            </h1>
+            <p style="font-size: 12px; margin: 5px 0;">━━━━━━━━━━━━━━━━━━━━</p>
         </div>
 
         <!-- Información de la transacción -->
         <div style="margin-bottom: 10px;">
-            <p style="margin: 4px 0; font-size: 11px;">
-                <strong>| Fecha y Hora:</strong> ${transaction.dateTime}
+            <p style="margin: 6px 0; font-size: 13px;">
+                <strong>Fecha y Hora:</strong> ${transaction.dateTime}
             </p>
-            <p style="margin: 4px 0; font-size: 11px;">
-                <strong>| Usuario:</strong> ${transaction.user}
+            <p style="margin: 6px 0; font-size: 13px;">
+                <strong>Usuario:</strong> ${transaction.user}
             </p>
-            <p style="margin: 4px 0; font-size: 11px;">
-                <strong>| Sucursal:</strong> ${transaction.sucursal}
+            <p style="margin: 6px 0; font-size: 13px;">
+                <strong>Sucursal:</strong> ${transaction.sucursal}
             </p>
-            <p style="margin: 4px 0; font-size: 11px;">
-                <strong>| Divisa:</strong> ${getCurrencyFullName(transaction.currency)}
+            <p style="margin: 6px 0; font-size: 13px;">
+                <strong>Divisa:</strong> ${getCurrencyFullName(transaction.currency)}
             </p>
         </div>
 
         <!-- Línea divisoria -->
-        <p style="font-size: 10px; margin: 5px 0;">━━━━━━━━━━━━━━━━━━━━</p>
+        <p style="font-size: 12px; margin: 5px 0;">━━━━━━━━━━━━━━━━━━━━</p>
 
         <!-- Detalle de denominaciones -->
         <div style="margin-bottom: 10px;">
-            <h3 style="font-size: 12px; margin: 0 0 5px; font-weight: bold;">DETALLE DE DENOMINACIONES:</h3>
+            <h3 style="font-size: 16px; margin: 0 0 5px; font-weight: bold; background-color: #000; color: #fff; padding: 5px; border-radius: 5px;">
+                DETALLE DE DENOMINACIONES
+            </h3>
             <ul style="list-style-type: none; padding: 0; margin: 0;">
                 ${transaction.denominations.map(d => `
-                    <li style="margin: 4px 0; padding: 5px; font-size: 11px; border: 1px solid #000; border-radius: 3px;">
-                        <span>| ${d.value} x ${d.denomination}</span>
+                    <li style="margin: 6px 0; padding: 8px; font-size: 13px; border: 1px solid #000; border-radius: 5px;">
+                        <span>${d.value} x ${d.denomination}</span>
                         <span style="float: right; font-weight: bold;">${(d.value * d.denomination).toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</span>
                     </li>
                 `).join('')}
@@ -628,27 +632,26 @@ const printContent = `
         </div>
 
         <!-- Línea divisoria -->
-        <p style="font-size: 10px; margin: 5px 0;">━━━━━━━━━━━━━━━━━━━━</p>
+        <p style="font-size: 12px; margin: 5px 0;">━━━━━━━━━━━━━━━━━━━━</p>
 
         <!-- Total -->
         <div style="text-align: right; margin-bottom: 10px;">
-            <p style="font-size: 14px; font-weight: bold; margin: 0;">
-                | TOTAL: ${transaction.total}
+            <p style="font-size: 16px; font-weight: bold; background-color: #000; color: #fff; padding: 5px; border-radius: 5px; display: inline-block;">
+                TOTAL: ${transaction.total}
             </p>
         </div>
 
         <!-- Línea divisoria -->
-        <p style="font-size: 10px; margin: 5px 0;">━━━━━━━━━━━━━━━━━━━━</p>
+        <p style="font-size: 12px; margin: 5px 0;">━━━━━━━━━━━━━━━━━━━━</p>
 
         <!-- Pie de página -->
         <div style="text-align: center; margin-top: 10px;">
-            <p style="font-size: 10px; margin: 0;">
+            <p style="font-size: 12px; margin: 0;">
                 Desarrollado por <strong>Toral</strong>
             </p>
         </div>
     </div>
 `;
-
 // Función para obtener el nombre completo de la divisa
 function getCurrencyFullName(currencyCode) {
   const currencyNames = {
