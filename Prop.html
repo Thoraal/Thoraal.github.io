@@ -1,0 +1,203 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Quiero Casarme Contigo!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+            overflow: hidden;
+            position: relative;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            text-align: center;
+            z-index: 2;
+            position: relative;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #ff69b4;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px rgba(255,105,180,0.5);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .botones {
+            position: relative;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #si {
+            background: #ff69b4;
+            color: white;
+            box-shadow: 0 0 20px rgba(255,105,180,0.5);
+        }
+
+        #no {
+            background: #444;
+            color: white;
+            transition: transform 0.3s ease;
+        }
+
+        .corazones {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .corazon {
+            position: absolute;
+            font-size: 24px;
+            animation: flotar 3s linear forwards;
+            opacity: 0;
+            bottom: -50px; / Inician desde abajo /
+        }
+
+        @keyframes flotar {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .night {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+            z-index: 0;
+        }
+
+        .festejo {
+            animation: festejo 1s infinite;
+        }
+
+        @keyframes festejo {
+            0%, 100% {
+                background-color: rgba(255, 105, 180, 0.1);
+            }
+            50% {
+                background-color: rgba(255, 105, 180, 0.3);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="night"></div>
+    
+    <div class="container">
+        <h1>¿Quieres casarte conmigo?</h1>
+        <div class="botones">
+            <button id="si">¡Sí!</button>
+            <button id="no">No</button>
+        </div>
+    </div>
+
+    <div class="corazones" id="corazones"></div>
+
+    <script>
+        const btnNo = document.getElementById('no');
+        const btnSi = document.getElementById('si');
+        const corazones = document.getElementById('corazones');
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+        // Movimiento del botón No (no tan lejos)
+        function moverBoton() {
+            const x = (Math.random() * 200 - 100); // Mueve entre -100px y 100px en X
+            const y = (Math.random() * 200 - 100); // Mueve entre -100px y 100px en Y
+            btnNo.style.transform = `translate(${x}px, ${y}px)`;
+        }
+
+        isMobile ? 
+            btnNo.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                moverBoton();
+            }) :
+            btnNo.addEventListener('mouseover', moverBoton);
+
+        // Animación de corazones (salen desde abajo)
+        function crearCorazon() {
+            const corazon = document.createElement('div');
+            corazon.className = 'corazon';
+            corazon.innerHTML = '❤️';
+            corazon.style.left = Math.random() * 100 + 'vw';
+            corazon.style.fontSize = (20 + Math.random() * 30) + 'px';
+            corazon.style.color = `hsl(${Math.random() * 360}, 100%, 70%)`;
+            corazon.style.animationDuration = (2 + Math.random() * 3) + 's';
+            
+            corazones.appendChild(corazon);
+            
+            setTimeout(() => corazon.remove(), 3000);
+        }
+
+        btnSi.addEventListener('click', () => {
+            // Lluvia de corazones
+            const intervalo = setInterval(crearCorazon, 50);
+            setTimeout(() => clearInterval(intervalo), 5000);
+            
+            // Cambiar mensaje
+            document.querySelector('h1').innerHTML = '¡Sabía que dirías que sí! 💍💖';
+            document.querySelector('.botones').style.display = 'none';
+            
+            // Efecto adicional
+            document.body.classList.add('festejo');
+        });
+
+        // Efecto de brillo
+        document.body.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            document.querySelector('.night').style.background = `
+                radial-gradient(circle at ${x  100}% ${y  100}%, 
+                rgba(255,105,180,0.2), transparent 50%)`;
+        });
+    </script>
+</body>
+</html>
