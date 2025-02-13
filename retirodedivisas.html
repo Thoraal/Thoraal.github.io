@@ -364,17 +364,31 @@ document.body.addEventListener('keydown', function(e) {
   }
 });
       
-    document.getElementById("buscadorDivisas").addEventListener("input", function() {
+    document.getElementById("buscadorDivisas").addEventListener("input", function () {
     let filtro = this.value.toLowerCase();
     let select = document.getElementById("selectDivisas");
+    let opciones = Array.from(select.options).slice(1); // Excluye la primera opción (placeholder)
 
-    for (let i = 0; i < select.options.length; i++) {
-        let option = select.options[i];
+    // Separar opciones que coinciden de las que no
+    let coincidentes = [];
+    let noCoincidentes = [];
+
+    opciones.forEach(option => {
         let texto = option.text.toLowerCase();
-        
-        // Si coincide con el filtro, se muestra; si no, se oculta
-        option.style.display = texto.includes(filtro) ? "block" : "none";
-    }
+        if (texto.includes(filtro)) {
+            coincidentes.push(option);
+        } else {
+            noCoincidentes.push(option);
+        }
+    });
+
+    // Vaciar el select excepto la primera opción
+    select.innerHTML = select.options[0].outerHTML;
+
+    // Agregar primero las opciones que coinciden y luego las que no
+    coincidentes.concat(noCoincidentes).forEach(option => {
+        select.appendChild(option);
+    });
 });
 
 
