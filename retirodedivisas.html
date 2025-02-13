@@ -293,6 +293,7 @@
         <hr style="border-color:#4d46a7;">
         <input type="number" id="currency-key" placeholder="Clave divisa 🔑" aria-label="Clave de divisa" oninput="selectCurrencyByKey()" />
         <div id="currency-key-error" class="error-message hidden">Clave de divisa no válida.</div>
+        <input type="text" id="buscadorDivisas" placeholder="Buscar divisa...">
         <select id="currency" aria-label="Seleccione una divisa" onchange="updateCurrencyKey()">
             <option value="">--- Seleccione una divisa ---</option>
             <!-- PRIMERO: Moneda Nacional y las más usadas -->
@@ -330,8 +331,6 @@
             <option value="CHF">Suiza (CHF)</option>
             <option value="TRY">Turquia (TRY)</option>
         </select>
-        <input type="text" id="buscadorDivisas" placeholder="Buscar divisa...">
-        <ul id="listaDivisas"></ul> <!-- Aquí se mostrarán las coincidencias -->
         <div id="denominations-container"></div>
         <div class="total" id="total">Monto total: $0.00</div>
         <button class="button print" onclick="printForm()">Imprimir</button>
