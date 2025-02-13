@@ -363,6 +363,20 @@ document.body.addEventListener('keydown', function(e) {
     }
   }
 });
+      
+    document.getElementById("buscadorDivisas").addEventListener("input", function() {
+    let filtro = this.value.toLowerCase();
+    let select = document.getElementById("selectDivisas");
+
+    for (let i = 0; i < select.options.length; i++) {
+        let option = select.options[i];
+        let texto = option.text.toLowerCase();
+        
+        // Si coincide con el filtro, se muestra; si no, se oculta
+        option.style.display = texto.includes(filtro) ? "block" : "none";
+    }
+});
+
 
         // Datos de denominaciones por divisa
     const denominationsByCurrency = {
