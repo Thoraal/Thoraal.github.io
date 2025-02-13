@@ -707,29 +707,6 @@ function resetForm() {
         updateDateTime();
         setInterval(updateDateTime, 1000);
         updateDenominations();
-        
-    document.addEventListener('DOMContentLoaded', function() {
-  // Seleccionamos todos los elementos que queremos que sean focusables
-  const focusableElements = 'input, select, textarea, button';
-  const elements = Array.from(document.querySelectorAll(focusableElements));
-
-  elements.forEach(element => {
-    element.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') {
-        e.preventDefault(); // Evita el comportamiento por defecto
-
-        // Busca el índice del elemento actual en el arreglo
-        const index = elements.indexOf(e.target);
-        if (index > -1 && index < elements.length - 1) {
-          // Enfoca el siguiente elemento
-          elements[index + 1].focus();
-        }
-      }
-    });
-  });
-});
-
-
     </script>
 </body>
 </html>
