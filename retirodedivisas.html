@@ -346,6 +346,25 @@
     
 </body>
     <script>
+    
+    document.addEventListener('DOMContentLoaded', function() {
+  // Seleccionamos todos los elementos focusables
+  const focusableElements = 'input, select, textarea, button';
+  const elements = Array.from(document.querySelectorAll(focusableElements));
+
+  elements.forEach(element => {
+    element.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const index = elements.indexOf(e.target);
+        if (index > -1 && index < elements.length - 1) {
+          elements[index + 1].focus();
+        }
+      }
+    });
+  });
+});
+
         // Datos de denominaciones por divisa
     const denominationsByCurrency = {
     MXN: [1000, 500, 200, 100, 50, 20, 10, 5, 2, 1, 0.5],
