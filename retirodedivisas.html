@@ -367,30 +367,19 @@ document.body.addEventListener('keydown', function(e) {
     document.getElementById("buscadorDivisas").addEventListener("input", function () {
     let filtro = this.value.toLowerCase();
     let select = document.getElementById("selectDivisas");
-    let opciones = Array.from(select.options).slice(1); // Excluye la primera opción (placeholder)
+    let datalist = document.getElementById("listaDivisas");
 
-    // Separar opciones que coinciden de las que no
-    let coincidentes = [];
-    let noCoincidentes = [];
+    datalist.innerHTML = ""; // Limpia la lista
 
-    opciones.forEach(option => {
+    Array.from(select.options).forEach(option => {
         let texto = option.text.toLowerCase();
-        if (texto.includes(filtro)) {
-            coincidentes.push(option);
-        } else {
-            noCoincidentes.push(option);
+        if (texto.includes(filtro) && option.value !== "") {
+            let nuevaOpcion = document.createElement("option");
+            nuevaOpcion.value = option.text; // Muestra el texto de la opción
+            datalist.appendChild(nuevaOpcion);
         }
     });
-
-    // Vaciar el select excepto la primera opción
-    select.innerHTML = select.options[0].outerHTML;
-
-    // Agregar primero las opciones que coinciden y luego las que no
-    coincidentes.concat(noCoincidentes).forEach(option => {
-        select.appendChild(option);
-    });
 });
-
 
         // Datos de denominaciones por divisa
     const denominationsByCurrency = {
