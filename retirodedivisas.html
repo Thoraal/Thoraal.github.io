@@ -347,22 +347,18 @@
 </body>
     <script>
     
-    document.addEventListener('DOMContentLoaded', function() {
-  // Seleccionamos todos los elementos focusables
-  const focusableElements = 'input, select, textarea, button';
-  const elements = Array.from(document.querySelectorAll(focusableElements));
-
-  elements.forEach(element => {
-    element.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        const index = elements.indexOf(e.target);
-        if (index > -1 && index < elements.length - 1) {
-          elements[index + 1].focus();
-        }
-      }
-    });
-  });
+document.body.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && ['INPUT', 'SELECT', 'TEXTAREA', 'BUTTON'].includes(e.target.tagName)) {
+    e.preventDefault();
+    // Obtenemos todos los elementos focusables visibles y habilitados
+    const focusable = Array.from(document.querySelectorAll('input, select, textarea, button'))
+      .filter(el => !el.disabled && el.offsetParent !== null);
+    
+    const index = focusable.indexOf(e.target);
+    if (index > -1 && index < focusable.length - 1) {
+      focusable[index + 1].focus();
+    }
+  }
 });
 
         // Datos de denominaciones por divisa
