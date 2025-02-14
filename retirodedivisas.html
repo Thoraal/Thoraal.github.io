@@ -271,6 +271,23 @@
     transform: scale(1.02);
     box-shadow: var(--shadow-main);
     }
+    
+    .autocomplete-items {
+    position: absolute;
+    border: 1px solid #d4d4d4;
+    max-height: 150px;
+    overflow-y: auto;
+    background-color: white;
+    width: 200px;
+    z-index: 1000;
+  }
+  .autocomplete-item {
+    padding: 8px;
+    cursor: pointer;
+  }
+  .autocomplete-item:hover {
+    background-color: #f1f1f1;
+  }
 
     </style>
 </head>
