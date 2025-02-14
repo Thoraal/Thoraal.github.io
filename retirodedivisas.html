@@ -271,24 +271,6 @@
     transform: scale(1.02);
     box-shadow: var(--shadow-main);
     }
-    
-    .autocomplete-items {
-    position: absolute;
-    border: 1px solid #d4d4d4;
-    max-height: 150px;
-    overflow-y: auto;
-    background-color: white;
-    width: 200px;
-    z-index: 1000;
-  }
-  .autocomplete-item {
-    padding: 8px;
-    cursor: pointer;
-  }
-  .autocomplete-item:hover {
-    background-color: #f1f1f1;
-  }
-
     </style>
 </head>
 <body>
@@ -310,8 +292,6 @@
         <hr style="border-color:#4d46a7;">
         <input type="number" id="currency-key" placeholder="Clave divisa 🔑" aria-label="Clave de divisa" oninput="selectCurrencyByKey()" />
         <div id="currency-key-error" class="error-message hidden">Clave de divisa no válida.</div>
-        <input type="text" id="buscadorDivisas" placeholder="Buscar divisa...">
-        <div id="autocomplete-list" class="autocomplete-items"></div>
         <select id="currency" aria-label="Seleccione una divisa" onchange="updateCurrencyKey()">
             <option value="">--- Seleccione una divisa ---</option>
             <!-- PRIMERO: Moneda Nacional y las más usadas -->
@@ -380,29 +360,6 @@ document.body.addEventListener('keydown', function(e) {
     }
   }
 });
-      
-    document.getElementById("buscadorDivisas").addEventListener("input", function () {
-    let filtro = this.value.toLowerCase();
-    let select = document.getElementById("selectDivisas");
-    let lista = document.getElementById("autocomplete-list");
-    
-    lista.innerHTML = ""; // Limpia la lista antes de actualizarla
-
-    Array.from(select.options).forEach(option => {
-        let texto = option.text.toLowerCase();
-        if (texto.includes(filtro) && option.value !== "") {
-            let item = document.createElement("div");
-            item.classList.add("autocomplete-item");
-            item.textContent = option.text;
-            item.onclick = function () {
-                document.getElementById("buscadorDivisas").value = option.text; // Llena el input con la selección
-                lista.innerHTML = ""; // Oculta la lista después de seleccionar
-            };
-            lista.appendChild(item);
-        }
-    });
-});
-
         // Datos de denominaciones por divisa
     const denominationsByCurrency = {
     MXN: [1000, 500, 200, 100, 50, 20, 10, 5, 2, 1, 0.5],
