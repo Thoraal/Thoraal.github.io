@@ -384,19 +384,25 @@ document.body.addEventListener('keydown', function(e) {
     document.getElementById("buscadorDivisas").addEventListener("input", function () {
     let filtro = this.value.toLowerCase();
     let select = document.getElementById("selectDivisas");
-    let datalist = document.getElementById("listaDivisas");
-
-    datalist.innerHTML = ""; // Limpia la lista
+    let lista = document.getElementById("autocomplete-list");
+    
+    lista.innerHTML = ""; // Limpia la lista antes de actualizarla
 
     Array.from(select.options).forEach(option => {
         let texto = option.text.toLowerCase();
         if (texto.includes(filtro) && option.value !== "") {
-            let nuevaOpcion = document.createElement("option");
-            nuevaOpcion.value = option.text; // Muestra el texto de la opción
-            datalist.appendChild(nuevaOpcion);
+            let item = document.createElement("div");
+            item.classList.add("autocomplete-item");
+            item.textContent = option.text;
+            item.onclick = function () {
+                document.getElementById("buscadorDivisas").value = option.text; // Llena el input con la selección
+                lista.innerHTML = ""; // Oculta la lista después de seleccionar
+            };
+            lista.appendChild(item);
         }
     });
 });
+</script>
 
         // Datos de denominaciones por divisa
     const denominationsByCurrency = {
