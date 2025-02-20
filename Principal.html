@@ -3,48 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proyectos iOS Style</title>
+    <title>Proyectos Modernos</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
         }
 
         :root {
-            --primary-color: rgba(255, 255, 255, 0.8);
-            --secondary-color: rgba(0, 122, 255, 0.8);
-            --background: #f0f0f0;
+            --bg-color: #ffffff;
+            --text-color: #1d1d1f;
+            --navbar-bg: rgba(255, 255, 255, 0.8);
+            --accent-color: #007AFF;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --footer-bg: rgba(255, 255, 255, 0.7);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #1d1d1f;
+            --text-color: #f5f5f7;
+            --navbar-bg: rgba(29, 29, 31, 0.8);
+            --accent-color: #0A84FF;
+            --card-bg: rgba(29, 29, 31, 0.8);
+            --footer-bg: rgba(29, 29, 31, 0.7);
         }
 
         body {
-            background: var(--background);
+            background: var(--bg-color);
+            color: var(--text-color);
             min-height: 100vh;
+            transition: background 0.3s ease;
         }
 
         .navbar {
-            backdrop-filter: blur(10px);
-            background: rgba(255, 255, 255, 0.7);
-            padding: 1rem 2rem;
             position: fixed;
-            width: 100%;
             top: 0;
+            width: 100%;
+            backdrop-filter: blur(20px);
+            background: var(--navbar-bg);
+            padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             z-index: 1000;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] .navbar {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .navbar-logo {
-            font-weight: 600;
-            color: var(--secondary-color);
+            font-weight: 700;
+            color: var(--accent-color);
+            font-size: 1.2rem;
         }
 
-        .navbar-links {
+        .nav-links {
             display: flex;
             gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: background 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .theme-toggle i {
+            font-size: 1.2rem;
+            color: var(--text-color);
+        }
+
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 25px;
+            height: 2px;
+            background: var(--text-color);
+            margin: 5px 0;
+            transition: all 0.3s ease;
         }
 
         .container {
@@ -57,7 +123,7 @@
         }
 
         .project-card {
-            background: var(--primary-color);
+            background: var(--card-bg);
             border-radius: 20px;
             padding: 1.5rem;
             backdrop-filter: blur(10px);
@@ -67,54 +133,65 @@
             text-decoration: none;
             color: inherit;
             display: block;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] .project-card {
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .project-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 12px rgba(0,0,0,0.1);
-        }
-
-        .project-image {
-            width: 100%;
-            height: 200px;
-            border-radius: 12px;
-            object-fit: cover;
-            margin-bottom: 1rem;
-        }
-
-        .project-title {
-            color: var(--secondary-color);
-            margin-bottom: 0.5rem;
-            font-size: 1.2rem;
-        }
-
-        .project-description {
-            color: #666;
-            font-size: 0.9rem;
-            line-height: 1.4;
         }
 
         .footer {
-            background: rgba(255, 255, 255, 0.7);
+            background: var(--footer-bg);
             backdrop-filter: blur(10px);
-            padding: 1.5rem;
+            padding: 2rem;
             text-align: center;
-            color: #666;
-            position: relative;
-            margin-top: auto;
+            color: var(--text-color);
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] .footer {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         @media (max-width: 768px) {
-            .navbar-links {
-                display: none;
+            .nav-links {
+                position: fixed;
+                top: 60px;
+                right: -100%;
+                flex-direction: column;
+                background: var(--navbar-bg);
+                backdrop-filter: blur(20px);
+                width: 100%;
+                padding: 1rem;
+                transition: right 0.3s ease;
+                gap: 1rem;
             }
-            
-            .navbar {
-                justify-content: center;
+
+            .nav-links.active {
+                right: 0;
             }
-            
+
+            .hamburger {
+                display: block;
+            }
+
+            .hamburger.active span:nth-child(1) {
+                transform: rotate(45deg) translate(5px, 5px);
+            }
+
+            .hamburger.active span:nth-child(2) {
+                opacity: 0;
+            }
+
+            .hamburger.active span:nth-child(3) {
+                transform: rotate(-45deg) translate(7px, -6px);
+            }
+
             .container {
-                grid-template-columns: 1fr;
                 padding-top: 5rem;
             }
         }
@@ -122,11 +199,21 @@
 </head>
 <body>
     <nav class="navbar">
-        <div class="navbar-logo">Mis Proyectos</div>
-        <div class="navbar-links">
+        <div class="navbar-logo">Proyectos</div>
+        
+        <button class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <div class="nav-links">
             <a href="#home">Inicio</a>
             <a href="#projects">Proyectos</a>
             <a href="#contact">Contacto</a>
+            <button class="theme-toggle">
+                <i class="fas fa-moon"></i>
+            </button>
         </div>
     </nav>
 
@@ -139,53 +226,70 @@
     </footer>
 
     <script>
+        // Generar proyectos
         const projects = [
             {
                 title: "Proyecto 1",
-                description: "Una breve descripción del primer proyecto desarrollado con tecnologías modernas.",
+                description: "Descripción breve del proyecto innovador desarrollado.",
                 image: "https://source.unsplash.com/random/800x600?tech,1",
                 link: "#"
             },
-            {
-                title: "Proyecto 2",
-                description: "Desarrollo de aplicación móvil con funcionalidades innovadoras.",
-                image: "https://source.unsplash.com/random/800x600?app,2",
-                link: "#"
-            },
-            {
-                title: "Proyecto 3",
-                description: "Plataforma web para gestión de proyectos empresariales.",
-                image: "https://source.unsplash.com/random/800x600?code,3",
-                link: "#"
-            }
+            // Agrega más proyectos aquí
         ];
 
         const container = document.getElementById('projects-container');
-
         projects.forEach(project => {
             const card = document.createElement('a');
             card.className = 'project-card';
             card.href = project.link;
-            
             card.innerHTML = `
                 <img src="${project.image}" class="project-image" alt="${project.title}">
                 <h3 class="project-title">${project.title}</h3>
                 <p class="project-description">${project.description}</p>
             `;
-            
             container.appendChild(card);
         });
 
-        // Efecto hover para móviles
-        document.querySelectorAll('.project-card').forEach(card => {
-            card.addEventListener('touchstart', function() {
-                this.classList.add('hover-effect');
-            });
-            
-            card.addEventListener('touchend', function() {
-                setTimeout(() => this.classList.remove('hover-effect'), 100);
-            });
+        // Toggle tema
+        const themeToggle = document.querySelector('.theme-toggle');
+        const body = document.body;
+
+        themeToggle.addEventListener('click', () => {
+            body.dataset.theme = body.dataset.theme === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('theme', body.dataset.theme);
+            themeToggle.innerHTML = body.dataset.theme === 'dark' ? 
+                '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
         });
+
+        // Cargar tema guardado
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme) {
+            body.dataset.theme = savedTheme;
+            themeToggle.innerHTML = savedTheme === 'dark' ? 
+                '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        }
+
+        // Menú móvil
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+
+        // Cerrar menú al hacer click fuera
+        document.addEventListener('click', (e) => {
+            if (!hamburger.contains(e.target) && !navLinks.contains(e.target)) {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('active');
+            }
+        });
+
+        // Iconos Font Awesome
+        const faScript = document.createElement('script');
+        faScript.src = 'https://kit.fontawesome.com/your-kit-code.js';
+        document.head.appendChild(faScript);
     </script>
 </body>
 </html>
