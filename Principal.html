@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proyectos Modernos</title>
+    <title>Proyectos Avanzados</title>
     <style>
         * {
             margin: 0;
@@ -20,6 +20,7 @@
             --card-bg: rgba(255, 255, 255, 0.8);
             --footer-bg: rgba(255, 255, 255, 0.7);
             --switch-bg: #e0e0e0;
+            --hero-text: #1d1d1f;
         }
 
         [data-theme="dark"] {
@@ -30,13 +31,14 @@
             --card-bg: rgba(29, 29, 31, 0.8);
             --footer-bg: rgba(29, 29, 31, 0.7);
             --switch-bg: #383838;
+            --hero-text: #ffffff;
         }
 
         body {
             background: var(--bg-color);
             color: var(--text-color);
             min-height: 100vh;
-            transition: background 0.3s ease, color 0.3s ease;
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .navbar {
@@ -52,6 +54,12 @@
             z-index: 1000;
             border-bottom: 1px solid rgba(0, 0, 0, 0.1);
             gap: 1rem;
+            transform: translateY(0);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .navbar.hidden {
+            transform: translateY(-100%);
         }
 
         [data-theme="dark"] .navbar {
@@ -68,6 +76,8 @@
             font-weight: 700;
             color: var(--accent-color);
             font-size: 1.2rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.3s forwards;
         }
 
         .theme-switch {
@@ -75,6 +85,8 @@
             display: inline-block;
             width: 50px;
             height: 28px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.2s forwards;
         }
 
         .theme-switch input {
@@ -91,7 +103,7 @@
             right: 0;
             bottom: 0;
             background-color: var(--switch-bg);
-            transition: .4s;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             border-radius: 34px;
         }
 
@@ -103,8 +115,9 @@
             left: 4px;
             bottom: 4px;
             background-color: var(--accent-color);
-            transition: .4s;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             border-radius: 50%;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
         }
 
         input:checked + .switch-slider {
@@ -132,11 +145,29 @@
             color: var(--text-color);
             text-decoration: none;
             font-weight: 500;
-            transition: color 0.3s ease;
+            transition: all 0.3s ease;
+            position: relative;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.4s forwards;
         }
 
         .nav-links a:hover {
             color: var(--accent-color);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--accent-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
         }
 
         .hamburger {
@@ -145,6 +176,8 @@
             border: none;
             cursor: pointer;
             padding: 0.5rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.5s forwards;
         }
 
         .hamburger span {
@@ -153,11 +186,26 @@
             height: 2px;
             background: var(--text-color);
             margin: 5px 0;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .hero {
+            padding: 120px 2rem 60px;
+            text-align: center;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.6s forwards;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--hero-text);
+            transform: translateY(20px);
+            animation: float 6s ease-in-out infinite;
         }
 
         .container {
-            padding: 7rem 2rem 4rem;
+            padding: 2rem;
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
@@ -171,12 +219,19 @@
             padding: 1.5rem;
             backdrop-filter: blur(10px);
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
             text-decoration: none;
             color: inherit;
             display: block;
             border: 1px solid rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .project-card.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         [data-theme="dark"] .project-card {
@@ -184,7 +239,8 @@
         }
 
         .project-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-10px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.1);
         }
 
         .project-image {
@@ -193,12 +249,19 @@
             border-radius: 12px;
             object-fit: cover;
             margin-bottom: 1rem;
+            transition: transform 0.4s ease;
+            transform-origin: center bottom;
+        }
+
+        .project-card:hover .project-image {
+            transform: scale(1.05);
         }
 
         .project-title {
             color: var(--accent-color);
             margin-bottom: 0.5rem;
             font-size: 1.2rem;
+            transition: color 0.3s ease;
         }
 
         .project-description {
@@ -206,6 +269,7 @@
             opacity: 0.8;
             font-size: 0.9rem;
             line-height: 1.4;
+            transition: opacity 0.3s ease;
         }
 
         .footer {
@@ -215,10 +279,34 @@
             text-align: center;
             color: var(--text-color);
             border-top: 1px solid rgba(0, 0, 0, 0.1);
+            margin-top: 4rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease-out 0.7s forwards;
         }
 
         [data-theme="dark"] .footer {
             border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes scaleUp {
+            from { transform: scale(0.95); }
+            to { transform: scale(1); }
         }
 
         @media (max-width: 768px) {
@@ -231,7 +319,7 @@
                 backdrop-filter: blur(20px);
                 width: 100%;
                 padding: 1rem;
-                transition: right 0.3s ease;
+                transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
                 gap: 1rem;
             }
 
@@ -255,12 +343,8 @@
                 transform: rotate(-45deg) translate(7px, -6px);
             }
 
-            .container {
-                padding-top: 5rem;
-            }
-
-            .nav-right {
-                gap: 1rem;
+            .hero h1 {
+                font-size: 2rem;
             }
         }
     </style>
@@ -289,6 +373,10 @@
             <a href="#contact">Contacto</a>
         </div>
     </nav>
+
+    <div class="hero">
+        <h1>Mis Proyectos Creativos</h1>
+    </div>
 
     <div class="container" id="projects-container">
         <!-- Proyectos generados con JS -->
@@ -323,7 +411,7 @@
 
         // Generar proyectos
         const container = document.getElementById('projects-container');
-        projects.forEach(project => {
+        projects.forEach((project, index) => {
             const card = document.createElement('a');
             card.className = 'project-card';
             card.href = project.link;
@@ -333,6 +421,11 @@
                 <p class="project-description">${project.description}</p>
             `;
             container.appendChild(card);
+            
+            // Animación de aparición escalonada
+            setTimeout(() => {
+                card.classList.add('visible');
+            }, 300 + (index * 100));
         });
 
         // Toggle tema
@@ -340,8 +433,18 @@
         const body = document.body;
 
         themeSwitch.addEventListener('change', () => {
+            body.style.transition = 'none';
             body.dataset.theme = themeSwitch.checked ? 'dark' : 'light';
+            setTimeout(() => body.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)');
             localStorage.setItem('theme', body.dataset.theme);
+            
+            // Animación del switch
+            if(themeSwitch.checked) {
+                document.querySelector('.switch-slider').style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    document.querySelector('.switch-slider').style.transform = 'scale(1)';
+                }, 200);
+            }
         });
 
         // Cargar tema guardado
@@ -368,6 +471,38 @@
                 navLinks.classList.remove('active');
             }
         });
+
+        // Scroll suave
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Efecto de navbar al hacer scroll
+        let lastScroll = 0;
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll > lastScroll && currentScroll > 100) {
+                document.querySelector('.navbar').classList.add('hidden');
+            } else {
+                document.querySelector('.navbar').classList.remove('hidden');
+            }
+            lastScroll = currentScroll;
+            
+            // Efecto de blur dinámico
+            const blurAmount = Math.min(currentScroll / 20, 20);
+            document.querySelector('.navbar').style.backdropFilter = `blur(${blurAmount}px)`;
+        });
+
+        // Animación inicial
+        setTimeout(() => {
+            document.body.style.opacity = '1';
+        }, 100);
     </script>
 </body>
 </html>
