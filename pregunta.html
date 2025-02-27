@@ -155,10 +155,16 @@
 </head>
 <body>
 
-    <div class="container" id="inicio">
-        <h1>🧠 Quiz de Conocimientos</h1>
-        <button class="btn" onclick="iniciarJuego()">Comenzar Juego</button>
-    </div>
+<div id="inicio">
+    <h1>🧠 Quiz de Conocimientos</h1>
+    <label for="tiempo">Selecciona el tiempo por pregunta:</label>
+    <select id="tiempoSeleccion">
+        <option value="10">10 segundos</option>
+        <option value="15" selected>15 segundos</option>
+        <option value="20">20 segundos</option>
+        <option value="30">30 segundos</option>
+    </select>
+    <button class="btn" onclick="iniciarJuego()">Comenzar Juego</button>
 
     <div class="container hidden" id="juego">
         <div class="progress-container">
@@ -226,8 +232,12 @@ let juego = {
 };
 
 function iniciarJuego() {
+    // Obtener el tiempo seleccionado
+    const tiempoSeleccionado = parseInt(document.getElementById('tiempoSeleccion').value);
+    
     juego = {
         ...juego,
+        tiempoBase: tiempoSeleccionado, // ⬅️ Usar el valor seleccionado
         preguntas: shuffleArray([...preguntas]),
         indiceActual: 0,
         correctas: 0,
