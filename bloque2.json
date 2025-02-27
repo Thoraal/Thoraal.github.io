@@ -1,0 +1,14 @@
+[
+    {
+        "concepto": "Color del cielo despejado",
+        "opciones": ["Verde", "Azul", "Rojo", "Blanco"],
+        "correcta": 1,
+        "categoria": "Ciencias"
+    },
+    {
+        "concepto": "Planeta más grande",
+        "opciones": ["Marte", "Saturno", "Júpiter", "Tierra"],
+        "correcta": 2,
+        "categoria": "Ciencias"
+    }
+]
