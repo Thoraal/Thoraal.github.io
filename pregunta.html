@@ -361,6 +361,7 @@ function finalizarJuego() {
     
     // Mostrar resultados
     document.getElementById('totalPreguntas').textContent = juego.historial.length;
+    document.getElementById('totalCorrectas').trxtContent = juego.correctas.length;
     document.getElementById('totalPuntos').textContent = juego.puntos;
     
     // Calcular porcentaje de aciertos
