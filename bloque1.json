@@ -1,0 +1,14 @@
+[
+    {
+        "concepto": "Capital de Francia",
+        "opciones": ["Londres", "París", "Roma", "Berlín"],
+        "correcta": 1,
+        "categoria": "Geografía"
+    },
+    {
+        "concepto": "País más grande del mundo",
+        "opciones": ["Canadá", "Rusia", "China", "Estados Unidos"],
+        "correcta": 1,
+        "categoria": "Geografía"
+    }
+]
