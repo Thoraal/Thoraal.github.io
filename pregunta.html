@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego de Conceptos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: linear-gradient(135deg, #4b6cb7, #182848);
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            justify-content: center;
+        }
+        .container {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 15px rgba(255, 255, 255, 0.3);
+            width: 90%;
+            max-width: 400px;
+        }
+        .option {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin: 5px 0;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s, transform 0.2s;
+            background: #007bff;
+            color: white;
+        }
+        .option:hover { background: #0056b3; }
+        .correct { background-color: #28a745 !important; }
+        .incorrect { background-color: #dc3545 !important; }
+        .hidden { display: none; }
+        .btn {
+            background: #ff9800;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .btn:hover { background: #e68900; }
+        .progress-container {
+            width: 100%;
+            background: #ccc;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .progress-bar {
+            height: 20px;
+            background: #28a745;
+            width: 0%;
+            border-radius: 5px;
+            transition: width 0.3s;
+        }
+        #historial { text-align: left; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    <div class="container" id="inicio">
+        <h2>Juego de Conceptos</h2>
+        <button class="btn" onclick="iniciarJuego()">Iniciar</button>
+    </div>
+
+    <div class="container hidden" id="juego">
+        <h2 id="concepto">Cargando...</h2>
+        <div id="opciones"></div>
+        <p id="mensaje"></p>
+        <p id="tiempo">Tiempo: 5s</p>
+        <p>Correctas: <span id="correctas">0</span> | Incorrectas: <span id="incorrectas">0</span></p>
+        <div class="progress-container">
+            <div class="progress-bar" id="barra"></div>
+        </div>
+    </div>
+
+    <div class="container hidden" id="resumen">
+        <h2 id="resultadoTexto"></h2>
+        <p id="fechaHora"></p>
+        <p>Total Correctas: <span id="finalCorrectas"></span></p>
+        <p>Total Incorrectas: <span id="finalIncorrectas"></span></p>
+        <div class="progress-container">
+            <div class="progress-bar" id="barraResumen"></div>
+        </div>
+        <h3>Respuestas</h3>
+        <div id="historial"></div>
+        <button class="btn" onclick="reiniciarJuego()">Jugar Otra Vez</button>
+    </div>
+
+    <script>
+        const preguntas = [
+            { concepto: "Capital de Francia", opciones: ["Londres", "París", "Roma"], correcta: 1 },
+            { concepto: "¿Cuánto es 5 x 6?", opciones: ["30", "25", "35"], correcta: 0 },
+            { concepto: "Color del cielo en un día despejado", opciones: ["Verde", "Azul", "Rojo"], correcta: 1 },
+            { concepto: "Planeta más grande del sistema solar", opciones: ["Marte", "Júpiter", "Saturno"], correcta: 1 },
+            { concepto: "¿Cuántos lados tiene un triángulo?", opciones: ["3", "4", "5"], correcta: 0 }
+        ];
+        
+        let preguntasPendientes, correctas, incorrectas, intervalo, tiempoRestante;
+        let historialRespuestas = [];
+
+        function iniciarJuego() {
+            document.getElementById("inicio").classList.add("hidden");
+            document.getElementById("juego").classList.remove("hidden");
+            
+            preguntasPendientes = [...preguntas];
+            historialRespuestas = [];
+            correctas = 0;
+            incorrectas = 0;
+            actualizarBarra();
+            document.getElementById("correctas").textContent = correctas;
+            document.getElementById("incorrectas").textContent = incorrectas;
+            cargarPregunta();
+        }
+
+        function cargarPregunta() {
+            if (preguntasPendientes.length === 0) {
+                mostrarResumen();
+                return;
+            }
+            
+            tiempoRestante = 5;
+            document.getElementById("tiempo").textContent = `Tiempo: ${tiempoRestante}s`;
+            document.getElementById("mensaje").textContent = "";
+
+            let indiceAleatorio = Math.floor(Math.random() * preguntasPendientes.length);
+            let preguntaActual = preguntasPendientes.splice(indiceAleatorio, 1)[0];
+
+            document.getElementById("concepto").textContent = preguntaActual.concepto;
+
+            let opcionesMezcladas = preguntaActual.opciones
+                .map((opcion, index) => ({ opcion, index }))
+                .sort(() => Math.random() - 0.5);
+
+            let opcionesHTML = opcionesMezcladas.map(({ opcion, index }) => 
+                `<button class="option" onclick="verificarRespuesta(this, '${opcion}', ${index === preguntaActual.correcta}, '${preguntaActual.concepto}')">${opcion}</button>`
+            ).join("");
+
+            document.getElementById("opciones").innerHTML = opcionesHTML;
+
+            intervalo = setInterval(actualizarTiempo, 1000);
+        }
+
+        function actualizarTiempo() {
+            tiempoRestante--;
+            document.getElementById("tiempo").textContent = `Tiempo: ${tiempoRestante}s`;
+            if (tiempoRestante === 0) {
+                clearInterval(intervalo);
+                incorrectas++;
+                actualizarBarra();
+                cargarPregunta();
+            }
+        }
+
+        function verificarRespuesta(boton, respuestaSeleccionada, esCorrecta, concepto) {
+            clearInterval(intervalo);
+            
+            if (esCorrecta) {
+                boton.classList.add("correct");
+                correctas++;
+                historialRespuestas.push(`${concepto}: ${respuestaSeleccionada} ✅`);
+            } else {
+                boton.classList.add("incorrect");
+                incorrectas++;
+                historialRespuestas.push(`${concepto}: ${respuestaSeleccionada} ❌`);
+            }
+
+            actualizarBarra();
+            setTimeout(cargarPregunta, 1000);
+        }
+
+        function actualizarBarra() {
+            let porcentaje = (correctas / (correctas + incorrectas)) * 100 || 0;
+            document.getElementById("barra").style.width = porcentaje + "%";
+        }
+
+        function mostrarResumen() {
+            document.getElementById("finalCorrectas").textContent = correctas;
+            document.getElementById("finalIncorrectas").textContent = incorrectas;
+            document.getElementById("barraResumen").style.width = (correctas / (correctas + incorrectas)) * 100 + "%";
+            document.getElementById("historial").innerHTML = historialRespuestas.join("<br>");
+            document.getElementById("juego").classList.add("hidden");
+            document.getElementById("resumen").classList.remove("hidden");
+        }
+
+        function reiniciarJuego() { location.reload(); }
+    </script>
+</body>
+</html>
