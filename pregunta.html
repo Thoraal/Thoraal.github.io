@@ -155,17 +155,10 @@
 </head>
 <body>
 
-<div id="inicio">
-    <h1>🧠 Quiz de Conocimientos</h1>
-    <label for="tiempo">Selecciona el tiempo por pregunta:</label>
-    <select id="tiempoSeleccion">
-        <option value="10">10 segundos</option>
-        <option value="15" selected>15 segundos</option>
-        <option value="20">20 segundos</option>
-        <option value="30">30 segundos</option>
-    </select>
-    <button class="btn" onclick="iniciarJuego()">Comenzar Juego</button>
-
+    <div class="container" id="inicio">
+        <h1>🧠 Quiz de Conocimientos</h1>
+        <button class="btn" onclick="iniciarJuego()">Comenzar Juego</button>
+    </div>
     <div class="container hidden" id="juego">
         <div class="progress-container">
             <div class="progress-bar" id="barraProgreso"></div>
@@ -224,21 +217,14 @@ let juego = {
     correctas: 0,
     incorrectas: 0,
     puntos: 0,
-    tiempoBase: 5,
+    tiempoBase: 15,
     tiempoRestante: 0,
     intervalo: null,
     historial: [],
     preguntaActual: null
 };
 
-// Inicialización del juego
-document.getElementById('iniciarBtn').addEventListener('click', iniciarJuego);
-
 function iniciarJuego() {
-    // Obtener el tiempo seleccionado
-    juego.tiempoBase = parseInt(document.getElementById('tiempoSeleccion').value);
-    
-    // Reiniciar estado del juego
     juego = {
         ...juego,
         preguntas: shuffleArray([...preguntas]),
@@ -249,12 +235,10 @@ function iniciarJuego() {
         historial: []
     };
     
-    // Cambiar vistas
     document.getElementById('inicio').classList.add('hidden');
     document.getElementById('juego').classList.remove('hidden');
     document.getElementById('resumen').classList.add('hidden');
     
-    // Iniciar primera pregunta
     actualizarUI();
     cargarPregunta();
 }
