@@ -295,33 +295,28 @@
     </div>
 
 <script>
-const preguntas = [
-    {
-        concepto: "Capital de Francia",
-        opciones: ["Londres", "París", "Roma", "Berlín"],
-        correcta: 1,
-        categoria: "Geografía"
-    },
-    {
-        concepto: "5 × 6",
-        opciones: ["30", "25", "35", "40"],
-        correcta: 0,
-        categoria: "Matemáticas"
-    },
-    {
-        concepto: "Color del cielo despejado",
-        opciones: ["Verde", "Azul", "Rojo", "Blanco"],
-        correcta: 1,
-        categoria: "Ciencias"
-    },
-    {
-        concepto: "Planeta más grande",
-        opciones: ["Marte", "Saturno", "Júpiter", "Tierra"],
-        correcta: 2,
-        categoria: "Astronomía"
-    }
-];
 
+let preguntas = []; // Variable global para almacenar las preguntas
+
+// Función para cargar las preguntas desde el archivo JSON
+async function cargarPreguntas() {
+    try {
+        const respuesta = await fetch('preguntas.json'); // Ruta al archivo JSON
+        if (!respuesta.ok) {
+            throw new Error('No se pudo cargar el archivo de preguntas');
+        }
+        preguntas = await respuesta.json(); // Convertir la respuesta a JSON
+        console.log('Preguntas cargadas:', preguntas);
+    } catch (error) {
+        console.error('Error al cargar las preguntas:', error);
+    }
+}
+
+// Llamar a la función para cargar las preguntas al iniciar
+document.addEventListener('DOMContentLoaded', () => {
+    cargarPreguntas();
+});
+    
 let juego = {
     preguntas: [],
     indiceActual: 0,
@@ -337,6 +332,11 @@ let juego = {
 };
 
 function iniciarJuego() {
+    if (preguntas.length === 0) {
+        alert('Las preguntas no se han cargado correctamente.');
+        return;
+    }
+
     // Obtener la dificultad seleccionada
     const dificultad = document.getElementById('dificultad').value;
     juego.dificultad = dificultad;
@@ -344,33 +344,33 @@ function iniciarJuego() {
     // Ajustar el tiempo base según la dificultad
     switch (dificultad) {
         case 'facil':
-            juego.tiempoBase = 20; // 20 segundos por pregunta
+            juego.tiempoBase = 20;
             break;
         case 'medio':
-            juego.tiempoBase = 15; // 15 segundos por pregunta
+            juego.tiempoBase = 15;
             break;
         case 'dificil':
-            juego.tiempoBase = 10; // 10 segundos por pregunta
+            juego.tiempoBase = 10;
             break;
         default:
-            juego.tiempoBase = 15; // Valor por defecto
+            juego.tiempoBase = 15;
     }
 
     // Reiniciar el juego
     juego = {
         ...juego,
-        preguntas: shuffleArray([...preguntas]),
+        preguntas: shuffleArray([...preguntas]), // Usar las preguntas cargadas
         indiceActual: 0,
         correctas: 0,
         incorrectas: 0,
         puntos: 0,
         historial: []
     };
-    
+
     document.getElementById('inicio').classList.add('hidden');
     document.getElementById('juego').classList.remove('hidden');
     document.getElementById('resumen').classList.add('hidden');
-    
+
     actualizarUI();
     cargarPregunta();
 }
