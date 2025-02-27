@@ -112,6 +112,18 @@
             margin: 15px 0;
             animation: pulse 1s infinite;
         }
+        .mensaje-felicidades {
+            background: linear-gradient(45deg, #28a745, #218838);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
 
         @keyframes pulse {
             0% { transform: scale(1); }
@@ -166,6 +178,7 @@
         <h2>📊 Resultados Finales</h2>
         <p>Total de preguntas: <span id="totalPreguntas">0</span></p>
         <p>Puntuación Final: <span id="totalPuntos">0</span> puntos</p>
+        <div id="mensajeFelicidades" class="hidden"></div>
         <h3>Detalle de Respuestas</h3>
         <div id="detalleRespuestas"></div>
         <button class="btn" onclick="reiniciarJuego()">Jugar de Nuevo</button>
@@ -350,6 +363,24 @@ function finalizarJuego() {
     // Mostrar resultados
     document.getElementById('totalPreguntas').textContent = juego.historial.length;
     document.getElementById('totalPuntos').textContent = juego.puntos;
+    
+    // Calcular porcentaje de aciertos
+    const porcentajeAciertos = (juego.correctas / juego.historial.length) * 100;
+    
+    // Mostrar mensaje de felicitaciones si corresponde
+    const mensajeFelicidades = document.getElementById('mensajeFelicidades');
+    if (porcentajeAciertos > 85) {
+        mensajeFelicidades.innerHTML = `
+            <div class="mensaje-felicidades">
+                <h3>🎉 ¡Felicidades! 🎉</h3>
+                <p>Has obtenido un ${porcentajeAciertos.toFixed(1)}% de respuestas correctas</p>
+                <p>¡Excelente trabajo!</p>
+            </div>
+        `;
+        mensajeFelicidades.classList.remove('hidden');
+    } else {
+        mensajeFelicidades.classList.add('hidden');
+    }
     
     // Generar detalle de respuestas
     const detalleHTML = juego.historial.map((item, index) => `
