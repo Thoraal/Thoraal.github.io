@@ -157,21 +157,28 @@
 
     <div class="container" id="inicio">
         <h1>🧠 Quiz de Conocimientos</h1>
+        <label for="dificultad">Selecciona la dificultad:</label>
+        <select id="dificultad">
+            <option value="facil">Fácil</option>
+            <option value="medio">Medio</option>
+            <option value="dificil">Difícil</option>
+        </select>
         <button class="btn" onclick="iniciarJuego()">Comenzar Juego</button>
     </div>
-    <div class="container hidden" id="juego">
-        <div class="progress-container">
-            <div class="progress-bar" id="barraProgreso"></div>
-        </div>
-        <h2 id="concepto"></h2>
-        <div id="opciones"></div>
-        <p id="tiempo"></p>
-        <div id="puntuacion">
-            <span>✅ <span id="correctas">0</span></span>
-            <span>❌ <span id="incorrectas">0</span></span>
-            <span>⭐ <span id="puntos">0</span></span>
-        </div>
+<div class="container hidden" id="juego">
+    <div class="progress-container">
+        <div class="progress-bar" id="barraProgreso"></div>
     </div>
+    <h2 id="concepto"></h2>
+    <p>Dificultad: <span id="nivelDificultad"></span></p> <!-- Nueva línea -->
+    <div id="opciones"></div>
+    <p id="tiempo"></p>
+    <div id="puntuacion">
+        <span>✅ <span id="correctas">0</span></span>
+        <span>❌ <span id="incorrectas">0</span></span>
+        <span>⭐ <span id="puntos">0</span></span>
+    </div>
+</div>
 
     <div class="container hidden" id="resumen">
         <h2>📊 Resultados Finales</h2>
@@ -219,14 +226,35 @@ let juego = {
     correctas: 0,
     incorrectas: 0,
     puntos: 0,
-    tiempoBase: 15,
+    tiempoBase: 15, // Valor por defecto
     tiempoRestante: 0,
     intervalo: null,
     historial: [],
-    preguntaActual: null
+    preguntaActual: null,
+    dificultad: "facil" // Nueva propiedad
 };
 
 function iniciarJuego() {
+    // Obtener la dificultad seleccionada
+    const dificultad = document.getElementById('dificultad').value;
+    juego.dificultad = dificultad;
+
+    // Ajustar el tiempo base según la dificultad
+    switch (dificultad) {
+        case 'facil':
+            juego.tiempoBase = 20; // 20 segundos por pregunta
+            break;
+        case 'medio':
+            juego.tiempoBase = 15; // 15 segundos por pregunta
+            break;
+        case 'dificil':
+            juego.tiempoBase = 10; // 10 segundos por pregunta
+            break;
+        default:
+            juego.tiempoBase = 15; // Valor por defecto
+    }
+
+    // Reiniciar el juego
     juego = {
         ...juego,
         preguntas: shuffleArray([...preguntas]),
@@ -258,6 +286,7 @@ function cargarPregunta() {
     
     document.getElementById('concepto').textContent = juego.preguntaActual.concepto;
     document.getElementById('tiempo').textContent = `Tiempo: ${juego.tiempoRestante}s`;
+    document.getElementById('nivelDificultad').textContent = juego.dificultad.toUpperCase(); // Mostrar dificultad
     
     const opcionesMezcladas = shuffleArray(
         juego.preguntaActual.opciones.map((texto, index) => ({
@@ -277,7 +306,6 @@ function cargarPregunta() {
     document.getElementById('opciones').innerHTML = opcionesHTML;
     iniciarTemporizador();
 }
-
 function iniciarTemporizador() {
     actualizarBarraProgreso();
     juego.intervalo = setInterval(() => {
