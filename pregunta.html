@@ -254,19 +254,22 @@
     </style>
 </head>
 <body>
-
-        <div class="container" id="inicio">
-            <h1>🧠 Quiz de Conocimientos</h1>
-            <label for="dificultad">Selecciona la dificultad:</label>
-            <div class="dificultad-container">
-                <select id="dificultad" class="dificultad-select">
-                    <option value="medio">Medio</option>
-                    <option value="facil">Fácil</option>
-                    <option value="dificil">Difícil</option>
-                </select>
-            </div>
-            <button class="btn" onclick="iniciarJuego()">Comenzar Juego</button>
-        </div>
+<div class="container" id="inicio">
+    <h1>🧠 Quiz de Conocimientos</h1>
+    <label for="area">Selecciona el área:</label>
+    <select id="area" class="dificultad-select">
+        <option value="geografia">Geografía</option>
+        <option value="matematicas">Matemáticas</option>
+        <option value="ciencias">Ciencias</option>
+    </select>
+    <label for="dificultad">Selecciona la dificultad:</label>
+    <select id="dificultad" class="dificultad-select">
+        <option value="facil">Fácil</option>
+        <option value="medio">Medio</option>
+        <option value="dificil">Difícil</option>
+    </select>
+    <button class="btn" onclick="iniciarJuego()">Comenzar Juego</button>
+</div>
 <div class="container hidden" id="juego">
     <div class="progress-container">
         <div class="progress-bar" id="barraProgreso"></div>
