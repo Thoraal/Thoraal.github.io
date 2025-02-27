@@ -231,13 +231,16 @@ let juego = {
     preguntaActual: null
 };
 
+// Inicialización del juego
+document.getElementById('iniciarBtn').addEventListener('click', iniciarJuego);
+
 function iniciarJuego() {
     // Obtener el tiempo seleccionado
-    const tiempoSeleccionado = parseInt(document.getElementById('tiempoSeleccion').value);
+    juego.tiempoBase = parseInt(document.getElementById('tiempoSeleccion').value);
     
+    // Reiniciar estado del juego
     juego = {
-        ...preguntas,
-        tiempoBase: tiempoSeleccionado, // ⬅️ Usar el valor seleccionado
+        ...juego,
         preguntas: shuffleArray([...preguntas]),
         indiceActual: 0,
         correctas: 0,
@@ -246,10 +249,12 @@ function iniciarJuego() {
         historial: []
     };
     
+    // Cambiar vistas
     document.getElementById('inicio').classList.add('hidden');
     document.getElementById('juego').classList.remove('hidden');
     document.getElementById('resumen').classList.add('hidden');
     
+    // Iniciar primera pregunta
     actualizarUI();
     cargarPregunta();
 }
