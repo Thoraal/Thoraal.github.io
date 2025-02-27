@@ -236,7 +236,7 @@ function iniciarJuego() {
     const tiempoSeleccionado = parseInt(document.getElementById('tiempoSeleccion').value);
     
     juego = {
-        ...juego,
+        ...preguntas,
         tiempoBase: tiempoSeleccionado, // ⬅️ Usar el valor seleccionado
         preguntas: shuffleArray([...preguntas]),
         indiceActual: 0,
