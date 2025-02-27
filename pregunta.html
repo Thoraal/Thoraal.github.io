@@ -363,6 +363,8 @@ function finalizarJuego() {
     
     // Mostrar resultados
     document.getElementById('totalPreguntas').textContent = juego.historial.length;
+    document.getElementById('totalCorrectas').textContent = juego.correctas; // Actualizar correctas
+    document.getElementById('totalIncorrectas').textContent = juego.incorrectas; // Actualizar incorrectas
     document.getElementById('totalPuntos').textContent = juego.puntos;
     
     // Calcular porcentaje de aciertos
