@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juego de Conocimientos Mejorado</title>
+    <title>Quiz de Conocimientos Mejorado</title>
     <style>
         :root {
             --color-correcto: #28a745;
@@ -50,7 +50,12 @@
             text-align: left;
         }
 
-        .option:hover {
+        .option:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .option:hover:not(:disabled) {
             background: rgba(255, 255, 255, 0.2);
             transform: translateY(-2px);
         }
@@ -114,33 +119,33 @@
             100% { transform: scale(1); }
         }
 
-        #historial {
-            background: rgba(0, 0, 0, 0.3);
+        .historial-item {
+            background: rgba(255, 255, 255, 0.05);
             padding: 15px;
             border-radius: 8px;
-            margin: 15px 0;
-        }
-
-        .logro {
-            background: linear-gradient(45deg, #ffc107, #ff9800);
-            padding: 10px;
-            border-radius: 5px;
             margin: 10px 0;
-            animation: slideIn 0.5s ease;
+            text-align: left;
         }
 
-        @keyframes slideIn {
-            from { transform: translateX(100%); }
-            to { transform: translateX(0); }
+        .historial-correcta {
+            border-left: 4px solid var(--color-correcto);
+        }
+
+        .historial-incorrecta {
+            border-left: 4px solid var(--color-incorrecto);
+        }
+
+        .respuesta-correcta {
+            color: var(--color-correcto);
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 
     <div class="container" id="inicio">
-        <h1>🧠 Juego de Conocimientos</h1>
+        <h1>🧠 Quiz de Conocimientos</h1>
         <button class="btn" onclick="iniciarJuego()">Comenzar Juego</button>
-        <div id="historialPrevios"></div>
     </div>
 
     <div class="container hidden" id="juego">
@@ -155,17 +160,14 @@
             <span>❌ <span id="incorrectas">0</span></span>
             <span>⭐ <span id="puntos">0</span></span>
         </div>
-        <div id="logrosContainer"></div>
     </div>
 
     <div class="container hidden" id="resumen">
-        <h2>🏆 Resultados Finales</h2>
-        <p id="fechaHora"></p>
-        <div class="progress-container">
-            <div class="progress-bar" id="barraResumen"></div>
-        </div>
-        <p>Puntuación Total: <span id="totalPuntos">0</span> puntos</p>
-        <div id="historial"></div>
+        <h2>📊 Resultados Finales</h2>
+        <p>Total de preguntas: <span id="totalPreguntas">0</span></p>
+        <p>Puntuación Final: <span id="totalPuntos">0</span> puntos</p>
+        <h3>Detalle de Respuestas</h3>
+        <div id="detalleRespuestas"></div>
         <button class="btn" onclick="reiniciarJuego()">Jugar de Nuevo</button>
     </div>
 
@@ -207,17 +209,10 @@ let juego = {
     tiempoRestante: 0,
     intervalo: null,
     historial: [],
-    logrosDesbloqueados: []
+    preguntaActual: null
 };
 
-const logros = [
-    { nombre: "Primer Acierto", cond: (j) => j.correctas === 1, desbloqueado: false },
-    { nombre: "Racha Perfecta", cond: (j) => j.correctas >= 3 && j.incorrectas === 0, desbloqueado: false },
-    { nombre: "Velocista", cond: (j) => j.puntos >= 500, desbloqueado: false }
-];
-
 function iniciarJuego() {
-    // Reiniciar estado del juego
     juego = {
         ...juego,
         preguntas: shuffleArray([...preguntas]),
@@ -244,23 +239,22 @@ function cargarPregunta() {
         return;
     }
 
-    const pregunta = juego.preguntas[juego.indiceActual];
-    juego.tiempoRestante = Math.max(juego.tiempoBase - Math.floor(juego.indiceActual/2), 5);
+    juego.preguntaActual = juego.preguntas[juego.indiceActual];
+    juego.tiempoRestante = juego.tiempoBase;
     
-    // Actualizar UI
-    document.getElementById('concepto').textContent = pregunta.concepto;
+    document.getElementById('concepto').textContent = juego.preguntaActual.concepto;
     document.getElementById('tiempo').textContent = `Tiempo: ${juego.tiempoRestante}s`;
     
-    // Mezclar opciones
-    const opcionesMezcladas = shuffleArray(pregunta.opciones.map((texto, index) => ({
-        texto,
-        correcta: index === pregunta.correcta
-    })));
+    const opcionesMezcladas = shuffleArray(
+        juego.preguntaActual.opciones.map((texto, index) => ({
+            texto,
+            correcta: index === juego.preguntaActual.correcta
+        }))
+    );
 
-    // Crear botones de opciones
     const opcionesHTML = opcionesMezcladas.map(opcion => `
         <button class="option" 
-                onclick="verificarRespuesta(${opcion.correcta}, '${opcion.texto}')"
+                onclick="verificarRespuesta(this, ${opcion.correcta}, '${opcion.texto}')"
                 data-correcta="${opcion.correcta}">
             ${opcion.texto}
         </button>
@@ -278,34 +272,58 @@ function iniciarTemporizador() {
         actualizarBarraProgreso();
 
         if (juego.tiempoRestante <= 0) {
-            clearInterval(juego.intervalo);
             manejarTiempoAgotado();
         }
     }, 1000);
 }
 
-function verificarRespuesta(esCorrecta, respuesta) {
+function verificarRespuesta(boton, esCorrecta, respuesta) {
     clearInterval(juego.intervalo);
-    
-    // Mostrar feedback visual
-    document.querySelectorAll('.option').forEach(boton => {
-        if (boton.dataset.correcta === 'true') boton.classList.add('correct');
-        if (boton.textContent === respuesta && !esCorrecta) boton.classList.add('incorrect');
+    document.querySelectorAll('.option').forEach(btn => btn.disabled = true);
+
+    // Mostrar feedback
+    document.querySelectorAll('.option').forEach(btn => {
+        if (btn.dataset.correcta === 'true') btn.classList.add('correct');
+        if (btn === boton && !esCorrecta) btn.classList.add('incorrect');
     });
 
-    // Actualizar estado del juego
+    // Registrar respuesta
+    const respuestaCorrecta = juego.preguntaActual.opciones[juego.preguntaActual.correcta];
+    juego.historial.push({
+        pregunta: juego.preguntaActual.concepto,
+        respuestaUsuario: respuesta,
+        correcta: respuestaCorrecta,
+        esCorrecta: esCorrecta
+    });
+
     if (esCorrecta) {
         juego.correctas++;
         juego.puntos += juego.tiempoRestante * 10;
-        juego.historial.push({ correcta: true, respuesta, tiempo: juego.tiempoRestante });
     } else {
         juego.incorrectas++;
-        juego.historial.push({ correcta: false, respuesta });
     }
 
-    // Verificar logros
-    verificarLogros();
+    setTimeout(() => {
+        juego.indiceActual++;
+        actualizarUI();
+        cargarPregunta();
+    }, 2000);
+}
 
+function manejarTiempoAgotado() {
+    clearInterval(juego.intervalo);
+    document.querySelectorAll('.option').forEach(btn => btn.disabled = true);
+
+    const respuestaCorrecta = juego.preguntaActual.opciones[juego.preguntaActual.correcta];
+    juego.historial.push({
+        pregunta: juego.preguntaActual.concepto,
+        respuestaUsuario: null,
+        correcta: respuestaCorrecta,
+        esCorrecta: false
+    });
+
+    juego.incorrectas++;
+    
     setTimeout(() => {
         juego.indiceActual++;
         actualizarUI();
@@ -321,7 +339,7 @@ function actualizarUI() {
 }
 
 function actualizarBarraProgreso() {
-    const porcentaje = (juego.tiempoRestante / (juego.tiempoBase - Math.floor(juego.indiceActual/2))) * 100;
+    const porcentaje = (juego.tiempoRestante / juego.tiempoBase) * 100;
     document.getElementById('barraProgreso').style.width = `${porcentaje}%`;
 }
 
@@ -330,51 +348,21 @@ function finalizarJuego() {
     document.getElementById('resumen').classList.remove('hidden');
     
     // Mostrar resultados
+    document.getElementById('totalPreguntas').textContent = juego.historial.length;
     document.getElementById('totalPuntos').textContent = juego.puntos;
-    document.getElementById('barraResumen').style.width = 
-        `${(juego.correctas / (juego.correctas + juego.incorrectas)) * 100}%`;
     
-    // Generar historial
-    const historialHTML = juego.historial.map((item, index) => `
-        <div>Pregunta ${index + 1}: 
-            ${item.correcta ? '✅' : '❌'} 
-            ${item.respuesta} 
-            ${item.tiempo ? `(${item.tiempo}s)` : ''}
+    // Generar detalle de respuestas
+    const detalleHTML = juego.historial.map((item, index) => `
+        <div class="historial-item ${item.esCorrecta ? 'historial-correcta' : 'historial-incorrecta'}">
+            <strong>Pregunta ${index + 1}:</strong> ${item.pregunta}<br>
+            ${item.respuestaUsuario 
+                ? `Tu respuesta: ${item.respuestaUsuario} ${item.esCorrecta ? '✅' : '❌'}` 
+                : '⌛ Tiempo agotado'}
+            <div class="respuesta-correcta">Respuesta correcta: ${item.correcta}</div>
         </div>
     `).join('');
-    document.getElementById('historial').innerHTML = historialHTML;
     
-    // Guardar en localStorage
-    guardarHistorial();
-}
-
-function verificarLogros() {
-    logros.forEach(logro => {
-        if (!logro.desbloqueado && logro.cond(juego)) {
-            logro.desbloqueado = true;
-            mostrarLogro(logro.nombre);
-        }
-    });
-}
-
-function mostrarLogro(nombre) {
-    const logrosContainer = document.getElementById('logrosContainer');
-    const logroDiv = document.createElement('div');
-    logroDiv.className = 'logro';
-    logroDiv.textContent = `🏅 Logro Desbloqueado: ${nombre}`;
-    logrosContainer.appendChild(logroDiv);
-    
-    setTimeout(() => logroDiv.remove(), 3000);
-}
-
-function guardarHistorial() {
-    const historial = JSON.parse(localStorage.getItem('quizHistorial') || '[]');
-    historial.push({
-        fecha: new Date().toISOString(),
-        correctas: juego.correctas,
-        puntos: juego.puntos
-    });
-    localStorage.setItem('quizHistorial', JSON.stringify(historial));
+    document.getElementById('detalleRespuestas').innerHTML = detalleHTML;
 }
 
 function shuffleArray(array) {
@@ -389,20 +377,13 @@ function reiniciarJuego() {
     iniciarJuego();
 }
 
-// Inicialización
+// Validar preguntas al cargar
 document.addEventListener('DOMContentLoaded', () => {
-    // Validar preguntas
     preguntas.forEach((pregunta, index) => {
         if (!pregunta.opciones || pregunta.opciones.length < 2) {
             console.error(`Pregunta ${index} no válida`);
         }
     });
-    
-    // Cargar historial previo
-    const historial = JSON.parse(localStorage.getItem('quizHistorial') || '[]');
-    document.getElementById('historialPrevios').innerHTML = historial
-        .map(entry => `<div>${new Date(entry.fecha).toLocaleDateString()}: ${entry.puntos} puntos</div>`)
-        .join('');
 });
 </script>
 </body>
