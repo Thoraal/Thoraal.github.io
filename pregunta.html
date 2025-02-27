@@ -298,13 +298,12 @@
     </div>
 
 <script>
-
 let preguntas = []; // Variable global para almacenar las preguntas
 
 // Función para cargar las preguntas desde el archivo JSON
-async function cargarPreguntas() {
+async function cargarPreguntas(area) {
     try {
-        const respuesta = await fetch('preguntas.json'); // Ruta al archivo JSON
+        const respuesta = await fetch(`${area}.json`); // Cargar el archivo JSON del área seleccionada
         if (!respuesta.ok) {
             throw new Error('No se pudo cargar el archivo de preguntas');
         }
@@ -315,26 +314,11 @@ async function cargarPreguntas() {
     }
 }
 
-// Llamar a la función para cargar las preguntas al iniciar
-document.addEventListener('DOMContentLoaded', () => {
-    cargarPreguntas();
-});
-    
-let juego = {
-    preguntas: [],
-    indiceActual: 0,
-    correctas: 0,
-    incorrectas: 0,
-    puntos: 0,
-    tiempoBase: 15, // Valor por defecto
-    tiempoRestante: 0,
-    intervalo: null,
-    historial: [],
-    preguntaActual: null,
-    dificultad: "facil" // Nueva propiedad
-};
+// Función para iniciar el juego
+async function iniciarJuego() {
+    const area = document.getElementById('area').value; // Obtener el área seleccionada
+    await cargarPreguntas(area); // Cargar las preguntas del área seleccionada
 
-function iniciarJuego() {
     if (preguntas.length === 0) {
         alert('Las preguntas no se han cargado correctamente.');
         return;
@@ -377,7 +361,6 @@ function iniciarJuego() {
     actualizarUI();
     cargarPregunta();
 }
-
 function cargarPregunta() {
     clearInterval(juego.intervalo);
     
