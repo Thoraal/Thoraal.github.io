@@ -119,6 +119,28 @@
             margin: 20px 0;
             animation: slideIn 0.5s ease;
         }
+        .mensaje-felicidades, .mensaje-aprobado, .mensaje-deficiente {
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            animation: slideIn 0.5s ease;
+            text-align: center;
+        }
+        
+        .mensaje-felicidades {
+            background: linear-gradient(45deg, #28a745, #218838);
+            border-left: 5px solid #1e7e34;
+        }
+        
+        .mensaje-aprobado {
+            background: linear-gradient(45deg, #ffc107, #e0a800);
+            border-left: 5px solid #d39e00;
+        }
+        
+        .mensaje-deficiente {
+            background: linear-gradient(45deg, #dc3545, #c82333);
+            border-left: 5px solid #bd2130;
+        }
 
         @keyframes slideIn {
             from { transform: translateY(-20px); opacity: 0; }
@@ -490,20 +512,38 @@ function finalizarJuego() {
     // Calcular porcentaje de aciertos
     const porcentajeAciertos = (juego.correctas / juego.historial.length) * 100;
     
-    // Mostrar mensaje de felicitaciones si corresponde
+    // Mostrar mensaje personalizado según el porcentaje de aciertos
     const mensajeFelicidades = document.getElementById('mensajeFelicidades');
-    if (porcentajeAciertos > 85) {
-        mensajeFelicidades.innerHTML = `
+    let mensajeHTML = '';
+
+    if (porcentajeAciertos >= 85) {
+        mensajeHTML = `
             <div class="mensaje-felicidades">
                 <h3>🎉 ¡Felicidades! 🎉</h3>
                 <p>Has obtenido un ${porcentajeAciertos.toFixed(1)}% de respuestas correctas</p>
                 <p>¡Excelente trabajo!</p>
             </div>
         `;
-        mensajeFelicidades.classList.remove('hidden');
+    } else if (porcentajeAciertos >= 60) {
+        mensajeHTML = `
+            <div class="mensaje-aprobado">
+                <h3>👍 ¡Bien hecho! 👍</h3>
+                <p>Has obtenido un ${porcentajeAciertos.toFixed(1)}% de respuestas correctas</p>
+                <p>¡Sigue así!</p>
+            </div>
+        `;
     } else {
-        mensajeFelicidades.classList.add('hidden');
+        mensajeHTML = `
+            <div class="mensaje-deficiente">
+                <h3>😟 ¡Debes estudiar más! 😟</h3>
+                <p>Has obtenido un ${porcentajeAciertos.toFixed(1)}% de respuestas correctas</p>
+                <p>Revisa los temas y vuelve a intentarlo.</p>
+            </div>
+        `;
     }
+
+    mensajeFelicidades.innerHTML = mensajeHTML;
+    mensajeFelicidades.classList.remove('hidden');
     
     // Generar detalle de respuestas
     const detalleHTML = juego.historial.map((item, index) => `
@@ -518,7 +558,6 @@ function finalizarJuego() {
     
     document.getElementById('detalleRespuestas').innerHTML = detalleHTML;
 }
-
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
