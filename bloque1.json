@@ -1,14 +1,252 @@
 [
     {
-        "concepto": "Capital de Francia",
-        "opciones": ["Londres", "París", "Roma", "Berlín"],
-        "correcta": 1,
-        "categoria": "Geografía"
+        "concepto": "Es la sanción para quien comete el delito de Financiamiento al Terrorismo de acuerdo con el Código Penal Federal Mexicano.",
+        "opciones": [
+            "15 a 40 años de prisión y de 400 a 1200 días de multa",
+            "1 a 9 años de prisión y de 100 a 300 días de multa",
+            "5 a 15 años de prisión y de 200 a 600 días de multa",
+            "Ninguna de las anteriores"
+        ],
+        "correcta": 0,
+        "categoria": "Bloque 1"
     },
     {
-        "concepto": "País más grande del mundo",
-        "opciones": ["Canadá", "Rusia", "China", "Estados Unidos"],
+        "concepto": "El delito de Financiamiento al Terrorismo se encuentra tipificado en el art. 400 Bis del Código Penal Federal Mexicano.",
+        "opciones": [
+            "True",
+            "False"
+        ],
         "correcta": 1,
-        "categoria": "Geografía"
+        "categoria": "Bloque 1"
+    },
+    {
+        "concepto": "Selecciona el artículo donde se encuentra tipificado el delito de Operaciones con Recursos de Procedencia Ilícita cuando quien lo comete es un prestador de servicios de una persona sujeta al régimen de prevención de operaciones con recursos de procedencia ilícita.",
+        "opciones": [
+            "400 Bis del Código Penal Federal.",
+            "139 del Código Penal Federal.",
+            "139 Quáter del Código Penal Federal.",
+            "400 Bis 1 del Código Penal Federal."
+        ],
+        "correcta": 3,
+        "categoria": "Bloque 1"
+    },
+    {
+        "concepto": "En la fase de Colocación el lavador coloca los fondos lavados de vuelta en la economía para crear una percepción de legitimidad. En esta etapa es extremadamente difícil distinguir la riqueza legal de la ilegal.",
+        "opciones": [
+            "True",
+            "False"
+        ],
+        "correcta": 0,
+        "categoria": "Bloque 1"
+    },
+    {
+        "concepto": "“Adquiera, enajene, administre, custodie, posea, cambie, convierta, deposite, retire, dé o reciba por cualquier motivo, invierta, traspase, transporte o transfiera, dentro del territorio nacional, de éste hacia el extranjero o a la inversa, recursos, derechos o bienes de cualquier naturaleza, cuando tenga conocimiento de que proceden o representan el producto de una actividad ilícita”, corresponde a la definición de lavado de dinero propuesta por:",
+        "opciones": [
+            "Grupo de Acción Financiera Internacional. (GAFI)",
+            "Convención de Viena.",
+            "Convención de Palermo.",
+            "Código Penal Federal Mexicano."
+        ],
+        "correcta": 3,
+        "categoria": "Bloque 1"
+    },
+    {
+        "concepto": "Para proceder penalmente en México por el delito de operaciones con recursos de procedencia ilícita se requiere:",
+        "opciones": [
+            "Investigación de los hechos por parte de un juez.",
+            "Denuncia previa de la Secretaría de Hacienda y Crédito Público.",
+            "Comprobar que el origen de los recursos es ilícito.",
+            "No se requiere ninguna acción previa."
+        ],
+        "correcta": 1,
+        "categoria": "Bloque 1"
+    },
+    {
+        "concepto": "Selecciona de las siguientes opciones la definición que corresponda al Lavado de Dinero:",
+        "opciones": [
+            "Proceso a través del cual se disfraza el origen de ganancias generadas por actos lícitos o ilícitos, introduciéndolas al sistema financiero aparentando que provienen de actividades lícitas.",
+            "Proceso a través del cual se disfraza el origen de ganancias generadas por actos lícitos, introduciéndolas al sistema financiero aparentando que provienen de actividades lícitas.",
+            "Proceso a través del cual se disfraza el origen de ganancias generadas por actos ilícitos, introduciéndolas al sistema financiero aparentando que provienen de actividades lícitas.",
+            "Ninguna de las anteriores."
+        ],
+        "correcta": 2,
+        "categoria": "Bloque 1"
+    },
+    {
+        "concepto": "Es la sanción para quien comete el delito de Terrorismo de acuerdo con el Código Penal Federal Mexicano.",
+        "opciones": [
+            "15 a 40 años de prisión y de 400 a 1200 días de multa",
+            "1 a 9 años de prisión y de 100 a 300 días de multa",
+            "5 a 15 años de prisión y de 200 a 600 días de multa",
+            "Ninguna de las anteriores"
+        ],
+        "correcta": 3,
+        "categoria": "Bloque 1"
+    },
+    {
+        "concepto": "La pena para quien comete este delito aumenta una mitad la sanción original que va de 5 a 15 años de prisión y de 1000 a 5000 días de multa.",
+        "opciones": [
+            "Operaciones con Recursos de Procedencia Ilícita.",
+            "Lavado de Dinero cometido por Servidores Públicos.",
+            "Encubrimiento de Lavado de Dinero.",
+            "Lavado de Dinero que involucre a menores de edad."
+        ],
+        "correcta": 3,
+        "categoria": "Bloque 1"
+    },
+    {
+        "concepto": "Las penas previstas en el artículo 400 Bis 1 del Código Penal Federal se duplicarán si la conducta es cometida por:",
+        "opciones": [
+            "Servidores públicos encargados de prevenir, detectar, denunciar, investigar o juzgar la comisión de delitos o ejecutar las sanciones penales.",
+            "Un administrador de una persona sujeta al régimen de prevención de operaciones con recursos de procedencia ilícita.",
+            "Una persona que utiliza a personas menores de dieciocho años de edad.",
+            "Ninguna de las anteriores."
+        ],
+        "correcta": 0,
+        "categoria": "Bloque 1"
+    },
+    {
+        "concepto": "De acuerdo con el Código Penal Federal Mexicano, se impondrá una pena de ___ a ___ años de prisión y de ___ a ___ días de multa, sin perjuicio de las penas que correspondan por otros delitos que resulten en la conducta de encubrimiento al terrorismo:",
+        "opciones": [
+            "3, 9, 300, 1800",
+            "1, 9, 100, 300",
+            "3, 9, 100, 300",
+            "1, 9, 300, 500"
+        ],
+        "correcta": 1,
+        "categoria": "Bloque 1"
+    },
+    {
+        "concepto": "El delito de Operaciones con Recursos de Procedencia Ilícita se encuentra tipificado en el art. 400 Bis del Código Penal Federal Mexicano.",
+        "opciones": [
+            "True",
+            "False"
+        ],
+        "correcta": 0,
+        "categoria": "Bloque 1"
+    },
+    {
+        "concepto": "El delito de Financiamiento al Terrorismo se encuentra tipificado en el art. 139 del Código Penal Federal Mexicano.",
+        "opciones": [
+            "True",
+            "False"
+        ],
+        "correcta": 1,
+        "categoria": "Bloque 1"
+    },
+    {
+        "concepto": "En la fase de Integración el lavador coloca los fondos lavados de vuelta en la economía para crear una percepción de legitimidad. En esta etapa es extremadamente difícil distinguir la riqueza legal de la ilegal.",
+        "opciones": [
+            "True",
+            "False"
+        ],
+        "correcta": 0,
+        "categoria": "Bloque 1"
+    },
+    {
+        "concepto": "Comete delito a que por cualquier medio que fuere ya sea directa o indirectamente, aporte o recaude fondos económicos o recursos de cualquier naturaleza con conocimiento de que serán destinados para financiar o apoyar actividades de individuos u organizaciones terroristas.",
+        "opciones": [
+            "Operaciones con Recursos de Procedencia Ilícita.",
+            "Encubrimiento de Lavado de Dinero.",
+            "Financiamiento al Terrorismo.",
+            "Terrorismo."
+        ],
+        "correcta": 2,
+        "categoria": "Bloque 1"
+    },
+    {
+        "concepto": "Implica una compleja red de transacciones a menudo incorporando a empresas fantasma o de pantalla, acciones al portador y paraísos de secreto bancario.",
+        "opciones": [
+            "Terrorismo.",
+            "Financiamiento al Terrorismo.",
+            "Lavado de dinero.",
+            "Fraude."
+        ],
+        "correcta": 2,
+        "categoria": "Bloque 1"
+    },
+    {
+        "concepto": "Selecciona el artículo donde se encuentra tipificado el delito de Operaciones con Recursos Procedencia Ilícita cuando quien lo comete es un consejero de una persona sujeta al régimen de prevención de operaciones con recursos de procedencia ilícita.",
+        "opciones": [
+            "400 Bis del Código Penal Federal.",
+            "139 del Código Penal Federal.",
+            "139 Quáter del Código Penal Federal.",
+            "400 Bis 1 del Código Penal Federal."
+        ],
+        "correcta": 3,
+        "categoria": "Bloque 1"
+    },
+    {
+        "concepto": "Las penas previstas en el artículo 400 Bis 1 del Código Penal Federal aumentarán desde un tercio hasta en una mitad si la conducta es cometida por servidores públicos encargados de prevenir, detectar, denunciar, investigar o juzgar la comisión de delitos o ejecutar las sanciones penales, así como a los ex servidores públicos encargados de tales funciones que cometan dicha conducta en los dos años posteriores a su terminación.",
+        "opciones": [
+            "True",
+            "False"
+        ],
+        "correcta": 1,
+        "categoria": "Bloque 1"
+    },
+    {
+        "concepto": "Es la fuente o procedencia de los recursos con los cuales opera el Financiamiento al Terrorismo:",
+        "opciones": [
+            "Lícitos.",
+            "Ilícitos.",
+            "Lícitos e Ilícitos.",
+            "Ninguna de las anteriores."
+        ],
+        "correcta": 2,
+        "categoria": "Bloque 1"
+    },
+    {
+        "concepto": "“La ocultación o el encubrimiento de la naturaleza, el origen, la ubicación, el destino, el movimiento o la propiedad real de los bienes, sabiendo que proceden de alguno o algunos de los delitos de narcotráfico”, corresponde a la definición de lavado de dinero propuesta por:",
+        "opciones": [
+            "Grupo de Acción Financiera Internacional.(GAFI)",
+            "Convención de Viena.",
+            "Convención de Palermo.",
+            "Código Penal Federal Mexicano."
+        ],
+        "correcta": 1,
+        "categoria": "Bloque 1"
+    },
+    {
+        "concepto": "En la mayoría de las veces este delito está impulsado por fines ideológicos en donde se busca apoyar para que se cometan actos que beneficien ese fin.",
+        "opciones": [
+            "Terrorismo.",
+            "Financiamiento al Terrorismo.",
+            "Lavado de dinero.",
+            "Fraude."
+        ],
+        "correcta": 0,
+        "categoria": "Bloque 1"
+    },
+    {
+        "concepto": "Realizar envíos internacionales de dinero en efectivo para depositar en instituciones financieras extranjeras corresponde a la etapa de:",
+        "opciones": [
+            "Colocación.",
+            "Estratificación.",
+            "Integración.",
+            "Ninguna de las anteriores."
+        ],
+        "correcta": 0,
+        "categoria": "Bloque 1"
+    },
+    {
+        "concepto": "El delito de Financiamiento al Terrorismo se encuentra tipificado en el art. 139 Quáter del Código Penal Federal Mexicano.",
+        "opciones": [
+            "True",
+            "False"
+        ],
+        "correcta": 0,
+        "categoria": "Bloque 1"
+    },
+    {
+        "concepto": "Dar apariencia legítima a riqueza ilícita mediante el reingreso en la economía con transacciones comerciales o personales que aparentan ser normales corresponde a la etapa de:",
+        "opciones": [
+            "Colocación.",
+            "Estratificación.",
+            "Integración.",
+            "Ninguna de las anteriores."
+        ],
+        "correcta": 2,
+        "categoria": "Bloque 1"
     }
 ]
