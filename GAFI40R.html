@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAFI 40 - Memorización Interactiva</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --success: #27ae60;
+            --text-light: #ecf0f1;
+            --text-dark: #2c3e50;
+            --bg-light: #f8f9fa;
+            --bg-dark: #1a1a1a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 1.6;
+            background: var(--bg-light);
+            color: var(--text-dark);
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode {
+            background: var(--bg-dark);
+            color: var(--text-light);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .primary-btn {
+            background: var(--primary);
+            color: white;
+        }
+
+        .primary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+
+        .progress-container {
+            background: rgba(52, 152, 219, 0.1);
+            height: 12px;
+            border-radius: 10px;
+            margin: 2rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), #29b982);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .flashcard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            padding: 1rem;
+        }
+
+        .flashcard {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            min-height: 300px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        body.dark-mode .flashcard {
+            background: #2c3e50;
+        }
+
+        .flashcard:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+            border-radius: 15px;
+        }
+
+        .front {
+            background: white;
+            justify-content: space-between;
+        }
+
+        body.dark-mode .front {
+            background: #34495e;
+        }
+
+        .back {
+            background: linear-gradient(135deg, var(--primary), #2980b9);
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        .card-number {
+            font-size: 1.2em;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .keywords {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 1rem;
+        }
+
+        .keyword {
+            background: rgba(52, 152, 219, 0.1);
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+        }
+
+        .dark-mode-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: none;
+            z-index: 1000;
+        }
+
+        @media (max-width: 768px) {
+            .flashcard-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .flashcard {
+                min-height: 250px;
+                font-size: 14px;
+            }
+
+            button {
+                width: 50%;
+                justify-content: center;
+                /* Centrar contenido */
+                padding: 10px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>GAFI 40 - Memorización Interactiva</h1>
+            <p>Domina las recomendaciones con este sistema avanzado</p>
+        </div>
+
+        <div class="controls">
+            <button class="primary-btn" onclick="shuffleCards()">🔀 Mezclar</button>
+            <button class="primary-btn" onclick="resetProgress()">🔄 Reiniciar</button>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <div class="flashcard-grid" id="flashcardGrid"></div>
+
+        <button class="dark-mode-toggle" onclick="toggleDarkMode()">🌓</button>
+    </div>
+
+    <script>
+        // Configuración inicial
+        let darkMode = false;
+
+        // Cargar datos
+        const loadData = async () => {
+            try {
+                const response = await fetch('gafi.json');
+                const data = await response.json();
+                return data.recomendaciones;
+            } catch (error) {
+                console.error('Error cargando datos:', error);
+                return [];
+            }
+        };
+
+        // Crear flashcards
+        const createCard = (recommendation) => {
+            const card = document.createElement('div');
+            card.className = 'flashcard';
+            card.dataset.learned = 'false';
+            card.dataset.number = recommendation.numero;
+
+            card.innerHTML = `
+        <div class="flashcard-inner">
+            <div class="card-face front">
+                <div class="card-number">Recomendación #${recommendation.numero}</div>
+                <div class="keywords">
+                    ${recommendation.keywords.map(k => `
+                        <div class="keyword">${k}</div>
+                    `).join('')}
+                </div>
+            </div>
+            <div class="card-face back">
+                <p><strong>${recommendation.titulo}</strong></p>
+                <p>${recommendation.contenido}</p>
+            </div>
+        </div>
+    `;
+
+            card.addEventListener('click', () => {
+                card.classList.toggle('flipped');
+                updateCardState(card);
+                updateProgress();
+            });
+
+            return card;
+        };
+
+        // Actualizar progreso
+        const updateProgress = () => {
+            const total = document.querySelectorAll('.flashcard').length;
+            const learned = document.querySelectorAll('.flashcard[data-learned="true"]').length;
+            const progress = (learned / total) * 100;
+
+            document.getElementById('progressBar').style.width = `${progress}%`;
+        };
+
+        // Actualizar estado de la tarjeta
+        const updateCardState = (card) => {
+            const isLearned = card.classList.contains('flipped');
+            card.dataset.learned = isLearned;
+            localStorage.setItem(`card-${card.dataset.number}`, isLearned);
+        };
+
+        // Barajar tarjetas
+        const shuffleCards = () => {
+            const grid = document.getElementById('flashcardGrid');
+            const cards = [...grid.children];
+            cards.sort(() => Math.random() - 0.5);
+            cards.forEach(card => grid.appendChild(card));
+        };
+
+        // Reiniciar progreso
+        const resetProgress = () => {
+            localStorage.clear();
+            document.querySelectorAll('.flashcard').forEach(card => {
+                card.classList.remove('flipped');
+                card.dataset.learned = 'false';
+            });
+            updateProgress();
+        };
+
+        // Modo oscuro
+        const toggleDarkMode = () => {
+            darkMode = !darkMode;
+            document.body.classList.toggle('dark-mode', darkMode);
+            localStorage.setItem('darkMode', darkMode);
+        };
+
+        // Cargar estado guardado
+        const loadSavedState = async () => {
+            const recommendations = await loadData();
+            recommendations.forEach(rec => {
+                const isLearned = localStorage.getItem(`card-${rec.numero}`) === 'true';
+                const card = document.querySelector(`.flashcard[data-number="${rec.numero}"]`);
+                if (card) {
+                    card.dataset.learned = isLearned;
+                    if (isLearned) card.classList.add('flipped');
+                }
+            });
+        };
+
+        // Inicializar
+        const init = async () => {
+            const recommendations = await loadData();
+            const grid = document.getElementById('flashcardGrid');
+
+            recommendations.forEach(rec => {
+                grid.appendChild(createCard(rec));
+            });
+
+            await loadSavedState();
+            updateProgress();
+
+            // Cargar modo oscuro
+            darkMode = localStorage.getItem('darkMode') === 'true';
+            document.body.classList.toggle('dark-mode', darkMode);
+        };
+
+        init();
+    </script>
+</body>
+</html>
