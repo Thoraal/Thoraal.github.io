@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GAFI 40 - Flashcards interactivos</title>
+    <title>GAFI 40 - Memorización Interactiva Profesional</title>
     <style>
         :root {
             --primary: #4d6bfe;
@@ -22,11 +22,13 @@
             --dark-text: #E2E8F0;
             --dark-border: #4A5568;
         }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
+
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             line-height: 1.5;
@@ -34,15 +36,18 @@
             color: var(--text-primary);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
         body.dark-mode {
             background: var(--dark-bg);
             color: var(--dark-text);
         }
+
         .container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 2rem;
         }
+
         .header {
             text-align: center;
             margin-bottom: 3rem;
@@ -52,6 +57,7 @@
             border-radius: 16px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+
         .controls {
             display: flex;
             gap: 1rem;
@@ -59,25 +65,28 @@
             margin-bottom: 2.5rem;
             flex-wrap: wrap;
         }
+
         button {
             padding: 0.8rem 1.5rem;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-weight: 600;
+            font-weight: 500;
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: .5rem;
             background: var(--primary);
             color: white;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
         button:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
             background: var(--secondary);
         }
+
         .progress-container {
             background: rgba(42, 92, 138, 0.1);
             height: 12px;
@@ -86,9 +95,11 @@
             overflow: hidden;
             position: relative;
         }
+
         body.dark-mode .progress-container {
             background: rgba(76, 160, 175, 0.1);
         }
+
         .progress-bar {
             height: 100%;
             background: linear-gradient(90deg, var(--primary), var(--accent));
@@ -96,7 +107,7 @@
             transition: width 0.5s ease;
             position: relative;
         }
-    
+
         .progress-bar::after {
             content: '';
             position: absolute;
@@ -104,25 +115,30 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(90deg, 
-                transparent 25%, 
-                rgba(255, 255, 255, 0.2) 50%, 
-                transparent 75%);
+            background: linear-gradient(90deg,
+                    transparent 25%,
+                    rgba(255, 255, 255, 0.2) 50%,
+                    transparent 75%);
             animation: progress-shine 1.5s infinite;
         }
-    
+
         @keyframes progress-shine {
-            from { transform: translateX(-100%); }
-            to { transform: translateX(100%); }
+            from {
+                transform: translateX(-100%);
+            }
+
+            to {
+                transform: translateX(100%);
+            }
         }
-    
+
         .flashcard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 2fr));
             gap: 1.75rem;
             padding: 1rem 0;
         }
-    
+
         .flashcard {
             background: var(--surface);
             border-radius: 12px;
@@ -134,21 +150,21 @@
             transform-style: preserve-3d;
             border: 1px solid rgba(0, 0, 0, 0.08);
         }
-    
+
         body.dark-mode .flashcard {
             background: var(--dark-surface);
             border-color: var(--dark-border);
         }
-    
+
         .flashcard:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
         }
-    
+
         .flashcard.flipped .flashcard-inner {
             transform: rotateY(180deg);
         }
-    
+
         .flashcard-inner {
             position: relative;
             width: 100%;
@@ -156,7 +172,7 @@
             transition: transform 0.6s;
             transform-style: preserve-3d;
         }
-    
+
         .card-face {
             position: absolute;
             width: 100%;
@@ -167,52 +183,52 @@
             padding: 1.75rem;
             border-radius: 12px;
         }
-    
+
         .front {
             background: var(--surface);
-            justify-content: space-between;
+            padding: 1rem;
         }
-    
+
         body.dark-mode .front {
             background: var(--dark-surface);
             border: 1px solid rgba(255, 255, 255, 0.1);
             color: var(--dark-text);
         }
-    
+
         .back {
             /* Para que en modo claro la cara trasera tenga el mismo aspecto que la delantera */
             background: var(--surface);
             color: var(--text-primary);
             transform: rotateY(180deg);
-            padding: 1.75rem;
+            padding: .8rem;
         }
-    
+
         body.dark-mode .back {
             /* En modo oscuro, la cara trasera coincide con la delantera */
             background: var(--dark-surface);
             border: 1px solid rgba(102, 121, 228, 0.534);
             color: var(--dark-text);
-            padding: 1.75rem;
+            padding: .8rem;
         }
-    
+
         .card-number {
             font-size: 1.25rem;
             font-weight: 700;
             color: var(--primary);
             margin-bottom: 1rem;
         }
-    
+
         body.dark-mode .card-number {
             color: var(--accent);
         }
-    
+
         .keywords {
             display: flex;
             flex-wrap: wrap;
             gap: 0.5rem;
             margin-top: auto;
         }
-    
+
         .keyword {
             background: rgba(42, 92, 138, 0.1);
             color: var(--primary);
@@ -222,13 +238,13 @@
             font-weight: 500;
             border: 1px solid rgba(42, 92, 138, 0.15);
         }
-    
+
         body.dark-mode .keyword {
             background: rgba(76, 152, 175, 0.15);
             color: var(--accent);
             border-color: rgba(76, 163, 175, 0.3);
         }
-    
+
         .dark-mode-toggle {
             position: fixed;
             bottom: 2rem;
@@ -245,37 +261,38 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
         }
-    
+
         .dark-mode-toggle:hover {
             transform: scale(1.1) rotate(180deg);
         }
-    
+
         @media (max-width: 768px) {
             .container {
                 padding: 1.5rem;
             }
-            
+
             .header {
                 padding: 1.5rem;
                 margin: -1rem -1rem 2rem;
                 border-radius: 5;
             }
+
             .flashcard-grid {
                 grid-template-columns: 1fr;
                 gap: 1rem;
             }
-            
+
             .flashcard {
                 min-height: 250px;
             }
-            
+
             button {
                 width: auto;
                 justify-content: center;
             }
         }
     </style>
-    
+
 </head>
 
 <body>
