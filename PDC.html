@@ -302,90 +302,90 @@
         }
 
         document.getElementById('processAllBtn').addEventListener('click', () => {
-    if (!workbook || !sheet) {
-        alert("Primero carga un archivo Excel.");
-        return;
-    }
-
-    const clonedWorkbook = XLSX.read(XLSX.write(workbook, { type: 'array' }), { type: 'array' });
-    const clonedSheet = clonedWorkbook.Sheets[clonedWorkbook.SheetNames[0]];
-
-    // Leer datos de encabezado
-    const razonSocial = clonedSheet["G1"]?.v || "";
-    const movimiento = clonedSheet["G3"]?.v || "";
-    const rangoRecha = clonedSheet["G7"]?.v || "";
-
-    const sections = document.querySelectorAll('.currency-section');
-    const summaryResults = [];
-    const clientDetails = [];
-    const clientTotals = {};  // Objeto para agrupar clientes
-
-    sections.forEach(section => {
-        const currency = section.getAttribute('data-currency');
-        const mapping = currencyMapping[currency];
-        const cellDivisa = clonedSheet[mapping.divisa];
-        const cellMN = clonedSheet[mapping.mn];
-        if (!cellDivisa || !cellMN) return;
-
-        const originalDivisa = parseMexicanNumber(cellDivisa.v);
-        const originalMN = parseMexicanNumber(cellMN.v);
-
-        let sumQuantity = 0;
-        let sumInvoiceMN = 0;
-        const clientEntries = section.querySelectorAll('.client-entry');
-        
-        clientEntries.forEach(entry => {
-            const clientName = entry.querySelector('.clientName').value.trim();
-            const qty = parseFloat(entry.querySelector('.invoiceQuantity').value) || 0;
-            const price = parseFloat(entry.querySelector('.invoicePrice').value) || 0;
-            
-            // Acumular montos por cliente
-            if (clientName) {
-                clientTotals[clientName] = (clientTotals[clientName] || 0) + (qty * price);
+            if (!workbook || !sheet) {
+                alert("Primero carga un archivo Excel.");
+                return;
             }
 
-            sumQuantity += qty;
-            sumInvoiceMN += qty * price;
+            const clonedWorkbook = XLSX.read(XLSX.write(workbook, { type: 'array' }), { type: 'array' });
+            const clonedSheet = clonedWorkbook.Sheets[clonedWorkbook.SheetNames[0]];
 
-            clientDetails.push({
-                Divisa: currency,
-                NombreCliente: clientName,
-                Cantidad: qty,
-                Precio: price,
-                FacturaCliente: qty * price
+            // Leer datos de encabezado
+            const razonSocial = clonedSheet["G1"]?.v || "";
+            const movimiento = clonedSheet["G3"]?.v || "";
+            const rangoRecha = clonedSheet["G7"]?.v || "";
+
+            const sections = document.querySelectorAll('.currency-section');
+            const summaryResults = [];
+            const clientDetails = [];
+            const clientTotals = {};  // Objeto para agrupar clientes
+
+            sections.forEach(section => {
+                const currency = section.getAttribute('data-currency');
+                const mapping = currencyMapping[currency];
+                const cellDivisa = clonedSheet[mapping.divisa];
+                const cellMN = clonedSheet[mapping.mn];
+                if (!cellDivisa || !cellMN) return;
+
+                const originalDivisa = parseMexicanNumber(cellDivisa.v);
+                const originalMN = parseMexicanNumber(cellMN.v);
+
+                let sumQuantity = 0;
+                let sumInvoiceMN = 0;
+                const clientEntries = section.querySelectorAll('.client-entry');
+
+                clientEntries.forEach(entry => {
+                    const clientName = entry.querySelector('.clientName').value.trim();
+                    const qty = parseFloat(entry.querySelector('.invoiceQuantity').value) || 0;
+                    const price = parseFloat(entry.querySelector('.invoicePrice').value) || 0;
+
+                    // Acumular montos por cliente
+                    if (clientName) {
+                        clientTotals[clientName] = (clientTotals[clientName] || 0) + (qty * price);
+                    }
+
+                    sumQuantity += qty;
+                    sumInvoiceMN += qty * price;
+
+                    clientDetails.push({
+                        Divisa: currency,
+                        NombreCliente: clientName,
+                        Cantidad: qty,
+                        Precio: price,
+                        FacturaCliente: qty * price
+                    });
+                });
+
+                // Resto de cálculos por divisa
+                const remainingDivisa = originalDivisa - sumQuantity;
+                const remainingMN = originalMN - sumInvoiceMN;
+                const nuevaTasa = remainingDivisa !== 0 ? parseFloat((remainingMN / remainingDivisa).toFixed(5)) : 0;
+                const facturaPublico = remainingDivisa * nuevaTasa;
+                const totalPesos = sumInvoiceMN + facturaPublico;
+
+                clonedSheet[mapping.divisa].v = remainingDivisa;
+                clonedSheet[mapping.divisa].z = '$#,##0.00';
+                clonedSheet[mapping.mn].v = remainingMN;
+                clonedSheet[mapping.mn].z = '$#,##0.00';
+
+                summaryResults.push({
+                    Divisa: currency,
+                    FacturaCliente: sumInvoiceMN,
+                    DivisaRestante: remainingDivisa,
+                    MNRestante: remainingMN,
+                    NuevaTasa: nuevaTasa,
+                    FacturaPublico: facturaPublico,
+                    TotalPesos: totalPesos
+                });
             });
-        });
 
-        // Resto de cálculos por divisa
-        const remainingDivisa = originalDivisa - sumQuantity;
-        const remainingMN = originalMN - sumInvoiceMN;
-        const nuevaTasa = remainingDivisa !== 0 ? parseFloat((remainingMN / remainingDivisa).toFixed(5)) : 0;
-        const facturaPublico = remainingDivisa * nuevaTasa;
-        const totalPesos = sumInvoiceMN + facturaPublico;
+            // Calcular totales generales
+            const overallClientes = Object.values(clientTotals).reduce((acc, total) => acc + total, 0);
+            const overallPublico = summaryResults.reduce((acc, item) => acc + item.FacturaPublico, 0);
+            const overallTotal = overallClientes + overallPublico;
 
-        clonedSheet[mapping.divisa].v = remainingDivisa;
-        clonedSheet[mapping.divisa].z = '$#,##0.00';
-        clonedSheet[mapping.mn].v = remainingMN;
-        clonedSheet[mapping.mn].z = '$#,##0.00';
-
-        summaryResults.push({
-            Divisa: currency,
-            FacturaCliente: sumInvoiceMN,
-            DivisaRestante: remainingDivisa,
-            MNRestante: remainingMN,
-            NuevaTasa: nuevaTasa,
-            FacturaPublico: facturaPublico,
-            TotalPesos: totalPesos
-        });
-    });
-
-    // Calcular totales generales
-    const overallClientes = Object.values(clientTotals).reduce((acc, total) => acc + total, 0);
-    const overallPublico = summaryResults.reduce((acc, item) => acc + item.FacturaPublico, 0);
-    const overallTotal = overallClientes + overallPublico;
-
-    // Generar HTML para el desglose de clientes
-    const clientBreakdownHTML = `
+            // Generar HTML para el desglose de clientes
+            const clientBreakdownHTML = `
         <h3>Desglose por Cliente</h3>
         <table>
             <thead>
@@ -405,8 +405,8 @@
         </table>
     `;
 
-    // Mostrar resultados en la interfaz
-    document.getElementById('resultSummary').innerHTML = `
+            // Mostrar resultados en la interfaz
+            document.getElementById('resultSummary').innerHTML = `
         <h2>Información del archivo procesado</h2>
         <p><strong>Razón Social:</strong> ${razonSocial}</p>
         <p><strong>Movimiento:</strong> ${movimiento}</p>
