@@ -318,7 +318,7 @@
     const sections = document.querySelectorAll('.currency-section');
     const summaryResults = [];
     const clientDetails = [];
-    const clientTotals = {};  // Objeto para agrupar clientes
+    const clientTotals = {}; 
 
     sections.forEach(section => {
         const currency = section.getAttribute('data-currency');
@@ -339,7 +339,6 @@
             const qty = parseFloat(entry.querySelector('.invoiceQuantity').value) || 0;
             const price = parseFloat(entry.querySelector('.invoicePrice').value) || 0;
             
-            // Acumular montos por cliente
             if (clientName) {
                 clientTotals[clientName] = (clientTotals[clientName] || 0) + (qty * price);
             }
@@ -356,12 +355,11 @@
             });
         });
 
-        // Resto de cálculos por divisa
+        // Cálculos para público general
         const remainingDivisa = originalDivisa - sumQuantity;
         const remainingMN = originalMN - sumInvoiceMN;
         const nuevaTasa = remainingDivisa !== 0 ? parseFloat((remainingMN / remainingDivisa).toFixed(5)) : 0;
         const facturaPublico = remainingDivisa * nuevaTasa;
-        const totalPesos = sumInvoiceMN + facturaPublico;
 
         clonedSheet[mapping.divisa].v = remainingDivisa;
         clonedSheet[mapping.divisa].z = '$#,##0.00';
@@ -371,29 +369,23 @@
         summaryResults.push({
             Divisa: currency,
             FacturaCliente: sumInvoiceMN,
-            DivisaRestante: remainingDivisa,
-            MNRestante: remainingMN,
-            NuevaTasa: nuevaTasa,
-            FacturaPublico: facturaPublico,
-            TotalPesos: totalPesos
+            DivisaRestante: remainingDivisa,      // Monto en divisa para público
+            MNRestante: remainingMN,              // MN restante (no usado directamente)
+            NuevaTasa: nuevaTasa,                // Tipo de cambio
+            FacturaPublico: facturaPublico        // Monto nacional para público
         });
     });
 
-    // Calcular totales generales
+    // Calcular totales
     const overallClientes = Object.values(clientTotals).reduce((acc, total) => acc + total, 0);
     const overallPublico = summaryResults.reduce((acc, item) => acc + item.FacturaPublico, 0);
     const overallTotal = overallClientes + overallPublico;
 
-    // Generar HTML para el desglose de clientes
+    // Generar HTML para resúmenes
     const clientBreakdownHTML = `
         <h3>Desglose por Cliente</h3>
         <table>
-            <thead>
-                <tr>
-                    <th>Cliente</th>
-                    <th>Total Facturado</th>
-                </tr>
-            </thead>
+            <thead><tr><th>Cliente</th><th>Total Facturado</th></tr></thead>
             <tbody>
                 ${Object.entries(clientTotals).map(([name, total]) => `
                     <tr>
@@ -405,7 +397,38 @@
         </table>
     `;
 
-    // Mostrar resultados en la interfaz
+    // Nuevo: Resumen público general
+    const publicSummaryHTML = `
+        <h3>Resumen Público General</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Divisa</th>
+                    <th>Monto (Divisa)</th>
+                    <th>Tipo de Cambio</th>
+                    <th>Monto Nacional</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${summaryResults.map(item => `
+                    <tr>
+                        <td>${item.Divisa}</td>
+                        <td>${item.DivisaRestante.toLocaleString('es-MX')}</td>
+                        <td>${item.NuevaTasa.toFixed(5)}</td>
+                        <td>${item.FacturaPublico.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</td>
+                    </tr>
+                `).join('')}
+                <tr class="total-row">
+                    <td><strong>Total</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td><strong>${overallPublico.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</strong></td>
+                </tr>
+            </tbody>
+        </table>
+    `;
+
+    // Mostrar resultados
     document.getElementById('resultSummary').innerHTML = `
         <h2>Información del archivo procesado</h2>
         <p><strong>Razón Social:</strong> ${razonSocial}</p>
@@ -441,6 +464,7 @@
         </table>
 
         ${clientBreakdownHTML}
+        ${publicSummaryHTML}
 
         <div class="total-general">
             <p><strong>Total General de Clientes:</strong> ${overallClientes.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</p>
