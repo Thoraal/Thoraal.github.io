@@ -302,143 +302,155 @@
         }
 
         document.getElementById('processAllBtn').addEventListener('click', () => {
-            if (!workbook || !sheet) {
-                alert("Primero carga un archivo Excel.");
-                return;
+    if (!workbook || !sheet) {
+        alert("Primero carga un archivo Excel.");
+        return;
+    }
+
+    // Clonar workbook original
+    const clonedWorkbook = XLSX.read(XLSX.write(workbook, { type: 'array' }), { type: 'array' });
+    const clonedSheet = clonedWorkbook.Sheets[clonedWorkbook.SheetNames[0]];
+
+    // Leer datos de encabezado
+    const razonSocial = clonedSheet["G1"]?.v || "";
+    const movimiento = clonedSheet["G3"]?.v || "";
+    const rangoRecha = clonedSheet["G7"]?.v || "";
+
+    const sections = document.querySelectorAll('.currency-section');
+    const summaryResults = [];
+    const clientDetails = [];
+
+    // Objeto para agrupar montos por cliente
+    const clientTotals = {};
+
+    sections.forEach(section => {
+        const currency = section.getAttribute('data-currency');
+        const mapping = currencyMapping[currency];
+        const cellDivisa = clonedSheet[mapping.divisa];
+        const cellMN = clonedSheet[mapping.mn];
+        if (!cellDivisa || !cellMN) return;
+
+        const originalDivisa = parseMexicanNumber(cellDivisa.v);
+        const originalMN = parseMexicanNumber(cellMN.v);
+
+        let sumQuantity = 0;
+        let sumInvoiceMN = 0;
+        const clientEntries = section.querySelectorAll('.client-entry');
+        clientEntries.forEach(entry => {
+            const clientName = entry.querySelector('.clientName').value;
+            const qty = parseFloat(entry.querySelector('.invoiceQuantity').value) || 0;
+            const price = parseFloat(entry.querySelector('.invoicePrice').value) || 0;
+            sumQuantity += qty;
+            sumInvoiceMN += qty * price;
+
+            // Acumular montos por cliente
+            if (!clientTotals[clientName]) {
+                clientTotals[clientName] = 0;
             }
+            clientTotals[clientName] += qty * price;
 
-            // Clonar workbook original
-            const clonedWorkbook = XLSX.read(XLSX.write(workbook, { type: 'array' }), { type: 'array' });
-            const clonedSheet = clonedWorkbook.Sheets[clonedWorkbook.SheetNames[0]];
-
-            // Leer datos de encabezado
-            const razonSocial = clonedSheet["G1"]?.v || "";
-            const movimiento = clonedSheet["G3"]?.v || "";
-            const rangoRecha = clonedSheet["G7"]?.v || "";
-
-            const sections = document.querySelectorAll('.currency-section');
-            const summaryResults = [];
-            const clientDetails = [];
-
-            sections.forEach(section => {
-                const currency = section.getAttribute('data-currency');
-                const mapping = currencyMapping[currency];
-                const cellDivisa = clonedSheet[mapping.divisa];
-                const cellMN = clonedSheet[mapping.mn];
-                if (!cellDivisa || !cellMN) return;
-
-                const originalDivisa = parseMexicanNumber(cellDivisa.v);
-                const originalMN = parseMexicanNumber(cellMN.v);
-
-                let sumQuantity = 0;
-                let sumInvoiceMN = 0;
-                const clientEntries = section.querySelectorAll('.client-entry');
-                clientEntries.forEach(entry => {
-                    const clientName = entry.querySelector('.clientName').value;
-                    const qty = parseFloat(entry.querySelector('.invoiceQuantity').value) || 0;
-                    const price = parseFloat(entry.querySelector('.invoicePrice').value) || 0;
-                    sumQuantity += qty;
-                    sumInvoiceMN += qty * price;
-                    clientDetails.push({
-                        Divisa: currency,
-                        NombreCliente: clientName,
-                        Cantidad: qty,
-                        Precio: price,
-                        FacturaCliente: qty * price
-                    });
-                });
-
-                const facturaCliente = sumInvoiceMN;
-                const remainingDivisa = originalDivisa - sumQuantity;
-                const remainingMN = originalMN - sumInvoiceMN;
-                const nuevaTasa = remainingDivisa !== 0 ? parseFloat((remainingMN / remainingDivisa).toFixed(5)) : 0;
-                const facturaPublico = remainingDivisa * nuevaTasa;
-                const totalPesos = facturaCliente + facturaPublico;
-
-                clonedSheet[mapping.divisa].v = remainingDivisa;
-                clonedSheet[mapping.divisa].z = '$#,##0.00';
-                clonedSheet[mapping.mn].v = remainingMN;
-                clonedSheet[mapping.mn].z = '$#,##0.00';
-
-                summaryResults.push({
-                    Divisa: currency,
-                    FacturaCliente: facturaCliente,
-                    DivisaRestante: remainingDivisa,
-                    MNRestante: remainingMN,
-                    NuevaTasa: nuevaTasa,
-                    FacturaPublico: facturaPublico,
-                    TotalPesos: totalPesos
-                });
+            clientDetails.push({
+                Divisa: currency,
+                NombreCliente: clientName,
+                Cantidad: qty,
+                Precio: price,
+                FacturaCliente: qty * price
             });
+        });
 
-            // Calcular totales generales
-            const overallClientes = summaryResults.reduce((acc, item) => acc + item.FacturaCliente, 0);
-            const overallPublico = summaryResults.reduce((acc, item) => acc + item.FacturaPublico, 0);
-            const overallTotal = overallClientes + overallPublico;
+        const facturaCliente = sumInvoiceMN;
+        const remainingDivisa = originalDivisa - sumQuantity;
+        const remainingMN = originalMN - sumInvoiceMN;
+        const nuevaTasa = remainingDivisa !== 0 ? parseFloat((remainingMN / remainingDivisa).toFixed(5)) : 0;
+        const facturaPublico = remainingDivisa * nuevaTasa;
+        const totalPesos = facturaCliente + facturaPublico;
 
-            // En la sección HTML de resultados
-            document.getElementById('resultSummary').innerHTML = `
-  <h2>Información del archivo procesado</h2>
-  <p><strong>Razón Social:</strong> ${razonSocial}</p>
-  <p><strong>Movimiento:</strong> ${movimiento}</p>
-  <p><strong>Rango Recha:</strong> ${rangoRecha}</p>
-  
-  <h2>Resumen de Resultados por Divisa - Compra</h2>
-  <table>
-      <thead>
-        <tr>
-          <th>Divisa</th>
-          <th>Factura Cliente</th>
-          <th>Divisa Restante</th>
-          <th>MN Restante</th>
-          <th>Nueva Tasa</th>
-          <th>Factura Público</th>
-          <th>Total Pesos</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${summaryResults.map(item => `
-          <tr>
-            <td>${item.Divisa}</td>
-            <td>${item.FacturaCliente.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</td>
-            <td>${item.DivisaRestante.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</td>
-            <td>${item.MNRestante.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</td>
-            <td>${item.NuevaTasa.toFixed(5)}</td>
-            <td>${item.FacturaPublico.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</td>
-            <td>${item.TotalPesos.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</td>
-          </tr>
-        `).join('')}
-      </tbody>
-    </table>
-   <div class="total-general">
-    <p><strong>Total General de Clientes:</strong> ${overallClientes.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</p>
-    <p><strong>Total General de Público en General:</strong> ${overallPublico.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</p>
-    <p><strong>Total General de Pesos:</strong> ${overallTotal.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</p>
-  </div>`;
-            document.getElementById('clientTableContainer').innerHTML = `
-    <h2>Detalles de Clientes</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Divisa</th>
-          <th>Nombre Cliente</th>
-          <th>Cantidad</th>
-          <th>Precio</th>
-          <th>Factura Cliente</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${clientDetails.map(item => `
-          <tr>
-            <td>${item.Divisa}</td>
-            <td>${item.NombreCliente}</td>
-            <td>${item.Cantidad}</td>
-            <td>${item.Precio.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</td>
-            <td>${item.FacturaCliente.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</td>
-          </tr>
-        `).join('')}
-      </tbody>
-    </table>`;
+        clonedSheet[mapping.divisa].v = remainingDivisa;
+        clonedSheet[mapping.divisa].z = '$#,##0.00';
+        clonedSheet[mapping.mn].v = remainingMN;
+        clonedSheet[mapping.mn].z = '$#,##0.00';
+
+        summaryResults.push({
+            Divisa: currency,
+            FacturaCliente: facturaCliente,
+            DivisaRestante: remainingDivisa,
+            MNRestante: remainingMN,
+            NuevaTasa: nuevaTasa,
+            FacturaPublico: facturaPublico,
+            TotalPesos: totalPesos
+        });
+    });
+
+    // Calcular totales generales
+    const overallClientes = summaryResults.reduce((acc, item) => acc + item.FacturaCliente, 0);
+    const overallPublico = summaryResults.reduce((acc, item) => acc + item.FacturaPublico, 0);
+    const overallTotal = overallClientes + overallPublico;
+
+    // Mostrar desglose de clientes
+    const clientBreakdown = Object.keys(clientTotals).map(clientName => ({
+        NombreCliente: clientName,
+        Total: clientTotals[clientName]
+    }));
+
+    // En la sección HTML de resultados
+    document.getElementById('resultSummary').innerHTML = `
+        <h2>Información del archivo procesado</h2>
+        <p><strong>Razón Social:</strong> ${razonSocial}</p>
+        <p><strong>Movimiento:</strong> ${movimiento}</p>
+        <p><strong>Rango Recha:</strong> ${rangoRecha}</p>
+
+        <h2>Resumen de Resultados por Divisa - Compra</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Divisa</th>
+                    <th>Factura Cliente</th>
+                    <th>Divisa Restante</th>
+                    <th>MN Restante</th>
+                    <th>Nueva Tasa</th>
+                    <th>Factura Público</th>
+                    <th>Total Pesos</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${summaryResults.map(item => `
+                    <tr>
+                        <td>${item.Divisa}</td>
+                        <td>${item.FacturaCliente.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</td>
+                        <td>${item.DivisaRestante.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</td>
+                        <td>${item.MNRestante.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</td>
+                        <td>${item.NuevaTasa.toFixed(5)}</td>
+                        <td>${item.FacturaPublico.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</td>
+                        <td>${item.TotalPesos.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+
+        <h2>Desglose de Clientes</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre del Cliente</th>
+                    <th>Total Facturado</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${clientBreakdown.map(item => `
+                    <tr>
+                        <td>${item.NombreCliente}</td>
+                        <td>${item.Total.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+
+        <div class="total-general">
+            <p><strong>Total General de Clientes:</strong> ${overallClientes.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</p>
+            <p><strong>Total General de Público en General:</strong> ${overallPublico.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</p>
+            <p><strong>Total General de Pesos:</strong> ${overallTotal.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</p>
+        </div>
+    `;
 
             const summaryHeaders = [
                 ["Razón Social", razonSocial],
@@ -481,12 +493,12 @@
             const blobUpdated = new Blob([updatedExcel], { type: "application/octet-stream" });
 
             //document.getElementById('downloadLinks').innerHTML = `
-    //<p><a href="${URL.createObjectURL(blobUpdated)}" download="Excel_Actualizado.xlsx">
-      //Descargar Excel Actualizado
-    //</a></p>
-   // <p><a href="${URL.createObjectURL(blobSummary)}" download="Resumen_Compacto.xlsx">
-     // Descargar Resumen Compacto
-   // </a></p>`;
+            //<p><a href="${URL.createObjectURL(blobUpdated)}" download="Excel_Actualizado.xlsx">
+            //Descargar Excel Actualizado
+            //</a></p>
+            // <p><a href="${URL.createObjectURL(blobSummary)}" download="Resumen_Compacto.xlsx">
+            // Descargar Resumen Compacto
+            // </a></p>`;
         });
     </script>
 </body>
