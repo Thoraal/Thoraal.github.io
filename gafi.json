@@ -1,18 +1,244 @@
 {
-     "recomendaciones": [
-         {
-             "numero": 1,
-             "titulo": "Evaluación de riesgos y aplicación de un enfoque basado en riesgo",
-             "contenido": "Se debe aplicar un EBR adoptando medidas para prevenir o mitigar el LA/FT/FP, estos deben ser proporcional al nivel de riego.",
-             "keywords": ["Evaluación de riesgos", "Enfoque basado en riesgo (EBR)", "LA/FT/FP", "Mitigación de riesgos", "Proporcionalidad", "Coordinación"]
-         }
-     ]
-     "recomendaciones": [
-         {
-             "numero": 2,
-             "titulo": "Cooperación y coordinación nacional",
-             "contenido": "",
-             "keywords": ["Evaluación de riesgos", "Enfoque basado en riesgo (EBR)", "LA/FT/FP", "Mitigación de riesgos", "Proporcionalidad", "Coordinación"]
-         }
-     ]
- }
+    "recomendaciones": [
+        {
+            "numero": 1,
+            "titulo": "Enfoque basado en riesgos",
+            "contenido": "Los países e instituciones deben identificar, evaluar y comprender los riesgos de lavado de activos (LA) y financiamiento del terrorismo (FT) y aplicar medidas proporcionales para mitigarlos.",
+            "keywords": ["riesgos", "mitigación", "proporcionalidad"]
+        },
+        {
+            "numero": 2,
+            "titulo": "Cooperación nacional",
+            "contenido": "Las autoridades competentes deben contar con mecanismos eficaces de coordinación y cooperación para diseñar e implementar políticas contra LA/FT.",
+            "keywords": ["cooperación", "coordinación", "políticas"]
+        },
+        {
+            "numero": 3,
+            "titulo": "Delito de lavado de activos",
+            "contenido": "Tipificar el lavado de activos conforme a la Convención de Viena (1988) y la Convención de Palermo (2000), abarcando todos los delitos graves.",
+            "keywords": ["tipificación", "convenciones internacionales", "delitos"]
+        },
+        {
+            "numero": 4,
+            "titulo": "Decomiso y medidas provisionales",
+            "contenido": "Adoptar medidas legales que permitan congelar, incautar y decomisar bienes derivados de LA/FT sin requerir una condena penal previa.",
+            "keywords": ["decomiso", "congelamiento", "medidas provisionales"]
+        },
+        {
+            "numero": 5,
+            "titulo": "Delito de financiamiento del terrorismo",
+            "contenido": "Tipificar el financiamiento del terrorismo conforme al Convenio Internacional para la Represión de la Financiación del Terrorismo, designándolo como delito determinante del LA.",
+            "keywords": ["financiamiento", "terrorismo", "tipificación"]
+        },
+        {
+            "numero": 6,
+            "titulo": "Sanciones financieras contra el terrorismo",
+            "contenido": "Implementar sanciones para cumplir las Resoluciones del Consejo de Seguridad de la ONU, congelando y bloqueando fondos y bienes sin demora.",
+            "keywords": ["sanciones", "ONU", "congelamiento"]
+        },
+        {
+            "numero": 7,
+            "titulo": "Sanciones financieras contra la proliferación",
+            "contenido": "Aplicar sanciones para prevenir la proliferación de armas de destrucción masiva y su financiamiento, congelando y bloqueando recursos de forma inmediata.",
+            "keywords": ["proliferación", "sanciones", "armas"]
+        },
+        {
+            "numero": 8,
+            "titulo": "Organizaciones sin fines de lucro",
+            "contenido": "Asegurar, mediante leyes y regulaciones, que las ONGs no sean utilizadas indebidamente para lavar dinero o financiar terrorismo.",
+            "keywords": ["ONG", "regulación", "prevención"]
+        },
+        {
+            "numero": 9,
+            "titulo": "Leyes sobre el secreto de las instituciones financieras",
+            "contenido": "Garantizar que las leyes de secreto financiero no impidan la implementación de medidas contra el LA/FT.",
+            "keywords": ["secreto financiero", "transparencia"]
+        },
+        {
+            "numero": 10,
+            "titulo": "Debida diligencia del cliente (DDC)",
+            "contenido": "Prohibir cuentas anónimas y exigir políticas y procesos para identificar, conocer y monitorear a nuevos clientes y beneficiarios finales.",
+            "keywords": ["DDC", "identificación", "monitoreo"]
+        },
+        {
+            "numero": 11,
+            "titulo": "Mantenimiento de registros",
+            "contenido": "Exigir a las instituciones financieras conservar registros de transacciones y medidas de DDC por al menos 5 años para poder reconstruir operaciones en caso de investigaciones.",
+            "keywords": ["registros", "transacciones", "documentación"]
+        },
+        {
+            "numero": 12,
+            "titulo": "Personas Políticamente Expuestas (PEP)",
+            "contenido": "Implementar medidas de diligencia intensificada para identificar y monitorear a PEP, sus familiares y asociados, verificando su condición y la fuente de sus fondos.",
+            "keywords": ["PEP", "diligencia intensificada", "verificación"]
+        },
+        {
+            "numero": 13,
+            "titulo": "Banca corresponsal",
+            "contenido": "Exigir medidas de DDC en la contratación de servicios de banca corresponsal, prohibiendo relaciones con bancos pantalla.",
+            "keywords": ["banca corresponsal", "bancos pantalla", "DDC"]
+        },
+        {
+            "numero": 14,
+            "titulo": "Servicios de transferencia de dinero o valores",
+            "contenido": "Asegurar que las entidades que ofrecen servicios de transferencia estén registradas o licenciadas y sean sometidas a un monitoreo eficaz para cumplir con las medidas establecidas.",
+            "keywords": ["transferencias", "licencias", "monitoreo"]
+        },
+        {
+            "numero": 15,
+            "titulo": "Nuevas tecnologías",
+            "contenido": "Identificar y evaluar los riesgos de LA/FT asociados a nuevos productos, prácticas comerciales y tecnologías antes de su lanzamiento, y aplicar medidas adecuadas para mitigarlos.",
+            "keywords": ["nuevas tecnologías", "evaluación", "riesgos"]
+        },
+        {
+            "numero": 16,
+            "titulo": "Transferencias electrónicas",
+            "contenido": "Incluir información del originador y beneficiario en las transferencias electrónicas y mantenerla a lo largo de toda la cadena de pago, vigilando aquellas transacciones que carezcan de dicha información.",
+            "keywords": ["transferencias electrónicas", "información", "cadena de pago"]
+        },
+        {
+            "numero": 17,
+            "titulo": "Dependencia en terceros",
+            "contenido": "Permitir que las instituciones financieras deleguen la ejecución de medidas de DDC en terceros, siempre que se cumplan los requisitos y la responsabilidad final permanezca en la institución.",
+            "keywords": ["terceros", "delegación", "responsabilidad"]
+        },
+        {
+            "numero": 18,
+            "titulo": "Controles internos en sucursales, filiales y subsidiarias",
+            "contenido": "Implementar programas anticorrupción y de prevención del LA/FT que aseguren la homogeneidad de políticas, procedimientos y controles en todas las sucursales y filiales, tanto nacionales como internacionales.",
+            "keywords": ["controles internos", "homogeneidad", "prevención"]
+        },
+        {
+            "numero": 19,
+            "titulo": "Países de mayor riesgo",
+            "contenido": "Aplicar medidas de debida diligencia intensificada a transacciones y relaciones comerciales con personas e instituciones procedentes de países con deficiencias en sus sistemas de control.",
+            "keywords": ["riesgo país", "diligencia intensificada", "transacciones"]
+        },
+        {
+            "numero": 20,
+            "titulo": "Reporte de operaciones sospechosas (ROS)",
+            "contenido": "Exigir que las instituciones financieras reporten de manera inmediata a la Unidad de Inteligencia Financiera (UIF) cualquier sospecha de que los fondos sean producto de actividades criminales o vinculados al FT.",
+            "keywords": ["ROS", "reporte", "UIF"]
+        },
+        {
+            "numero": 21,
+            "titulo": "Revelación (tipping‑off) y confidencialidad",
+            "contenido": "Prohibir que la institución financiera y sus empleados revelen, por ley, que se ha notificado a la UIF sobre operaciones sospechosas, protegiendo así la confidencialidad del reporte.",
+            "keywords": ["tipping‑off", "confidencialidad", "protección"]
+        },
+        {
+            "numero": 22,
+            "titulo": "APNFD: debida diligencia del cliente",
+            "contenido": "Extender los requisitos de DDC y mantenimiento de registros a las Actividades y Profesiones No Financieras Designadas (APNFD), como casinos, inmobiliarias, y profesiones jurídicas, entre otros.",
+            "keywords": ["APNFD", "DDC", "registros"]
+        },
+        {
+            "numero": 23,
+            "titulo": "APNFD: otras medidas",
+            "contenido": "Aplicar a las APNFD los mismos controles internos y medidas preventivas que se exigen a las instituciones financieras.",
+            "keywords": ["APNFD", "controles", "medidas preventivas"]
+        },
+        {
+            "numero": 24,
+            "titulo": "Transparencia y beneficiario final de las personas jurídicas",
+            "contenido": "Asegurar que exista información adecuada, precisa y oportuna sobre el beneficiario final y el control de las personas jurídicas, accesible a las autoridades competentes.",
+            "keywords": ["transparencia", "beneficiario final", "personas jurídicas"]
+        },
+        {
+            "numero": 25,
+            "titulo": "Transparencia y beneficiario final de otras estructuras jurídicas",
+            "contenido": "Garantizar que estructuras como fideicomisos cuenten con información clara sobre el fideicomitente, fiduciario y beneficiarios, disponible para las autoridades.",
+            "keywords": ["fideicomisos", "transparencia", "estructura"]
+        },
+        {
+            "numero": 26,
+            "titulo": "Regulación y supervisión de las instituciones financieras",
+            "contenido": "Asegurar que las instituciones financieras estén sujetas a una regulación y supervisión adecuadas para prevenir que actores criminales se beneficien de ellas.",
+            "keywords": ["regulación", "supervisión", "instituciones financieras"]
+        },
+        {
+            "numero": 27,
+            "titulo": "Facultades de los supervisores",
+            "contenido": "Otorgar a los supervisores las facultades necesarias para inspeccionar, imponer sanciones y, en casos de incumplimiento, retirar o restringir la licencia de las instituciones financieras.",
+            "keywords": ["facultades", "sanciones", "supervisión"]
+        },
+        {
+            "numero": 28,
+            "titulo": "Regulación y supervisión de las APNFD",
+            "contenido": "Garantizar que las Actividades y Profesiones No Financieras Designadas estén sujetas a medidas de regulación y supervisión similares a las aplicadas a las instituciones financieras.",
+            "keywords": ["APNFD", "regulación", "supervisión"]
+        },
+        {
+            "numero": 29,
+            "titulo": "Unidades de Inteligencia Financiera (UIF)",
+            "contenido": "Establecer una UIF que funcione como centro nacional para la recepción, análisis y comunicación de información relevante sobre operaciones sospechosas de LA/FT.",
+            "keywords": ["UIF", "inteligencia", "análisis"]
+        },
+        {
+            "numero": 30,
+            "titulo": "Responsabilidades de las autoridades de orden público e investigativas",
+            "contenido": "Asegurar que las autoridades del orden público asuman la responsabilidad de identificar, rastrear y actuar para congelar y embargar bienes relacionados con actividades delictivas.",
+            "keywords": ["autoridades", "orden público", "congelamiento"]
+        },
+        {
+            "numero": 31,
+            "titulo": "Facultades de las autoridades de orden público e investigativas",
+            "contenido": "Otorgar a las autoridades la capacidad de exigir registros, utilizar técnicas investigativas (incluyendo operaciones encubiertas e intercepción de comunicaciones) y coordinar acciones a nivel nacional e internacional.",
+            "keywords": ["facultades", "investigación", "coordinación"]
+        },
+        {
+            "numero": 32,
+            "titulo": "Transporte de efectivo",
+            "contenido": "Implementar un sistema de declaración para el traslado transfronterizo de efectivo o instrumentos negociables, con la facultad de detener y sancionar en caso de revelaciones falsas.",
+            "keywords": ["efectivo", "traslado", "declaración"]
+        },
+        {
+            "numero": 33,
+            "titulo": "Estadísticas",
+            "contenido": "Mantener estadísticas amplias sobre reportes, investigaciones, condenas, bienes congelados, incautados y asistencia legal mutua en materia de LA/FT.",
+            "keywords": ["estadísticas", "reportes", "análisis"]
+        },
+        {
+            "numero": 34,
+            "titulo": "Guía y retroalimentación",
+            "contenido": "Establecer directrices y mecanismos de retroalimentación que faciliten la correcta aplicación de medidas nacionales contra el LA/FT por parte de instituciones financieras y APNFD.",
+            "keywords": ["guía", "retroalimentación", "directrices"]
+        },
+        {
+            "numero": 35,
+            "titulo": "Sanciones",
+            "contenido": "Asegurar la aplicación de sanciones eficaces, proporcionales y disuasivas (penales, civiles o administrativas) para quienes incumplan con los requisitos de la lucha contra el LA/FT.",
+            "keywords": ["sanciones", "cumplimiento", "disuasión"]
+        },
+        {
+            "numero": 36,
+            "titulo": "Instrumentos Internacionales",
+            "contenido": "Adoptar e implementar plenamente instrumentos internacionales, tales como la Convención de Viena, la Convención de Palermo, la Convención de Mérida y el Convenio para la Represión de la Financiación del Terrorismo.",
+            "keywords": ["instrumentos internacionales", "convenios"]
+        },
+        {
+            "numero": 37,
+            "titulo": "Asistencia legal mutua",
+            "contenido": "Prestar asistencia legal mutua de manera rápida y eficaz en investigaciones, procedimientos judiciales y procesos relacionados con el LA/FT, eliminando barreras legales para el intercambio de información.",
+            "keywords": ["asistencia legal", "mutua", "colaboración"]
+        },
+        {
+            "numero": 38,
+            "titulo": "Asistencia legal mutua: congelamiento y decomiso",
+            "contenido": "Contar con la autoridad para responder de forma inmediata a solicitudes extranjeras de identificar, congelar, embargar y decomisar bienes relacionados con actividades de LA/FT.",
+            "keywords": ["congelamiento", "decomiso", "asistencia"]
+        },
+        {
+            "numero": 39,
+            "titulo": "Extradición",
+            "contenido": "Ejecutar solicitudes de extradición de forma rápida y eficaz, evitando ofrecer refugio seguro a individuos acusados de FT, terrorismo u otros delitos conexos.",
+            "keywords": ["extradición", "solicitudes", "refugio"]
+        },
+        {
+            "numero": 40,
+            "titulo": "Otras formas de cooperación internacional",
+            "contenido": "Asegurar que las autoridades cooperen internacionalmente de forma rápida y eficaz mediante canales claros y mecanismos transparentes para la priorización y ejecución oportuna de solicitudes.",
+            "keywords": ["cooperación internacional", "canales", "transparencia"]
+        }
+    ]
+}
