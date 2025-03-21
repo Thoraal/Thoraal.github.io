@@ -1,14 +1,442 @@
 [
     {
-        "concepto": "Color del cielo despejado",
-        "opciones": ["Verde", "Azul", "Rojo", "Blanco"],
-        "correcta": 1,
-        "categoria": "Ciencias"
+        "concepto": "Recomendación 1: ¿Qué enfoque deben adoptar los países para prevenir el lavado de activos y el financiamiento del terrorismo?",
+        "opciones": [
+            "Enfoque basado en riesgos",
+            "Enfoque basado en sanciones",
+            "Enfoque basado en auditorías",
+            "Enfoque basado en intervenciones internacionales"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 1"
     },
     {
-        "concepto": "Planeta más grande",
-        "opciones": ["Marte", "Saturno", "Júpiter", "Tierra"],
-        "correcta": 2,
-        "categoria": "Ciencias"
+        "concepto": "Recomendación 2: ¿Qué se requiere en la cooperación nacional según el GAFI?",
+        "opciones": [
+            "Coordinación y cooperación entre autoridades competentes",
+            "Autonomía total de cada autoridad",
+            "Intervención exclusiva de organismos internacionales",
+            "Supervisión solo de instituciones financieras"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 2"
+    },
+    {
+        "concepto": "Recomendación 3: ¿Cómo debe tipificarse el lavado de activos?",
+        "opciones": [
+            "Basado en convenios internacionales (Viena y Palermo)",
+            "Mediante legislación local sin referencia internacional",
+            "Solo en delitos menores",
+            "No tipificarse, solo sancionarse"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 3"
+    },
+    {
+        "concepto": "Recomendación 4: ¿Qué medida permite la adopción de decomiso y medidas provisionales?",
+        "opciones": [
+            "Decomiso sin necesidad de condena penal previa",
+            "Decomiso únicamente tras condena penal",
+            "Decomiso opcional para casos graves",
+            "Solo congelamiento sin decomiso"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 4"
+    },
+    {
+        "concepto": "Recomendación 5: ¿Qué establece la tipificación del financiamiento del terrorismo?",
+        "opciones": [
+            "Debe tipificarse como delito determinante del lavado de activos",
+            "Se aplica únicamente a fondos superiores a cierto monto",
+            "No requiere tipificación formal",
+            "Solo se tipifica en casos de terrorismo confirmado"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 5"
+    },
+    {
+        "concepto": "Recomendación 6: ¿Qué acción deben tomar las sanciones financieras contra el terrorismo?",
+        "opciones": [
+            "Congelar y bloquear fondos sin demora",
+            "Aplicar sanciones únicamente simbólicas",
+            "Incrementar impuestos a las transacciones",
+            "Sancionar solo tras proceso judicial"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 6"
+    },
+    {
+        "concepto": "Recomendación 7: ¿Cuál es el objetivo de las sanciones financieras contra la proliferación?",
+        "opciones": [
+            "Prevenir la proliferación de armas de destrucción masiva y su financiamiento",
+            "Regular el comercio de armas civiles",
+            "Fomentar la cooperación militar internacional",
+            "Sancionar el tráfico de drogas"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 7"
+    },
+    {
+        "concepto": "Recomendación 8: ¿Qué deben evitar las leyes sobre organizaciones sin fines de lucro (ONGs)?",
+        "opciones": [
+            "Que sean utilizadas para lavar dinero o financiar terrorismo",
+            "Que recauden impuestos de forma excesiva",
+            "Que operen sin fines comerciales",
+            "Que dependan de donaciones internacionales"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 8"
+    },
+    {
+        "concepto": "Recomendación 9: ¿Qué debe garantizarse respecto al secreto de las instituciones financieras?",
+        "opciones": [
+            "Que el secreto financiero no impida la lucha contra el lavado de activos y FT",
+            "Que se mantenga el secreto absoluto de todas las transacciones",
+            "Que solo se divulgue información financiera internamente",
+            "Que la privacidad del cliente prevalezca sobre todo"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 9"
+    },
+    {
+        "concepto": "Recomendación 10: ¿Qué establece la debida diligencia del cliente (DDC) en cuanto a la identificación?",
+        "opciones": [
+            "Prohibir cuentas anónimas y exigir identificación y monitoreo",
+            "Permitir cuentas anónimas para proteger la privacidad",
+            "Exigir identificación solo en transacciones internacionales",
+            "Realizar verificaciones únicamente en nuevos clientes"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 10"
+    },
+    {
+        "concepto": "Recomendación 11: ¿Por cuánto tiempo deben mantenerse los registros de transacciones?",
+        "opciones": [
+            "Al menos 5 años",
+            "1 año",
+            "3 años",
+            "10 años"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 11"
+    },
+    {
+        "concepto": "Recomendación 12: ¿Qué medida se exige respecto a las Personas Políticamente Expuestas (PEP)?",
+        "opciones": [
+            "Identificar, verificar y monitorear de forma intensificada a las PEP, familiares y asociados",
+            "Tratar a las PEP como clientes comunes sin distinción",
+            "Eximir a las PEP de controles de DDC",
+            "Requerir solo un registro básico sin monitoreo"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 12"
+    },
+    {
+        "concepto": "Recomendación 13: ¿Qué se exige en la banca corresponsal?",
+        "opciones": [
+            "Aplicar medidas de DDC y prohibir relaciones con bancos pantalla",
+            "Permitir relaciones con cualquier banco sin restricciones",
+            "Fomentar la banca corresponsal sin controles adicionales",
+            "Utilizar solo bancos nacionales"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 13"
+    },
+    {
+        "concepto": "Recomendación 14: ¿Qué deben hacer los servicios de transferencia de dinero o valores?",
+        "opciones": [
+            "Obtener licencia o estar registrados y someterse a un monitoreo eficaz",
+            "Operar sin necesidad de registro",
+            "Transferir solo en moneda local",
+            "No estar sujetos a controles regulatorios"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 14"
+    },
+    {
+        "concepto": "Recomendación 15: ¿Qué se debe hacer antes de lanzar nuevos productos o tecnologías?",
+        "opciones": [
+            "Evaluar y mitigar los riesgos de lavado de activos y financiamiento del terrorismo",
+            "Lanzarlos sin evaluaciones previas",
+            "Esperar aprobación de organismos internacionales",
+            "Realizar únicamente pruebas internas sin evaluación externa"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 15"
+    },
+    {
+        "concepto": "Recomendación 16: ¿Qué información debe incluirse en las transferencias electrónicas?",
+        "opciones": [
+            "Datos del originador y del beneficiario a lo largo de la cadena de pago",
+            "Solo el monto y la fecha de la transferencia",
+            "Únicamente el país de origen",
+            "Datos del banco intermediario"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 16"
+    },
+    {
+        "concepto": "Recomendación 17: ¿Qué permite la dependencia en terceros en la ejecución de medidas de DDC?",
+        "opciones": [
+            "Delegar en terceros siempre que se cumplan los requisitos y la responsabilidad final permanezca en la institución",
+            "Externalizar completamente la responsabilidad",
+            "Permitir la delegación sin supervisión",
+            "No permitir la delegación en ningún caso"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 17"
+    },
+    {
+        "concepto": "Recomendación 18: ¿Qué deben garantizar los controles internos en sucursales y filiales?",
+        "opciones": [
+            "La homogeneidad de políticas, procedimientos y controles en todas las sedes",
+            "Controles diferenciados para cada sucursal",
+            "Controles solo en la sede central",
+            "La supervisión exclusiva de la matriz"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 18"
+    },
+    {
+        "concepto": "Recomendación 19: ¿Qué se debe aplicar a las transacciones con países de mayor riesgo?",
+        "opciones": [
+            "Medidas de debida diligencia intensificada",
+            "Trato preferencial para incentivar inversiones",
+            "Exclusión total de operaciones",
+            "Solo asesoría mínima"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 19"
+    },
+    {
+        "concepto": "Recomendación 20: ¿Qué deben hacer las instituciones financieras ante operaciones sospechosas?",
+        "opciones": [
+            "Reportar de inmediato a la Unidad de Inteligencia Financiera (UIF)",
+            "Esperar confirmación interna antes de reportar",
+            "Informar únicamente al cliente",
+            "No reportar para evitar alarma"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 20"
+    },
+    {
+        "concepto": "Recomendación 21: ¿Qué prohíbe la medida de revelación (tipping‑off)?",
+        "opciones": [
+            "Revelar que se ha reportado una operación sospechosa a la UIF",
+            "Divulgar información financiera de clientes",
+            "Comunicar la identidad de las PEP",
+            "Informar sobre sanciones internas"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 21"
+    },
+    {
+        "concepto": "Recomendación 22: ¿A quiénes se extienden los requisitos de debida diligencia del cliente (DDC) según esta recomendación?",
+        "opciones": [
+            "A las Actividades y Profesiones No Financieras Designadas (APNFD)",
+            "Solo a instituciones financieras",
+            "Únicamente a entidades públicas",
+            "Exclusivamente a bancos internacionales"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 22"
+    },
+    {
+        "concepto": "Recomendación 23: ¿Qué medidas deben cumplir las APNFD según esta recomendación?",
+        "opciones": [
+            "Los mismos controles internos y medidas preventivas que las instituciones financieras",
+            "Controles menos estrictos que los bancos",
+            "Solo registros contables básicos",
+            "No se aplican medidas de DDC"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 23"
+    },
+    {
+        "concepto": "Recomendación 24: ¿Qué garantiza la transparencia y el control en personas jurídicas?",
+        "opciones": [
+            "Información adecuada y precisa sobre el beneficiario final",
+            "Anonimato total de los beneficiarios",
+            "Solo registros financieros internos",
+            "Información compartida solo entre socios"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 24"
+    },
+    {
+        "concepto": "Recomendación 25: ¿Qué exige respecto a las estructuras jurídicas como fideicomisos?",
+        "opciones": [
+            "Información clara sobre fideicomitente, fiduciario y beneficiarios",
+            "Registro de transacciones sin detalles personales",
+            "Exención de información detallada",
+            "Confidencialidad total sin acceso de autoridades"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 25"
+    },
+    {
+        "concepto": "Recomendación 26: ¿Qué debe garantizar la regulación y supervisión de las instituciones financieras?",
+        "opciones": [
+            "Que estén sujetas a una supervisión y regulación adecuadas",
+            "Que se autorregulen sin intervención externa",
+            "Que solo sean inspeccionadas ocasionalmente",
+            "Que operen sin supervisión en mercados internacionales"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 26"
+    },
+    {
+        "concepto": "Recomendación 27: ¿Qué facultades deben tener los supervisores según esta recomendación?",
+        "opciones": [
+            "Inspeccionar, imponer sanciones y retirar licencias en casos de incumplimiento",
+            "Solo recomendar medidas correctivas",
+            "Únicamente realizar auditorías internas",
+            "Asesorar sin poder de sanción"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 27"
+    },
+    {
+        "concepto": "Recomendación 28: ¿Qué se exige para las Actividades y Profesiones No Financieras Designadas (APNFD)?",
+        "opciones": [
+            "Que estén sujetas a regulación y supervisión similares a las instituciones financieras",
+            "Que se autorregulen sin supervisión estatal",
+            "Que solo cumplan con registros básicos",
+            "Que operen sin ningún control específico"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 28"
+    },
+    {
+        "concepto": "Recomendación 29: ¿Cuál es la función principal de la Unidad de Inteligencia Financiera (UIF)?",
+        "opciones": [
+            "Recibir, analizar y comunicar información sobre operaciones sospechosas",
+            "Regular las tasas de interés de los bancos",
+            "Imponer sanciones financieras directamente",
+            "Autorizar transacciones internacionales"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 29"
+    },
+    {
+        "concepto": "Recomendación 30: ¿Qué responsabilidad tienen las autoridades de orden público según esta recomendación?",
+        "opciones": [
+            "Identificar, rastrear y actuar para congelar y embargar bienes sospechosos",
+            "Solo observar y documentar casos",
+            "Investigar únicamente cuando se presente denuncia ciudadana",
+            "Ninguna responsabilidad específica en materia de LA/FT"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 30"
+    },
+    {
+        "concepto": "Recomendación 31: ¿Qué facultad se otorga a las autoridades de orden público e investigativas?",
+        "opciones": [
+            "Exigir registros y utilizar técnicas investigativas avanzadas",
+            "Emitir recomendaciones sin poder coercitivo",
+            "Solo coordinar con la UIF sin intervenir",
+            "Observar sin tomar medidas legales"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 31"
+    },
+    {
+        "concepto": "Recomendación 32: ¿Qué establece respecto al transporte transfronterizo de efectivo?",
+        "opciones": [
+            "Implementar un sistema de declaración y sancionar revelaciones falsas",
+            "Permitir el transporte sin ningún tipo de declaración",
+            "Prohibir totalmente el transporte de efectivo",
+            "Declarar solo si se excede un monto mínimo establecido"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 32"
+    },
+    {
+        "concepto": "Recomendación 33: ¿Qué se requiere en materia de estadísticas?",
+        "opciones": [
+            "Mantener amplias estadísticas sobre reportes, investigaciones y bienes congelados",
+            "Registrar solo datos resumidos anualmente",
+            "Contar únicamente con estadísticas internas sin divulgar",
+            "No es necesario mantener estadísticas detalladas"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 33"
+    },
+    {
+        "concepto": "Recomendación 34: ¿Para qué se establecen directrices y mecanismos de retroalimentación?",
+        "opciones": [
+            "Facilitar la correcta aplicación de medidas contra el lavado de activos y el financiamiento del terrorismo",
+            "Crear informes públicos sin efecto en la operatividad",
+            "Reemplazar las auditorías internas periódicas",
+            "Aumentar la burocracia interna sin mejorar procesos"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 34"
+    },
+    {
+        "concepto": "Recomendación 35: ¿Qué tipo de sanciones se deben aplicar?",
+        "opciones": [
+            "Sanciones eficaces, proporcionales y disuasivas (penales, civiles o administrativas)",
+            "Únicamente sanciones penales",
+            "Solo sanciones administrativas sin carácter disuasorio",
+            "Sanciones simbólicas sin efecto real"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 35"
+    },
+    {
+        "concepto": "Recomendación 36: ¿Qué instrumentos deben adoptarse a nivel internacional?",
+        "opciones": [
+            "Instrumentos internacionales como las Convenciones de Viena, Palermo, Mérida y el Convenio contra la Financiación del Terrorismo",
+            "Únicamente leyes locales",
+            "Directrices internas sin referencia internacional",
+            "Solo convenios bilaterales de cooperación"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 36"
+    },
+    {
+        "concepto": "Recomendación 37: ¿Qué tipo de asistencia legal deben prestar los países?",
+        "opciones": [
+            "Asistencia legal mutua rápida y eficaz en investigaciones y procesos judiciales",
+            "Solo asesoría legal interna sin cooperación internacional",
+            "Únicamente asistencia financiera a las investigaciones",
+            "No se requiere prestar asistencia legal mutua"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 37"
+    },
+    {
+        "concepto": "Recomendación 38: ¿Qué capacidad deben tener las autoridades en cuanto a congelamiento y decomiso?",
+        "opciones": [
+            "Actuar de inmediato para identificar, congelar y decomisar bienes en solicitudes extranjeras",
+            "Esperar confirmación judicial antes de intervenir",
+            "Emitir solo alertas sin acción directa",
+            "No tienen competencia para intervenir en estos casos"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 38"
+    },
+    {
+        "concepto": "Recomendación 39: ¿Qué establece la extradición en esta recomendación?",
+        "opciones": [
+            "Ejecutar solicitudes de extradición de forma rápida y eficaz",
+            "Negar la extradición en todos los casos",
+            "Retrasar el proceso de extradición intencionalmente",
+            "Aplicar la extradición solo en casos menores"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 39"
+    },
+    {
+        "concepto": "Recomendación 40: ¿Qué debe asegurar la cooperación internacional según esta recomendación?",
+        "opciones": [
+            "Que las autoridades cooperen mediante canales claros y mecanismos transparentes",
+            "Que la cooperación se limite a reuniones anuales",
+            "Que solo se coopere en materia de seguridad interna",
+            "Que la cooperación sea voluntaria sin protocolos establecidos"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 40"
     }
 ]
