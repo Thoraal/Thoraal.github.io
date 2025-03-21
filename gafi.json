@@ -3,7 +3,15 @@
          {
              "numero": 1,
              "titulo": "Evaluación de riesgos y aplicación de un enfoque basado en riesgo",
-             "contenido": "Identificar y evaluar riesgos de LA/FT/FP. Aplicar medidas proporcionales al riesgo. Designar autoridad para coordinar acciones. Mitigar riesgos de financiamiento de proliferación. Obligar a instituciones a identificar y mitigar riesgos.",
+             "contenido": "Se debe aplicar un EBR adoptando medidas para prevenir o mitigar el LA/FT/FP, estos deben ser proporcional al nivel de riego.",
+             "keywords": ["Evaluación de riesgos", "Enfoque basado en riesgo (EBR)", "LA/FT/FP", "Mitigación de riesgos", "Proporcionalidad", "Coordinación"]
+         }
+     ]
+     "recomendaciones": [
+         {
+             "numero": 2,
+             "titulo": "Cooperación y coordinación nacional",
+             "contenido": "",
              "keywords": ["Evaluación de riesgos", "Enfoque basado en riesgo (EBR)", "LA/FT/FP", "Mitigación de riesgos", "Proporcionalidad", "Coordinación"]
          }
      ]
