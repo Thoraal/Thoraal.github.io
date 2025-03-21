@@ -1,1 +1,443 @@
 
+[
+    {
+        "concepto": "¿Qué recomendación establece que los países e instituciones deben identificar, evaluar y entender sus riesgos de lavado de activos y financiamiento del terrorismo, aplicando medidas proporcionales para mitigarlos?",
+        "opciones": [
+            "Recomendación 1: Enfoque basado en riesgos",
+            "Recomendación 2: Cooperación nacional",
+            "Recomendación 3: Delito de lavado de activos",
+            "Recomendación 4: Decomiso y medidas provisionales"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 1"
+    },
+    {
+        "concepto": "¿Qué recomendación exige que las autoridades competentes cooperen y coordinen de forma interna para implementar políticas contra el lavado de activos y el financiamiento del terrorismo?",
+        "opciones": [
+            "Recomendación 1: Enfoque basado en riesgos",
+            "Recomendación 2: Cooperación nacional",
+            "Recomendación 6: Sanciones financieras dirigidas al terrorismo",
+            "Recomendación 10: Debida diligencia del cliente (DDC)"
+        ],
+        "correcta": 1,
+        "categoria": "Recomendación 2"
+    },
+    {
+        "concepto": "¿Qué recomendación indica que se debe tipificar el lavado de activos basándose en la Convención de Viena (1988) y la Convención de Palermo (2000), abarcando todos los delitos graves?",
+        "opciones": [
+            "Recomendación 2: Cooperación nacional",
+            "Recomendación 3: Delito de lavado de activos",
+            "Recomendación 5: Delito de financiamiento al terrorismo",
+            "Recomendación 4: Decomiso y medidas provisionales"
+        ],
+        "correcta": 1,
+        "categoria": "Recomendación 3"
+    },
+    {
+        "concepto": "¿Qué recomendación permite que las autoridades congelen, incauten y decomisen bienes sin requerir una condena penal previa?",
+        "opciones": [
+            "Recomendación 4: Decomiso y medidas provisionales",
+            "Recomendación 3: Delito de lavado de activos",
+            "Recomendación 7: Sanciones financieras dirigidas a la proliferación",
+            "Recomendación 10: Debida diligencia del cliente (DDC)"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 4"
+    },
+    {
+        "concepto": "¿Qué recomendación tipifica el financiamiento del terrorismo basándose en el Convenio Internacional para la Represión de la Financiación del Terrorismo (1999) y lo designa como delito determinante del lavado de activos?",
+        "opciones": [
+            "Recomendación 5: Delito de financiamiento al terrorismo",
+            "Recomendación 6: Sanciones financieras dirigidas al terrorismo",
+            "Recomendación 8: Organizaciones sin fines de lucro",
+            "Recomendación 9: Leyes sobre el secreto de las instituciones financieras"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 5"
+    },
+    {
+        "concepto": "¿Qué recomendación establece la implementación de sanciones financieras que congelen y bloqueen fondos sin demora para combatir el terrorismo y el financiamiento del terrorismo?",
+        "opciones": [
+            "Recomendación 6: Sanciones financieras dirigidas al terrorismo",
+            "Recomendación 7: Sanciones financieras dirigidas a la proliferación",
+            "Recomendación 5: Delito de financiamiento al terrorismo",
+            "Recomendación 10: Debida diligencia del cliente (DDC)"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 6"
+    },
+    {
+        "concepto": "¿Qué recomendación está orientada a prevenir la proliferación de armas de destrucción masiva y su financiamiento mediante sanciones financieras inmediatas?",
+        "opciones": [
+            "Recomendación 6: Sanciones financieras dirigidas al terrorismo",
+            "Recomendación 7: Sanciones financieras dirigidas a la proliferación",
+            "Recomendación 8: Organizaciones sin fines de lucro",
+            "Recomendación 9: Leyes sobre el secreto de las instituciones financieras"
+        ],
+        "correcta": 1,
+        "categoria": "Recomendación 7"
+    },
+    {
+        "concepto": "¿Qué recomendación exige, mediante leyes y regulaciones, que las organizaciones sin fines de lucro no sean utilizadas para lavar dinero o financiar terrorismo?",
+        "opciones": [
+            "Recomendación 8: Organizaciones sin fines de lucro",
+            "Recomendación 7: Sanciones financieras dirigidas a la proliferación",
+            "Recomendación 9: Leyes sobre el secreto de las instituciones financieras",
+            "Recomendación 10: Debida diligencia del cliente (DDC)"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 8"
+    },
+    {
+        "concepto": "¿Qué recomendación busca asegurar que las leyes de secreto financiero no impidan la implementación de las medidas contra el lavado de activos y el financiamiento del terrorismo?",
+        "opciones": [
+            "Recomendación 8: Organizaciones sin fines de lucro",
+            "Recomendación 9: Leyes sobre el secreto de las instituciones financieras",
+            "Recomendación 10: Debida diligencia del cliente (DDC)",
+            "Recomendación 11: Mantenimiento de registros"
+        ],
+        "correcta": 1,
+        "categoria": "Recomendación 9"
+    },
+    {
+        "concepto": "¿Qué recomendación prohíbe que las instituciones financieras mantengan cuentas anónimas y exige contar con procesos para identificar a nuevos clientes, beneficiarios finales y proveedores de recursos?",
+        "opciones": [
+            "Recomendación 10: Debida diligencia del cliente (DDC)",
+            "Recomendación 11: Mantenimiento de registros",
+            "Recomendación 12: Personas políticamente expuestas (PEP)",
+            "Recomendación 13: Banca corresponsal"
+        ],
+        "correcta": 0,
+        "categoria": "Recomendación 10"
+    },
+    {
+        "concepto": "¿Qué recomendación exige que las instituciones financieras mantengan todos los registros necesarios sobre transacciones y medidas de DDC por un período de al menos 5 años?",
+        "opciones": [
+            "Recomendación 10: Debida diligencia del cliente (DDC)",
+            "Recomendación 11: Mantenimiento de registros",
+            "Recomendación 12: Personas políticamente expuestas (PEP)",
+            "Recomendación 15: Nuevas tecnologías"
+        ],
+        "correcta": 1,
+        "categoria": "Recomendación 11"
+    },
+    {
+        "concepto": "¿Qué recomendación requiere medidas intensificadas para verificar y monitorear a las Personas Políticamente Expuestas (PEP), incluyendo a familiares y asociados?",
+        "opciones": [
+            "Recomendación 11: Mantenimiento de registros",
+            "Recomendación 12: Personas políticamente expuestas (PEP)",
+            "Recomendación 13: Banca corresponsal",
+            "Recomendación 14: Servicios de transferencia de dinero o valores"
+        ],
+        "correcta": 1,
+        "categoria": "Recomendación 12"
+    },
+    {
+        "concepto": "¿Qué recomendación exige la implementación de medidas de DDC en la contratación de servicios de banca corresponsal y prohíbe relaciones con bancos pantalla?",
+        "opciones": [
+            "Recomendación 12: Personas políticamente expuestas (PEP)",
+            "Recomendación 13: Banca corresponsal",
+            "Recomendación 14: Servicios de transferencia de dinero o valores",
+            "Recomendación 15: Nuevas tecnologías"
+        ],
+        "correcta": 1,
+        "categoria": "Recomendación 13"
+    },
+    {
+        "concepto": "¿Qué recomendación establece que las entidades que prestan servicios de transferencia de dinero o valores deben estar registradas o licenciadas y sujetas a monitoreo eficaz?",
+        "opciones": [
+            "Recomendación 13: Banca corresponsal",
+            "Recomendación 14: Servicios de transferencia de dinero o valores",
+            "Recomendación 15: Nuevas tecnologías",
+            "Recomendación 16: Transferencias electrónicas"
+        ],
+        "correcta": 1,
+        "categoria": "Recomendación 14"
+    },
+    {
+        "concepto": "¿Qué recomendación indica que antes de lanzar nuevos productos, prácticas o tecnologías se deben identificar y evaluar los riesgos de lavado de activos y financiamiento del terrorismo?",
+        "opciones": [
+            "Recomendación 14: Servicios de transferencia de dinero o valores",
+            "Recomendación 15: Nuevas tecnologías",
+            "Recomendación 16: Transferencias electrónicas",
+            "Recomendación 17: Dependencia en terceros"
+        ],
+        "correcta": 1,
+        "categoria": "Recomendación 15"
+    },
+    {
+        "concepto": "¿Qué recomendación exige que en las transferencias electrónicas se incluya la información del originador y del beneficiario a lo largo de toda la cadena de pago?",
+        "opciones": [
+            "Recomendación 15: Nuevas tecnologías",
+            "Recomendación 16: Transferencias electrónicas",
+            "Recomendación 17: Dependencia en terceros",
+            "Recomendación 18: Controles internos en sucursales y filiales"
+        ],
+        "correcta": 1,
+        "categoria": "Recomendación 16"
+    },
+    {
+        "concepto": "¿Qué recomendación permite que las instituciones financieras deleguen en terceros la ejecución de medidas de DDC, siempre que se cumplan requisitos y la responsabilidad final permanezca en la institución?",
+        "opciones": [
+            "Recomendación 16: Transferencias electrónicas",
+            "Recomendación 17: Dependencia en terceros",
+            "Recomendación 18: Controles internos en sucursales y filiales",
+            "Recomendación 19: Países de mayor riesgo"
+        ],
+        "correcta": 1,
+        "categoria": "Recomendación 17"
+    },
+    {
+        "concepto": "¿Qué recomendación exige la implementación de controles internos homogéneos en todas las sucursales, filiales y subsidiarias, tanto nacionales como internacionales?",
+        "opciones": [
+            "Recomendación 17: Dependencia en terceros",
+            "Recomendación 18: Controles internos en sucursales y filiales",
+            "Recomendación 19: Países de mayor riesgo",
+            "Recomendación 20: Reporte de operaciones sospechosas (ROS)"
+        ],
+        "correcta": 1,
+        "categoria": "Recomendación 18"
+    },
+    {
+        "concepto": "¿Qué recomendación establece que se deben aplicar medidas de debida diligencia intensificada a transacciones con países de mayor riesgo?",
+        "opciones": [
+            "Recomendación 18: Controles internos en sucursales y filiales",
+            "Recomendación 19: Países de mayor riesgo",
+            "Recomendación 20: Reporte de operaciones sospechosas (ROS)",
+            "Recomendación 21: Revelación (tipping‑off) y confidencialidad"
+        ],
+        "correcta": 1,
+        "categoria": "Recomendación 19"
+    },
+    {
+        "concepto": "¿Qué recomendación obliga a las instituciones financieras a reportar de inmediato a la Unidad de Inteligencia Financiera (UIF) cualquier operación sospechosa de estar relacionada con actividades criminales o financiamiento del terrorismo?",
+        "opciones": [
+            "Recomendación 19: Países de mayor riesgo",
+            "Recomendación 20: Reporte de operaciones sospechosas (ROS)",
+            "Recomendación 21: Revelación (tipping‑off) y confidencialidad",
+            "Recomendación 22: APNFD: debida diligencia del cliente"
+        ],
+        "correcta": 1,
+        "categoria": "Recomendación 20"
+    },
+    {
+        "concepto": "¿Qué recomendación prohíbe revelar que se ha realizado un reporte de operaciones sospechosas (tipping‑off), protegiendo así la confidencialidad?",
+        "opciones": [
+            "Recomendación 20: Reporte de operaciones sospechosas (ROS)",
+            "Recomendación 21: Revelación (tipping‑off) y confidencialidad",
+            "Recomendación 22: APNFD: debida diligencia del cliente",
+            "Recomendación 23: APNFD: otras medidas"
+        ],
+        "correcta": 1,
+        "categoria": "Recomendación 21"
+    },
+    {
+        "concepto": "¿Qué recomendación extiende los requisitos de debida diligencia del cliente (DDC) y mantenimiento de registros a las Actividades y Profesiones No Financieras Designadas (APNFD)?",
+        "opciones": [
+            "Recomendación 21: Revelación (tipping‑off) y confidencialidad",
+            "Recomendación 22: APNFD: debida diligencia del cliente",
+            "Recomendación 23: APNFD: otras medidas",
+            "Recomendación 24: Transparencia y beneficiario final de las personas jurídicas"
+        ],
+        "correcta": 1,
+        "categoria": "Recomendación 22"
+    },
+    {
+        "concepto": "¿Qué recomendación establece que a las APNFD se les deben aplicar los mismos controles internos y medidas preventivas que a las instituciones financieras?",
+        "opciones": [
+            "Recomendación 22: APNFD: debida diligencia del cliente",
+            "Recomendación 23: APNFD: otras medidas",
+            "Recomendación 24: Transparencia y beneficiario final de las personas jurídicas",
+            "Recomendación 25: Transparencia y beneficiario final de otras estructuras jurídicas"
+        ],
+        "correcta": 1,
+        "categoria": "Recomendación 23"
+    },
+    {
+        "concepto": "¿Qué recomendación exige asegurar que exista información adecuada, precisa y oportuna sobre el beneficiario final y el control de las personas jurídicas?",
+        "opciones": [
+            "Recomendación 23: APNFD: otras medidas",
+            "Recomendación 24: Transparencia y beneficiario final de las personas jurídicas",
+            "Recomendación 25: Transparencia y beneficiario final de otras estructuras jurídicas",
+            "Recomendación 26: Regulación y supervisión de las instituciones financieras"
+        ],
+        "correcta": 1,
+        "categoria": "Recomendación 24"
+    },
+    {
+        "concepto": "¿Qué recomendación garantiza que las estructuras jurídicas, como los fideicomisos, cuenten con información clara sobre el fideicomitente, fiduciario y beneficiarios?",
+        "opciones": [
+            "Recomendación 24: Transparencia y beneficiario final de las personas jurídicas",
+            "Recomendación 25: Transparencia y beneficiario final de otras estructuras jurídicas",
+            "Recomendación 26: Regulación y supervisión de las instituciones financieras",
+            "Recomendación 27: Facultades de los supervisores"
+        ],
+        "correcta": 1,
+        "categoria": "Recomendación 25"
+    },
+    {
+        "concepto": "¿Qué recomendación requiere que las instituciones financieras estén sujetas a una regulación y supervisión adecuadas para evitar que actores criminales se beneficien de ellas?",
+        "opciones": [
+            "Recomendación 25: Transparencia y beneficiario final de otras estructuras jurídicas",
+            "Recomendación 26: Regulación y supervisión de las instituciones financieras",
+            "Recomendación 27: Facultades de los supervisores",
+            "Recomendación 28: Regulación y supervisión de las APNFD"
+        ],
+        "correcta": 1,
+        "categoria": "Recomendación 26"
+    },
+    {
+        "concepto": "¿Qué recomendación establece que los supervisores deben contar con facultades para inspeccionar, imponer sanciones y, en casos de incumplimiento, retirar o restringir la licencia de las instituciones financieras?",
+        "opciones": [
+            "Recomendación 26: Regulación y supervisión de las instituciones financieras",
+            "Recomendación 27: Facultades de los supervisores",
+            "Recomendación 28: Regulación y supervisión de las APNFD",
+            "Recomendación 29: Unidades de Inteligencia Financiera (UIF)"
+        ],
+        "correcta": 1,
+        "categoria": "Recomendación 27"
+    },
+    {
+        "concepto": "¿Qué recomendación se refiere a que las Actividades y Profesiones No Financieras Designadas (APNFD) deben estar sujetas a medidas de regulación y supervisión similares a las instituciones financieras?",
+        "opciones": [
+            "Recomendación 27: Facultades de los supervisores",
+            "Recomendación 28: Regulación y supervisión de las APNFD",
+            "Recomendación 29: Unidades de Inteligencia Financiera (UIF)",
+            "Recomendación 30: Responsabilidades de las autoridades de orden público e investigativas"
+        ],
+        "correcta": 1,
+        "categoria": "Recomendación 28"
+    },
+    {
+        "concepto": "¿Qué recomendación establece la creación de una Unidad de Inteligencia Financiera (UIF) que reciba, analice y comunique información sobre operaciones sospechosas?",
+        "opciones": [
+            "Recomendación 28: Regulación y supervisión de las APNFD",
+            "Recomendación 29: Unidades de Inteligencia Financiera (UIF)",
+            "Recomendación 30: Responsabilidades de las autoridades de orden público e investigativas",
+            "Recomendación 31: Facultades de las autoridades de orden público e investigativas"
+        ],
+        "correcta": 1,
+        "categoria": "Recomendación 29"
+    },
+    {
+        "concepto": "¿Qué recomendación asigna a las autoridades de orden público la responsabilidad de identificar, rastrear y actuar para congelar y embargar bienes sospechosos de estar vinculados a actividades delictivas?",
+        "opciones": [
+            "Recomendación 29: Unidades de Inteligencia Financiera (UIF)",
+            "Recomendación 30: Responsabilidades de las autoridades de orden público e investigativas",
+            "Recomendación 31: Facultades de las autoridades de orden público e investigativas",
+            "Recomendación 32: Transporte de efectivo"
+        ],
+        "correcta": 1,
+        "categoria": "Recomendación 30"
+    },
+    {
+        "concepto": "¿Qué recomendación otorga a las autoridades de orden público e investigativas la facultad de exigir registros y utilizar técnicas investigativas avanzadas para el combate del lavado de activos y financiamiento del terrorismo?",
+        "opciones": [
+            "Recomendación 30: Responsabilidades de las autoridades de orden público e investigativas",
+            "Recomendación 31: Facultades de las autoridades de orden público e investigativas",
+            "Recomendación 32: Transporte de efectivo",
+            "Recomendación 33: Estadísticas"
+        ],
+        "correcta": 1,
+        "categoria": "Recomendación 31"
+    },
+    {
+        "concepto": "¿Qué recomendación establece la implementación de un sistema de declaración para el traslado transfronterizo de efectivo, incluyendo la facultad de detenerlo y sancionar en caso de información falsa?",
+        "opciones": [
+            "Recomendación 31: Facultades de las autoridades de orden público e investigativas",
+            "Recomendación 32: Transporte de efectivo",
+            "Recomendación 33: Estadísticas",
+            "Recomendación 34: Guía y retroalimentación"
+        ],
+        "correcta": 1,
+        "categoria": "Recomendación 32"
+    },
+    {
+        "concepto": "¿Qué recomendación exige que los países mantengan amplias estadísticas sobre reportes, investigaciones, procesos y bienes congelados, incautados o decomisados en materia de LA/FT?",
+        "opciones": [
+            "Recomendación 32: Transporte de efectivo",
+            "Recomendación 33: Estadísticas",
+            "Recomendación 34: Guía y retroalimentación",
+            "Recomendación 35: Sanciones"
+        ],
+        "correcta": 1,
+        "categoria": "Recomendación 33"
+    },
+    {
+        "concepto": "¿Qué recomendación establece directrices y mecanismos de retroalimentación para ayudar a las instituciones financieras y APNFD a aplicar correctamente las medidas contra el lavado de activos y financiamiento del terrorismo?",
+        "opciones": [
+            "Recomendación 33: Estadísticas",
+            "Recomendación 34: Guía y retroalimentación",
+            "Recomendación 35: Sanciones",
+            "Recomendación 36: Instrumentos Internacionales"
+        ],
+        "correcta": 1,
+        "categoria": "Recomendación 34"
+    },
+    {
+        "concepto": "¿Qué recomendación exige la aplicación de sanciones eficaces, proporcionales y disuasivas (penales, civiles o administrativas) para quienes incumplan con las medidas contra el lavado de activos y el financiamiento del terrorismo?",
+        "opciones": [
+            "Recomendación 34: Guía y retroalimentación",
+            "Recomendación 35: Sanciones",
+            "Recomendación 36: Instrumentos Internacionales",
+            "Recomendación 37: Asistencia legal mutua"
+        ],
+        "correcta": 1,
+        "categoria": "Recomendación 35"
+    },
+    {
+        "concepto": "¿Qué recomendación insta a los países a adoptar e implementar plenamente instrumentos internacionales como las Convenciones de Viena, Palermo, Mérida y el Convenio contra la Financiación del Terrorismo?",
+        "opciones": [
+            "Recomendación 35: Sanciones",
+            "Recomendación 36: Instrumentos Internacionales",
+            "Recomendación 37: Asistencia legal mutua",
+            "Recomendación 38: Asistencia legal mutua: congelamiento y decomiso"
+        ],
+        "correcta": 1,
+        "categoria": "Recomendación 36"
+    },
+    {
+        "concepto": "¿Qué recomendación establece que los países deben prestar asistencia legal mutua de manera rápida y eficaz en investigaciones, procedimientos judiciales y procesos relacionados con el lavado de activos y el financiamiento del terrorismo?",
+        "opciones": [
+            "Recomendación 36: Instrumentos Internacionales",
+            "Recomendación 37: Asistencia legal mutua",
+            "Recomendación 38: Asistencia legal mutua: congelamiento y decomiso",
+            "Recomendación 39: Extradición"
+        ],
+        "correcta": 1,
+        "categoria": "Recomendación 37"
+    },
+    {
+        "concepto": "¿Qué recomendación requiere que los países cuenten con la autoridad para tomar acciones inmediatas de congelamiento y decomiso de bienes en respuesta a solicitudes extranjeras?",
+        "opciones": [
+            "Recomendación 37: Asistencia legal mutua",
+            "Recomendación 38: Asistencia legal mutua: congelamiento y decomiso",
+            "Recomendación 39: Extradición",
+            "Recomendación 40: Otras formas de cooperación internacional"
+        ],
+        "correcta": 1,
+        "categoria": "Recomendación 38"
+    },
+    {
+        "concepto": "¿Qué recomendación establece la ejecución rápida y eficaz de solicitudes de extradición, evitando ofrecer refugio seguro a individuos involucrados en financiamiento del terrorismo o actos terroristas?",
+        "opciones": [
+            "Recomendación 38: Asistencia legal mutua: congelamiento y decomiso",
+            "Recomendación 39: Extradición",
+            "Recomendación 40: Otras formas de cooperación internacional",
+            "Recomendación 37: Asistencia legal mutua"
+        ],
+        "correcta": 1,
+        "categoria": "Recomendación 39"
+    },
+    {
+        "concepto": "¿Qué recomendación exige que las autoridades cooperen internacionalmente de manera rápida y eficaz, utilizando canales claros y mecanismos transparentes para la priorización y ejecución oportuna de solicitudes?",
+        "opciones": [
+            "Recomendación 39: Extradición",
+            "Recomendación 40: Otras formas de cooperación internacional",
+            "Recomendación 37: Asistencia legal mutua",
+            "Recomendación 38: Asistencia legal mutua: congelamiento y decomiso"
+        ],
+        "correcta": 1,
+        "categoria": "Recomendación 40"
+    }
+]
