@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unir PDFs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 40px;
+            background-color: #f4f4f4;
+        }
+        h2 {
+            color: #333;
+        }
+        input {
+            margin: 10px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Unir dos archivos PDF</h2>
+    
+    <input type="file" id="pdf1" accept="application/pdf">
+    <input type="file" id="pdf2" accept="application/pdf">
+    <br><br>
+    <button onclick="mergePDFs()">Unir PDFs</button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <script>
+        async function mergePDFs() {
+            const file1 = document.getElementById("pdf1").files[0];
+            const file2 = document.getElementById("pdf2").files[0];
+
+            if (!file1 || !file2) {
+                alert("Selecciona dos archivos PDF.");
+                return;
+            }
+
+            // Leer los archivos como ArrayBuffer
+            const pdfBytes1 = await file1.arrayBuffer();
+            const pdfBytes2 = await file2.arrayBuffer();
+
+            // Cargar los PDFs
+            const pdfDoc = await PDFLib.PDFDocument.create();
+            const pdfA = await PDFLib.PDFDocument.load(pdfBytes1);
+            const pdfB = await PDFLib.PDFDocument.load(pdfBytes2);
+
+            // Copiar páginas de los archivos originales al nuevo PDF
+            const copiedPagesA = await pdfDoc.copyPages(pdfA, pdfA.getPageIndices());
+            copiedPagesA.forEach((page) => pdfDoc.addPage(page));
+
+            const copiedPagesB = await pdfDoc.copyPages(pdfB, pdfB.getPageIndices());
+            copiedPagesB.forEach((page) => pdfDoc.addPage(page));
+
+            // Guardar el nuevo PDF
+            const mergedPdfBytes = await pdfDoc.save();
+
+            // Crear un enlace de descarga
+            const blob = new Blob([mergedPdfBytes], { type: "application/pdf" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "PDF_Unido.pdf";
+            a.click();
+
+            // Liberar el objeto URL
+            URL.revokeObjectURL(url);
+        }
+    </script>
+
+</body>
+</html>
