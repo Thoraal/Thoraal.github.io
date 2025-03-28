@@ -3,84 +3,231 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unir PDFs</title>
+    <title>Unificador de PDFs</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+
+        h1 {
+            color: #2c3e50;
             text-align: center;
-            margin: 40px;
-            background-color: #f4f4f4;
+            margin-bottom: 30px;
         }
-        h2 {
-            color: #333;
+
+        .container {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
         }
-        input {
-            margin: 10px;
+
+        .input-group {
+            margin: 15px 0;
         }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #495057;
+            font-weight: bold;
+        }
+
+        input[type="file"], input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #dee2e6;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
         button {
-            background-color: #007bff;
+            width: 100%;
+            padding: 12px;
+            background-color: #4a90e2;
             color: white;
             border: none;
-            padding: 10px 15px;
-            cursor: pointer;
             border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s, transform 0.2s;
         }
+
         button:hover {
-            background-color: #0056b3;
+            background-color: #357abd;
+            transform: translateY(-1px);
+        }
+
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .status {
+            text-align: center;
+            margin: 15px 0;
+            min-height: 20px;
+        }
+
+        .error {
+            color: #dc3545;
+            display: none;
+        }
+
+        .success {
+            color: #28a745;
+            display: none;
+        }
+
+        .loading {
+            display: none;
+            color: #17a2b8;
         }
     </style>
 </head>
 <body>
+    <h1>Unificador de PDFs</h1>
+    <div class="container">
+        <div class="input-group">
+            <label for="pdfFiles">Selecciona los archivos PDF:</label>
+            <input type="file" id="pdfFiles" accept="application/pdf" multiple>
+        </div>
 
-    <h2>Unir dos archivos PDF</h2>
-    
-    <input type="file" id="pdf1" accept="application/pdf">
-    <input type="file" id="pdf2" accept="application/pdf">
-    <br><br>
-    <button onclick="mergePDFs()">Unir PDFs</button>
+        <div class="input-group">
+            <label for="fileName">Nombre del archivo resultante:</label>
+            <input type="text" id="fileName" placeholder="Ej: documento-unido" value="documento-unido">
+        </div>
+
+        <button id="mergeBtn">Unir Archivos PDF</button>
+        
+        <div class="status">
+            <div class="loading">Procesando, por favor espera...</div>
+            <div class="error"></div>
+            <div class="success"></div>
+        </div>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
     <script>
-        async function mergePDFs() {
-            const file1 = document.getElementById("pdf1").files[0];
-            const file2 = document.getElementById("pdf2").files[0];
+        document.addEventListener('DOMContentLoaded', () => {
+            const mergeBtn = document.getElementById('mergeBtn');
+            const pdfInput = document.getElementById('pdfFiles');
+            const fileNameInput = document.getElementById('fileName');
+            const loading = document.querySelector('.loading');
+            const errorMsg = document.querySelector('.error');
+            const successMsg = document.querySelector('.success');
 
-            if (!file1 || !file2) {
-                alert("Selecciona dos archivos PDF.");
-                return;
+            mergeBtn.addEventListener('click', mergePDFs);
+
+            async function mergePDFs() {
+                try {
+                    resetMessages();
+                    showLoading(true);
+                    
+                    const files = Array.from(pdfInput.files);
+                    const fileName = getValidFileName();
+
+                    if (files.length < 2) {
+                        throw new Error('Debes seleccionar al menos 2 archivos PDF');
+                    }
+
+                    const { validFiles, invalidFiles } = validateFiles(files);
+                    
+                    if (invalidFiles.length > 0) {
+                        throw new Error(`${invalidFiles.length} archivo(s) no son PDF válidos`);
+                    }
+
+                    const mergedPdf = await processFiles(validFiles);
+                    downloadPDF(mergedPdf, fileName);
+                    
+                    showSuccess('¡Archivos unidos exitosamente!');
+                    resetForm();
+
+                } catch (error) {
+                    showError(error.message);
+                    console.error('Error:', error);
+                } finally {
+                    showLoading(false);
+                }
             }
 
-            // Leer los archivos como ArrayBuffer
-            const pdfBytes1 = await file1.arrayBuffer();
-            const pdfBytes2 = await file2.arrayBuffer();
+            function getValidFileName() {
+                let name = fileNameInput.value.trim() || 'documento-unido';
+                name = name.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-_]/g, '');
+                return name.endsWith('.pdf') ? name : `${name}.pdf`;
+            }
 
-            // Cargar los PDFs
-            const pdfDoc = await PDFLib.PDFDocument.create();
-            const pdfA = await PDFLib.PDFDocument.load(pdfBytes1);
-            const pdfB = await PDFLib.PDFDocument.load(pdfBytes2);
+            function validateFiles(files) {
+                return files.reduce((acc, file) => {
+                    if (file.type === 'application/pdf') {
+                        acc.validFiles.push(file);
+                    } else {
+                        acc.invalidFiles.push(file);
+                    }
+                    return acc;
+                }, { validFiles: [], invalidFiles: [] });
+            }
 
-            // Copiar páginas de los archivos originales al nuevo PDF
-            const copiedPagesA = await pdfDoc.copyPages(pdfA, pdfA.getPageIndices());
-            copiedPagesA.forEach((page) => pdfDoc.addPage(page));
+            async function processFiles(files) {
+                const pdfDoc = await PDFLib.PDFDocument.create();
+                const pdfBuffers = await Promise.all(
+                    files.map(file => file.arrayBuffer()
+                        .then(buffer => PDFLib.PDFDocument.load(buffer))
+                    )
+                );
 
-            const copiedPagesB = await pdfDoc.copyPages(pdfB, pdfB.getPageIndices());
-            copiedPagesB.forEach((page) => pdfDoc.addPage(page));
+                for (const pdf of pdfBuffers) {
+                    const pages = await pdfDoc.copyPages(pdf, pdf.getPageIndices());
+                    pages.forEach(page => pdfDoc.addPage(page));
+                }
 
-            // Guardar el nuevo PDF
-            const mergedPdfBytes = await pdfDoc.save();
+                return pdfDoc.save();
+            }
 
-            // Crear un enlace de descarga
-            const blob = new Blob([mergedPdfBytes], { type: "application/pdf" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = "PDF_Unido.pdf";
-            a.click();
+            function downloadPDF(pdfBytes, fileName) {
+                const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+                const url = URL.createObjectURL(blob);
+                
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = fileName;
+                document.body.appendChild(link);
+                link.click();
+                
+                link.remove();
+                URL.revokeObjectURL(url);
+            }
 
-            // Liberar el objeto URL
-            URL.revokeObjectURL(url);
-        }
+            function resetForm() {
+                pdfInput.value = '';
+                fileNameInput.value = 'documento-unido';
+            }
+
+            function resetMessages() {
+                errorMsg.style.display = 'none';
+                successMsg.style.display = 'none';
+            }
+
+            function showLoading(show) {
+                mergeBtn.disabled = show;
+                loading.style.display = show ? 'block' : 'none';
+            }
+
+            function showError(message) {
+                errorMsg.textContent = message;
+                errorMsg.style.display = 'block';
+            }
+
+            function showSuccess(message) {
+                successMsg.textContent = message;
+                successMsg.style.display = 'block';
+            }
+        });
     </script>
-
 </body>
 </html>
