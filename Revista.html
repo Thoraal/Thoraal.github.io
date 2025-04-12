@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Revista con Efecto de Pasar Hoja</title>
+  <!-- Cargamos PDF.js desde CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+  <style>
+    /* Estilos generales */
+    body {
+      margin: 0;
+      padding: 0;
+      background: #f1f1f1;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    /* Contenedor con efecto flip */
+    #flip-container {
+      width: 100%;
+      max-width: 600px;
+      margin: 20px auto;
+      perspective: 1200px;
+      position: relative;
+    }
+    #flip-book {
+      position: relative;
+      width: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+    }
+    canvas {
+      width: 100%;
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      backface-visibility: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    #canvas-front {
+      z-index: 2;
+    }
+    #canvas-back {
+      transform: rotateY(180deg);
+      z-index: 1;
+    }
+    /* Controles normales (no pantalla completa) */
+    #navigation, #controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      width: 90%;
+      max-width: 600px;
+      margin-top: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      background: #007BFF;
+      color: white;
+      cursor: pointer;
+    }
+    button:disabled {
+      background: #bbb;
+      cursor: default;
+    }
+    #page-info {
+      margin-top: 10px;
+      font-size: 16px;
+    }
+    /* Controles adicionales para "Ir a página" y "Pantalla completa" */
+    #page-input {
+      width: 60px;
+      padding: 5px;
+      font-size: 16px;
+      text-align: center;
+    }
+    /* Botones para pantalla completa (ocultan los otros controles) */
+    .fs-nav-btn {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2000;
+      background: rgba(0, 0, 0, 0.5);
+      border: none;
+      color: #fff;
+      font-size: 30px;
+      padding: 10px 15px;
+      border-radius: 3px;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    #fs-prev-btn {
+      left: 20px;
+    }
+    #fs-next-btn {
+      right: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Contenedor de la revista -->
+  <div id="flip-container">
+    <div id="flip-book">
+      <canvas id="canvas-front"></canvas>
+      <canvas id="canvas-back"></canvas>
+    </div>
+  </div>
+
+  <!-- Controles normales -->
+  <div id="navigation">
+    <button id="prev-btn">Anterior</button>
+    <button id="next-btn">Siguiente</button>
+  </div>
+  <div id="page-info">
+    Página <span id="page-num">1</span> de <span id="page-count">0</span>
+  </div>
+  <div id="controls">
+    <label for="page-input">Ir a página:</label>
+    <input type="number" id="page-input" min="1" value="1">
+    <button id="go-btn">Ir</button>
+    <button id="fs-btn">Pantalla completa</button>
+  </div>
+
+  <!-- Botones de navegación para pantalla completa (inicialmente ocultos) -->
+  <button id="fs-prev-btn" class="fs-nav-btn">&#9664;</button>
+  <button id="fs-next-btn" class="fs-nav-btn">&#9654;</button>
+
+  <script>
+    const url = 'CHECK_7MA.pdf'; // Asegúrate de que este PDF esté en la misma carpeta o ajusta la ruta.
+
+    const pdfjsLib = window['pdfjs-dist/build/pdf'];
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
+    let pdfDoc = null,
+        currentPage = 1,
+        scale = 1.0,
+        swipeStartX = 0,
+        swipeEndX = 0,
+        fsNavTimer; // Timer para ocultar los botones FS
+
+    const canvasFront = document.getElementById('canvas-front');
+    const canvasBack = document.getElementById('canvas-back');
+    const flipBook = document.getElementById('flip-book');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const pageNumElem = document.getElementById('page-num');
+    const pageCountElem = document.getElementById('page-count');
+    const pageInput = document.getElementById('page-input');
+    const goBtn = document.getElementById('go-btn');
+    const fsBtn = document.getElementById('fs-btn');
+    const fsPrevBtn = document.getElementById('fs-prev-btn');
+    const fsNextBtn = document.getElementById('fs-next-btn');
+    const navigationContainer = document.getElementById("navigation");
+    const controlsContainer = document.getElementById("controls");
+
+    // Función para renderizar una página en un canvas determinado
+    function renderPage(pageNumber, canvas, callback) {
+      pdfDoc.getPage(pageNumber).then(page => {
+        const viewport = page.getViewport({ scale: scale });
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        flipBook.style.height = viewport.height + "px";
+
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const renderContext = {
+          canvasContext: ctx,
+          viewport: viewport
+        };
+
+        page.render(renderContext).promise.then(callback);
+      });
+    }
+
+    function updatePageInfo() {
+      pageNumElem.textContent = currentPage;
+      prevBtn.disabled = (currentPage === 1);
+      nextBtn.disabled = (currentPage === pdfDoc.numPages);
+      pageInput.value = currentPage;
+    }
+
+    // Función para aplicar efecto flip
+    function flipPage(direction) {
+      const rotation = (direction === 'next') ? -180 : 180;
+      flipBook.style.transform = "rotateY(" + rotation + "deg)";
+    }
+
+    // Al finalizar la animación, se copia el contenido y se resetea la transformación
+    flipBook.addEventListener("transitionend", () => {
+      const frontCtx = canvasFront.getContext('2d');
+      frontCtx.clearRect(0, 0, canvasFront.width, canvasFront.height);
+      frontCtx.drawImage(canvasBack, 0, 0);
+
+      flipBook.style.transition = "none";
+      flipBook.style.transform = "none";
+      void flipBook.offsetWidth;
+      flipBook.style.transition = "transform 0.8s cubic-bezier(0.77, 0, 0.175, 1)";
+
+      updatePageInfo();
+    });
+
+    // Navegación estándar con botones
+    nextBtn.addEventListener('click', () => {
+      if (currentPage < pdfDoc.numPages) {
+        currentPage++;
+        renderPage(currentPage, canvasBack, () => {
+          flipPage('next');
+        });
+      }
+    });
+
+    prevBtn.addEventListener('click', () => {
+      if (currentPage > 1) {
+        currentPage--;
+        renderPage(currentPage, canvasBack, () => {
+          flipPage('prev');
+        });
+      }
+    });
+
+    // Botón "Ir a página"
+    goBtn.addEventListener('click', () => {
+      const desiredPage = parseInt(pageInput.value);
+      if (!isNaN(desiredPage) && desiredPage >= 1 && desiredPage <= pdfDoc.numPages && desiredPage !== currentPage) {
+        const direction = desiredPage > currentPage ? 'next' : 'prev';
+        currentPage = desiredPage;
+        renderPage(currentPage, canvasBack, () => {
+          flipPage(direction);
+        });
+      } else {
+        alert("Número de página inválido.");
+      }
+    });
+
+    // Función para mostrar/ocultar los controles FS
+    function showFSNavButtons() {
+      fsPrevBtn.style.opacity = 1;
+      fsNextBtn.style.opacity = 1;
+      // Reiniciamos el timer para ocultarlos
+      if (fsNavTimer) clearTimeout(fsNavTimer);
+      fsNavTimer = setTimeout(() => {
+        fsPrevBtn.style.opacity = 0;
+        fsNextBtn.style.opacity = 0;
+      }, 2000);
+    }
+
+    // Botones para pantalla completa
+    fsPrevBtn.addEventListener('click', () => {
+      if (currentPage > 1) {
+        currentPage--;
+        renderPage(currentPage, canvasBack, () => {
+          flipPage('prev');
+        });
+      }
+      showFSNavButtons();
+    });
+
+    fsNextBtn.addEventListener('click', () => {
+      if (currentPage < pdfDoc.numPages) {
+        currentPage++;
+        renderPage(currentPage, canvasBack, () => {
+          flipPage('next');
+        });
+      }
+      showFSNavButtons();
+    });
+
+    // Detección de swipe para pantalla completa
+    flipBook.addEventListener('touchstart', (e) => {
+      swipeStartX = e.changedTouches[0].screenX;
+    });
+    flipBook.addEventListener('touchend', (e) => {
+      swipeEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    });
+    function handleSwipe() {
+      const threshold = 50; // píxeles necesarios para considerar swipe
+      if (swipeStartX - swipeEndX > threshold) {
+        // Swipe a la izquierda: siguiente página
+        if (currentPage < pdfDoc.numPages) {
+          currentPage++;
+          renderPage(currentPage, canvasBack, () => {
+            flipPage('next');
+          });
+        }
+      } else if (swipeEndX - swipeStartX > threshold) {
+        // Swipe a la derecha: página anterior
+        if (currentPage > 1) {
+          currentPage--;
+          renderPage(currentPage, canvasBack, () => {
+            flipPage('prev');
+          });
+        }
+      }
+    }
+
+    // Botón para activar/salir de pantalla completa
+    fsBtn.addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          alert(`Error al intentar activar el modo pantalla completa: ${err.message}`);
+        });
+      } else {
+        document.exitFullscreen();
+      }
+    });
+
+    // Mostrar los botones FS al mover el mouse (cuando esté en pantalla completa)
+    document.addEventListener('mousemove', () => {
+      if (document.fullscreenElement) {
+        showFSNavButtons();
+      }
+    });
+    document.addEventListener('touchstart', () => {
+      if (document.fullscreenElement) {
+        showFSNavButtons();
+      }
+    });
+
+    // Escuchar cambios en el estado de pantalla completa para ocultar o mostrar controles
+    document.addEventListener("fullscreenchange", () => {
+      if (document.fullscreenElement) {
+        // En pantalla completa se ocultan controles normales y se muestran los FS
+        navigationContainer.style.display = "none";
+        controlsContainer.style.display = "none";
+        fsPrevBtn.style.opacity = 0;
+        fsNextBtn.style.opacity = 0;
+      } else {
+        // Fuera de pantalla completa se muestran controles normales y se ocultan botones FS
+        navigationContainer.style.display = "flex";
+        controlsContainer.style.display = "flex";
+        fsPrevBtn.style.opacity = 0;
+        fsNextBtn.style.opacity = 0;
+      }
+    });
+
+    // Cargar el PDF
+    pdfjsLib.getDocument(url).promise.then(pdf => {
+      pdfDoc = pdf;
+      pageCountElem.textContent = pdfDoc.numPages;
+      renderPage(currentPage, canvasFront, () => {
+        updatePageInfo();
+      });
+    }).catch(err => {
+      alert("No se pudo cargar el PDF. Verifica la ruta o el archivo.");
+      console.error(err);
+    });
+  </script>
+</body>
+</html>
