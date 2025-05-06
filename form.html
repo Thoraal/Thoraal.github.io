@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <title>Entrenamiento - Modificación de Usuario</title>
   <style>
-    body { font-family: Arial; background: #f0f2f5; margin: 0; padding: 20px; }
-    form { background: #fff; padding: 20px; border-radius: 8px; max-width: 900px; margin: auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    body { font-family: Arial, sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
+    form { background: #fff; padding: 20px; border-radius: 8px; max-width: 1000px; margin: auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); position: relative; }
     label { display: block; margin: 10px 0 5px; }
     input, select { width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc; }
     .row { display: flex; gap: 15px; flex-wrap: wrap; }
@@ -13,20 +13,19 @@
     .actions { text-align: right; margin-top: 20px; }
     button { background: #003366; color: #fff; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; }
     button:hover { background: #005599; }
+    h2 { margin-top: 30px; color: #003366; }
+    #timer { position: absolute; top: 10px; right: 20px; font-weight: bold; background: #e0e0e0; padding: 5px 10px; border-radius: 5px; }
+    #snapshot { margin-top: 20px; text-align: center; }
   </style>
 </head>
 <body>
   <form id="usuarioForm">
-    <h2>Datos del Usuario</h2>
+    <div id="timer">Tiempo: 00:00</div>
+
+    <h2>Datos Generales</h2>
     <div class="row">
-      <div class="col">
-        <label>ID Usuario (Generado)</label>
-        <input type="text" id="idUsuario" readonly />
-      </div>
-      <div class="col">
-        <label>RFC (Auto-generado)</label>
-        <input type="text" id="rfc" readonly />
-      </div>
+      <div class="col"><label>ID Usuario (Generado)</label><input type="text" id="idUsuario" readonly /></div>
+      <div class="col"><label>RFC (Auto-generado)</label><input type="text" id="rfc" readonly /></div>
     </div>
     <div class="row">
       <div class="col"><label>Nombre</label><input type="text" id="nombre" required /></div>
@@ -34,12 +33,26 @@
       <div class="col"><label>Apellido Materno</label><input type="text" id="apellidoM" required /></div>
     </div>
     <div class="row">
-      <div class="col">
-        <label>Fecha de Nacimiento</label>
-        <input type="date" id="fechaNacimiento" required />
+      <div class="col"><label>Fecha de Nacimiento</label><input type="date" id="fechaNacimiento" required /></div>
+      <div class="col"><label>Tipo de Persona</label>
+        <select required><option>Persona Física</option><option>Persona Moral</option></select>
       </div>
-      <div class="col">
-        <label>Tipo de Documento</label>
+      <div class="col"><label>Género</label>
+        <select required><option>Masculino</option><option>Femenino</option></select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col"><label>Nacionalidad</label>
+        <select required><option value="MEXICANA">MEXICANA</option><option value="CUBA">CUBA</option><option value="EXTRANJERA">EXTRANJERA</option></select>
+      </div>
+      <div class="col"><label>Residencia</label>
+        <select required><option>Residente permanente</option><option>Residente temporal</option></select>
+      </div>
+    </div>
+
+    <h2>Documento de Identificación</h2>
+    <div class="row">
+      <div class="col"><label>Tipo de Documento</label>
         <select id="tipoDoc" required>
           <option value="">Selecciona</option>
           <option value="Residencia">Residencia</option>
@@ -47,25 +60,50 @@
           <option value="Pasaporte">Pasaporte</option>
         </select>
       </div>
-      <div class="col">
-        <label>Número de Documento</label>
-        <input type="text" id="numeroDoc" required />
-      </div>
-      <div class="col">
-        <label>Fecha de Vencimiento</label>
-        <input type="date" id="vencimientoDoc" required />
-      </div>
+      <div class="col"><label>Número de Documento</label><input type="text" id="numeroDoc" required /></div>
+      <div class="col"><label>Fecha de Vencimiento</label><input type="date" id="vencimientoDoc" required /></div>
     </div>
+
+    <h2>Dirección</h2>
+    <div class="row">
+      <div class="col"><label>Calle</label><input type="text" required /></div>
+      <div class="col"><label>No. Exterior</label><input type="text" required /></div>
+      <div class="col"><label>No. Interior</label><input type="text" /></div>
+      <div class="col"><label>Manzana (MZA)</label><input type="text" /></div>
+    </div>
+    <div class="row">
+      <div class="col"><label>Colonia</label><input type="text" required /></div>
+      <div class="col"><label>Ciudad o Población</label><input type="text" required /></div>
+      <div class="col"><label>Alcaldía o Municipio</label><input type="text" required /></div>
+    </div>
+    <div class="row">
+      <div class="col"><label>Estado</label><input type="text" required /></div>
+      <div class="col"><label>País</label><input type="text" value="MÉXICO" required /></div>
+      <div class="col"><label>Código Postal</label><input type="text" required /></div>
+    </div>
+
     <div class="actions">
       <button type="submit">Aceptar</button>
     </div>
   </form>
 
+  <div id="snapshot"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script>
-    // Generar ID aleatorio
+    // Iniciar cronómetro
+    let start = Date.now();
+    let timerInterval = setInterval(() => {
+      let elapsed = Date.now() - start;
+      let mins = Math.floor(elapsed / 60000).toString().padStart(2, '0');
+      let secs = Math.floor((elapsed % 60000) / 1000).toString().padStart(2, '0');
+      document.getElementById('timer').textContent = `Tiempo: ${mins}:${secs}`;
+    }, 1000);
+
+    // ID aleatorio
     document.getElementById('idUsuario').value = Math.floor(100000 + Math.random() * 900000);
 
-    // Generar RFC básico al cambiar nombre o fecha
+    // RFC dinámico
     function generarRFC() {
       const nombre = document.getElementById('nombre').value.trim().toUpperCase();
       const apP = document.getElementById('apellidoP').value.trim().toUpperCase();
@@ -74,7 +112,7 @@
 
       if (nombre && apP && apM && fecha) {
         const [year, month, day] = fecha.split("-");
-        const rfc = apP[0] + (apP[1] || '') + apM[0] + nombre[0] + year.slice(2) + month + day;
+        const rfc = apP[0] + (apP[1] || 'X') + apM[0] + nombre[0] + year.slice(2) + month + day;
         document.getElementById('rfc').value = rfc;
       }
     }
@@ -84,10 +122,26 @@
     document.getElementById('apellidoM').addEventListener('input', generarRFC);
     document.getElementById('fechaNacimiento').addEventListener('change', generarRFC);
 
-    // Validar y mostrar mensaje
+    // Al enviar
     document.getElementById("usuarioForm").addEventListener("submit", function (e) {
       e.preventDefault();
-      alert("Formulario de entrenamiento llenado correctamente.");
+
+      const nombreAspirante = prompt("Ingresa tu nombre completo como aspirante:");
+      if (!nombreAspirante) {
+        alert("Debes ingresar tu nombre para guardar la evidencia.");
+        return;
+      }
+
+      clearInterval(timerInterval);
+      html2canvas(document.querySelector("#usuarioForm")).then(canvas => {
+        const imgData = canvas.toDataURL("image/png");
+
+        const div = document.getElementById("snapshot");
+        div.innerHTML = `<h2>Evidencia Capturada</h2>
+                         <p><strong>Aspirante:</strong> ${nombreAspirante}</p>
+                         <p><strong>Tiempo:</strong> ${document.getElementById("timer").textContent}</p>
+                         <img src="${imgData}" alt="Evidencia" style="max-width:100%;border:1px solid #ccc;" />`;
+      });
     });
   </script>
 </body>
