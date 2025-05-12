@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Financiera Avanzada</title>
+    <style>
+        /* --- :root Variables y Reset --- */
+        :root {
+            --primary-blue: #007AFF;
+            --secondary-blue-light: #EBF5FF; /* Un azul muy claro para fondos sutiles */
+            --green-accent: #34C759;
+            --light-gray: #f0f0f7; /* Un gris ligeramente más cálido */
+            --text-color: #1a1a1c;
+            --secondary-text-color: #8a8a8e;
+            --card-background: rgba(255, 255, 255, 0.85);
+            --card-background-opaque: #ffffff;
+            --divider-color: rgba(60, 60, 67, 0.22);
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --error-bg: rgba(255, 59, 48, 0.1);
+            --error-border: #ff3b30;
+            --font-family-system: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            --border-radius-main: 20px; /* Bordes más redondeados */
+            --border-radius-elements: 12px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-family-system);
+            line-height: 1.65; /* Ligeramente más espaciado */
+            background-color: var(--light-gray);
+            color: var(--text-color);
+            padding: clamp(10px, 3vw, 30px); /* Padding adaptable */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* --- Contenedor Principal --- */
+        .container {
+            width: 100%;
+            max-width: 760px; /* Un poco más de ancho */
+            background: transparent;
+            border-radius: var(--border-radius-main);
+            overflow: hidden;
+            box-shadow: 0 12px 40px var(--shadow-color);
+            transition: all 0.3s ease-in-out;
+        }
+        
+        .main-header {
+            padding: 30px 25px;
+            text-align: center;
+            color: var(--text-color);
+            background-color: var(--card-background-opaque);
+            border-bottom: 1px solid var(--divider-color);
+        }
+        .main-header h1 { font-size: clamp(1.6em, 4vw, 2em); font-weight: 600; margin: 0; }
+        
+        /* --- Tarjetas --- */
+        .card {
+            background-color: var(--card-background);
+            backdrop-filter: blur(30px) saturate(200%);
+            -webkit-backdrop-filter: blur(30px) saturate(200%);
+            padding: 30px 25px;
+            border-bottom: 1px solid var(--divider-color);
+        }
+        .card:last-of-type { border-bottom: none; } /* Asegurar que solo el último tipo de card no tenga borde */
+         .container > .card:last-child, .container > section:last-of-type .card:last-child {
+            border-bottom-left-radius: var(--border-radius-main);
+            border-bottom-right-radius: var(--border-radius-main);
+        }
+        .card h2 { font-size: clamp(1.3em, 3vw, 1.5em); font-weight: 500; margin-bottom: 25px; color: var(--primary-blue); }
+        .card h3 { font-size: clamp(1.1em, 2.5vw, 1.3em); font-weight: 600; margin-bottom: 15px; color: var(--text-color); }
+
+
+        /* --- Formularios y Elementos --- */
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 10px; font-weight: 500; font-size: 0.9em; color: var(--secondary-text-color); text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        .input-group { display: flex; gap: 12px; align-items: center; }
+        .input-group input[type="number"] { flex-grow: 2; } /* Dar más espacio al número */
+        .input-group select { flex-grow: 1; }
+
+        input[type="number"], select {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid var(--divider-color);
+            border-radius: var(--border-radius-elements);
+            background-color: rgba(235, 239, 242, 0.6); /* Fondo más integrado */
+            font-size: 1em;
+            color: var(--text-color);
+            transition: all 0.25s ease-in-out;
+        }
+        input[type="number"]:hover, select:hover { border-color: rgba(0,122,255,0.5); }
+        input[type="number"]:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3.5px rgba(0,122,255,0.2);
+            background-color: #fff;
+        }
+        select { appearance: none; -webkit-appearance: none; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M7%2010L12%2015L17%2010%22%20stroke%3D%22%238E8E93%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%3C/svg%3E'); background-repeat: no-repeat; background-position: right 15px center; background-size: 20px; padding-right: 45px; }
+
+        .action-button { display: block; width: 100%; padding: 16px 20px; background: linear-gradient(135deg, var(--primary-blue), #0052D4); color: white; border: none; border-radius: var(--border-radius-elements); cursor: pointer; font-size: 1.1em; font-weight: 500; text-align: center; transition: all 0.2s ease-in-out; margin-top: 15px; box-shadow: 0 4px 12px rgba(0,122,255,0.2); }
+        .action-button:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,122,255,0.3); }
+        .action-button:active { transform: translateY(0px) scale(0.99); box-shadow: 0 2px 8px rgba(0,122,255,0.25); }
+
+        /* --- Resultados --- */
+        .results-section { opacity: 0; max-height: 0; overflow: hidden; transform: translateY(20px); transition: opacity 0.6s ease-out, max-height 0.7s ease-out, transform 0.6s ease-out; }
+        .results-section.visible { opacity: 1; max-height: 5000px; /* Suficientemente grande */ transform: translateY(0); }
+        
+        .result-block { padding: 25px; background-color: var(--secondary-blue-light); border-top: 1px solid var(--divider-color); }
+        .result-block:first-child { border-top: none; }
+        .result-block h3 { color: var(--primary-blue); } /* Título de resultado destacado */
+        .result-block p { margin: 10px 0; font-size: 1.05em; color: var(--secondary-text-color); }
+        .result-block p strong { color: var(--text-color); font-weight: 500; }
+        .result-block p span { font-weight: 600; color: var(--green-accent); font-size: 1.1em; } /* Resultados numéricos destacados */
+
+        .procedure-display, .table-wrapper { font-family: Menlo, Monaco, Consolas, "Courier New", monospace; white-space: pre-wrap; background-color: rgba(225, 230, 235, 0.5); padding: 20px; border: 1px solid var(--divider-color); border-radius: var(--border-radius-elements); margin-top: 20px; font-size: 0.88em; overflow-x: auto; color: #2c3e50; }
+        .procedure-display h4, .table-wrapper h4 { font-family: var(--font-family-system); color: var(--text-color); font-size: 1.25em; margin-bottom: 15px; }
+
+        table { width: 100%; min-width: 550px; border-collapse: separate; border-spacing:0; margin-top: 0; }
+        th, td { border-bottom: 1px solid var(--divider-color); padding: 14px 12px; text-align: left; font-size: 0.98em; }
+        tr:last-child td { border-bottom: none; }
+        th { font-weight: 600; color: var(--secondary-text-color); text-transform: uppercase; font-size: 0.85em; background-color: rgba(235, 239, 242, 0.7); }
+        th:first-child { border-top-left-radius: 8px; }
+        th:last-child { border-top-right-radius: 8px; }
+        td:nth-child(1), th:nth-child(1) { text-align: center; font-weight: 500; }
+        td:nth-child(n+2), th:nth-child(n+2) { text-align: right; }
+        tbody tr:hover { background-color: rgba(0,122,255,0.03); }
+
+
+        /* --- Mensajes de Error --- */
+        .error-message { background-color: var(--error-bg); color: var(--error-border); padding: 15px; border: 1px solid var(--error-border); border-radius: var(--border-radius-elements); margin: 20px 0 0 0; text-align: center; font-weight: 500; opacity: 0; max-height: 0; overflow:hidden; transform: scaleY(0.8); transition: all 0.35s ease-in-out; }
+        .error-message.visible { opacity: 1; max-height: 100px; transform: scaleY(1); }
+
+        .hidden-input-group { display: none !important; }
+
+        /* --- Media Queries --- */
+        @media (max-width: 700px) {
+            body { padding: 0; }
+            .container { border-radius: 0; margin:0; max-width: 100%; box-shadow: none;}
+            .card { padding: 25px 20px; border-radius: 0 !important; }
+            .main-header h1 { font-size: 1.5em; }
+            .card h2 { font-size: 1.25em; }
+            .action-button { padding: 15px; font-size: 1em; }
+            input[type="number"], select, .result-block p { font-size: 0.95em; }
+            .procedure-display, .table-wrapper { font-size: 0.82em; }
+            .input-group { flex-direction: column; gap: 8px; }
+            .input-group input[type="number"], .input-group select { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="main-header">
+            <h1>Calculadora Financiera Pro</h1>
+        </header>
+
+        <section class="card input-section">
+            <h2>Configuración del Cálculo</h2>
+            <div class="form-group">
+                <label for="calculationType">Objetivo del Cálculo</label>
+                <select id="calculationType">
+                    <option value="solveFV">Calcular Monto Final e Interés (Valor Futuro)</option>
+                    <option value="solvePV">Calcular Monto Inicial (Valor Presente)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="interestType">Tipo de Interés</label>
+                <select id="interestType">
+                    <option value="compuesto">Compuesto</option>
+                    <option value="simple">Simple</option>
+                </select>
+            </div>
+
+            <div id="groupCapitalInicial" class="form-group">
+                <label for="capital">Capital Inicial (Monto Presente)</label>
+                <input type="number" id="capital" placeholder="Ej: 10000">
+            </div>
+            <div id="groupMontoFinal" class="form-group hidden-input-group">
+                <label for="montoFinal">Monto Final Deseado (Valor Futuro)</label>
+                <input type="number" id="montoFinal" placeholder="Ej: 15000">
+            </div>
+
+            <div class="form-group">
+                <label for="tasa">Tasa de Interés Nominal</label>
+                <div class="input-group">
+                    <input type="number" id="tasa" placeholder="Ej: 5">
+                    <select id="tasaPeriodo">
+                        <option value="anual">Anual (%)</option>
+                        <option value="mensual">Mensual (%)</option>
+                        <option value="diaria">Diaria (%)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="tiempo">Período Total</label>
+                <div class="input-group">
+                    <input type="number" id="tiempo" placeholder="Ej: 3">
+                    <select id="tiempoUnidad">
+                        <option value="anos">Años</option>
+                        <option value="meses">Meses</option>
+                        <option value="dias">Días</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="groupCompoundingFrequency" class="form-group">
+                <label for="compoundingFrequency">Frecuencia de Capitalización (Interés Compuesto)</label>
+                <select id="compoundingFrequency">
+                    <option value="anual">Anual (1/año)</option>
+                    <option value="semestral">Semestral (2/año)</option>
+                    <option value="trimestral">Trimestral (4/año)</option>
+                    <option value="mensual">Mensual (12/año)</option>
+                    <option value="diaria">Diaria (365/año)</option>
+                </select>
+            </div>
+            
+            <button id="calcularBtn" class="action-button">Calcular Ahora</button>
+        </section>
+        
+        <div id="error-message" class="error-message"></div>
+
+        <section id="resultados" class="results-section">
+             </section>
+    </div>
+
+    <script>
+    // Constantes
+    const DAYS_IN_YEAR = 365;
+    const MONTHS_IN_YEAR = 12;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Elementos de UI
+        const ui = {
+            calculationType: document.getElementById('calculationType'),
+            interestType: document.getElementById('interestType'),
+            groupCapitalInicial: document.getElementById('groupCapitalInicial'),
+            capital: document.getElementById('capital'),
+            groupMontoFinal: document.getElementById('groupMontoFinal'),
+            montoFinal: document.getElementById('montoFinal'),
+            tasa: document.getElementById('tasa'),
+            tasaPeriodo: document.getElementById('tasaPeriodo'),
+            tiempo: document.getElementById('tiempo'),
+            tiempoUnidad: document.getElementById('tiempoUnidad'),
+            groupCompoundingFrequency: document.getElementById('groupCompoundingFrequency'),
+            compoundingFrequency: document.getElementById('compoundingFrequency'),
+            calcularBtn: document.getElementById('calcularBtn'),
+            resultadosDiv: document.getElementById('resultados'),
+            errorMessageDiv: document.getElementById('error-message')
+        };
+
+        // --- Lógica para mostrar/ocultar campos ---
+        function updateInputVisibility() {
+            const calcType = ui.calculationType.value;
+            ui.groupCapitalInicial.classList.toggle('hidden-input-group', calcType === 'solvePV');
+            ui.groupMontoFinal.classList.toggle('hidden-input-group', calcType === 'solveFV');
+            
+            const isCompuesto = ui.interestType.value === 'compuesto';
+            ui.groupCompoundingFrequency.style.display = isCompuesto ? 'block' : 'none';
+        }
+        ui.calculationType.addEventListener('change', updateInputVisibility);
+        ui.interestType.addEventListener('change', updateInputVisibility);
+        updateInputVisibility(); // Llamada inicial
+
+        // --- Lógica de Cálculo Principal ---
+        ui.calcularBtn.addEventListener('click', function() {
+            ocultarError();
+            ui.resultadosDiv.innerHTML = ''; 
+            ui.resultadosDiv.classList.remove('visible');
+
+            try {
+                const inputs = gatherAndValidateInputs();
+                const results = performCalculation(inputs);
+                displayAllResults(results);
+            } catch (error) {
+                mostrarError(error.message || "Ocurrió un error desconocido.");
+            }
+        });
+        
+        // --- Recopilación y Validación de Entradas ---
+        function gatherAndValidateInputs() {
+            const calcType = ui.calculationType.value;
+            const interestType = ui.interestType.value;
+
+            const PV = parseFloat(ui.capital.value);
+            const FV_target = parseFloat(ui.montoFinal.value); // Target FV if solving for PV
+            
+            const tasaNominalInput = parseFloat(ui.tasa.value);
+            const tasaPeriodo = ui.tasaPeriodo.value;
+            const tiempoInput = parseFloat(ui.tiempo.value);
+            const tiempoUnidad = ui.tiempoUnidad.value;
+            const compoundingFreq = ui.compoundingFrequency.value;
+
+            // Validaciones
+            if (calcType === 'solveFV' && (isNaN(PV) || PV <= 0)) {
+                throw new Error("Ingrese un Capital Inicial válido y positivo.");
+            }
+            if (calcType === 'solvePV' && (isNaN(FV_target) || FV_target <= 0)) {
+                throw new Error("Ingrese un Monto Final Deseado válido y positivo.");
+            }
+            if (isNaN(tasaNominalInput) || tasaNominalInput < 0) {
+                 throw new Error("Ingrese una Tasa de Interés válida (no negativa).");
+            }
+             if (isNaN(tiempoInput) || tiempoInput <= 0) {
+                throw new Error("Ingrese un Período de Tiempo válido y positivo.");
+            }
+
+
+            return {
+                calcType, interestType, PV, FV_target,
+                tasaNominal: tasaNominalInput / 100, // Convertir a decimal aquí
+                tasaPeriodo, tiempo: tiempoInput, tiempoUnidad, compoundingFreq
+            };
+        }
+
+        // --- Normalización de Tasa y Tiempo ---
+        function normalizeInputs(inputs) {
+            let { tasaNominal, tasaPeriodo, tiempo, tiempoUnidad } = inputs;
+            
+            let tasaAnualEfectiva = tasaNominal;
+            if (tasaPeriodo === 'mensual') tasaAnualEfectiva *= MONTHS_IN_YEAR;
+            else if (tasaPeriodo === 'diaria') tasaAnualEfectiva *= DAYS_IN_YEAR;
+
+            let tiempoEnAnos = tiempo;
+            if (tiempoUnidad === 'meses') tiempoEnAnos /= MONTHS_IN_YEAR;
+            else if (tiempoUnidad === 'dias') tiempoEnAnos /= DAYS_IN_YEAR;
+            
+            return { ...inputs, tasaAnualEfectiva, tiempoEnAnos };
+        }
+
+        // --- Realizar Cálculos ---
+        function performCalculation(rawInputs) {
+            const inputs = normalizeInputs(rawInputs);
+            const { calcType, interestType, PV, FV_target, tasaAnualEfectiva, tiempoEnAnos, compoundingFreq } = inputs;
+            
+            let calculatedPV, calculatedFV, interest, procedureText, breakdownTableHTML = '';
+
+            if (interestType === 'simple') {
+                if (calcType === 'solveFV') {
+                    calculatedFV = PV * (1 + tasaAnualEfectiva * tiempoEnAnos);
+                    interest = calculatedFV - PV;
+                    procedureText = generateProcedure_SimpleFV(PV, tasaAnualEfectiva, tiempoEnAnos, calculatedFV, interest, inputs);
+                } else { // solvePV
+                    calculatedPV = FV_target / (1 + tasaAnualEfectiva * tiempoEnAnos);
+                    interest = FV_target - calculatedPV;
+                    procedureText = generateProcedure_SimplePV(FV_target, tasaAnualEfectiva, tiempoEnAnos, calculatedPV, interest, inputs);
+                }
+            } else { // Compuesto
+                const m = getCompoundingPeriodsPerYear(compoundingFreq);
+                const ratePerPeriod = tasaAnualEfectiva / m;
+                const totalPeriods = tiempoEnAnos * m;
+
+                if (calcType === 'solveFV') {
+                    calculatedFV = PV * Math.pow((1 + ratePerPeriod), totalPeriods);
+                    interest = calculatedFV - PV;
+                    procedureText = generateProcedure_CompoundFV(PV, tasaAnualEfectiva, tiempoEnAnos, m, ratePerPeriod, totalPeriods, calculatedFV, interest, inputs);
+                    breakdownTableHTML = generateCompoundBreakdownTable(PV, ratePerPeriod, totalPeriods, inputs.compoundingFreq);
+                } else { // solvePV
+                    calculatedPV = FV_target / Math.pow((1 + ratePerPeriod), totalPeriods);
+                    interest = FV_target - calculatedPV;
+                    procedureText = generateProcedure_CompoundPV(FV_target, tasaAnualEfectiva, tiempoEnAnos, m, ratePerPeriod, totalPeriods, calculatedPV, interest, inputs);
+                    // Podríamos generar la tabla aquí también, empezando desde el PV calculado hacia el FV
+                     breakdownTableHTML = generateCompoundBreakdownTable(calculatedPV, ratePerPeriod, totalPeriods, inputs.compoundingFreq);
+                }
+            }
+            return { calcType, calculatedPV, calculatedFV, interest, procedureText, breakdownTableHTML };
+        }
+
+        // --- Generadores de Texto de Procedimiento (Ejemplos) ---
+        function generateProcedure_SimpleFV(PV, iAnual, tAnos, FV, I, originalInputs) {
+            return `Cálculo de Monto Final (Interés Simple):
+1. Datos Originales:
+   Capital Inicial (PV) = ${formatCurrency(PV)}
+   Tasa Nominal = ${originalInputs.tasaNominal*100}% ${originalInputs.tasaPeriodo}
+   Tiempo = ${originalInputs.tiempo} ${originalInputs.tiempoUnidad}
+
+2. Conversiones a Base Anual:
+   Tasa Anual Efectiva (i) = ${(iAnual*100).toFixed(4)}%
+   Tiempo en Años (t) = ${tAnos.toFixed(4)} años
+
+3. Fórmula Interés Simple: I = PV * i * t
+   I = ${formatCurrency(PV)} * ${iAnual.toFixed(6)} * ${tAnos.toFixed(4)} = ${formatCurrency(I)}
+
+4. Fórmula Monto Final: FV = PV + I
+   FV = ${formatCurrency(PV)} + ${formatCurrency(I)} = ${formatCurrency(FV)}`;
+        }
+        function generateProcedure_SimplePV(FV, iAnual, tAnos, PV, I, originalInputs) {
+             return `Cálculo de Monto Inicial (Interés Simple):
+1. Datos Originales:
+   Monto Final (FV) = ${formatCurrency(FV)}
+   Tasa Nominal = ${originalInputs.tasaNominal*100}% ${originalInputs.tasaPeriodo}
+   Tiempo = ${originalInputs.tiempo} ${originalInputs.tiempoUnidad}
+
+2. Conversiones a Base Anual:
+   Tasa Anual Efectiva (i) = ${(iAnual*100).toFixed(4)}%
+   Tiempo en Años (t) = ${tAnos.toFixed(4)} años
+
+3. Fórmula Valor Presente (Simple): PV = FV / (1 + i * t)
+   PV = ${formatCurrency(FV)} / (1 + ${iAnual.toFixed(6)} * ${tAnos.toFixed(4)})
+   PV = ${formatCurrency(FV)} / ${(1 + iAnual * tAnos).toFixed(8)} = ${formatCurrency(PV)}
+
+4. Interés Total: I = FV - PV
+   I = ${formatCurrency(FV)} - ${formatCurrency(PV)} = ${formatCurrency(I)}`;
+        }
+        function generateProcedure_CompoundFV(PV, iAnual, tAnos, m, iPeriodo, nTotal, FV, I, originalInputs) {
+            return `Cálculo de Monto Final (Interés Compuesto):
+1. Datos Originales:
+   Capital Inicial (PV) = ${formatCurrency(PV)}
+   Tasa Nominal = ${originalInputs.tasaNominal*100}% ${originalInputs.tasaPeriodo}
+   Tiempo = ${originalInputs.tiempo} ${originalInputs.tiempoUnidad}
+   Frec. Capitalización = ${originalInputs.compoundingFreq} (${m} veces/año)
+
+2. Conversiones:
+   Tasa Anual Efectiva (i_anual) = ${(iAnual*100).toFixed(4)}%
+   Tiempo en Años (N_años) = ${tAnos.toFixed(4)} años
+   Tasa por período de cap. (i_p) = i_anual / m = ${iAnual.toFixed(6)} / ${m} = ${iPeriodo.toFixed(8)}
+   Número total de períodos (n_total) = N_años * m = ${tAnos.toFixed(4)} * ${m} = ${nTotal.toFixed(4)}
+
+3. Fórmula Monto Compuesto: FV = PV * (1 + i_p)^n_total
+   FV = ${formatCurrency(PV)} * (1 + ${iPeriodo.toFixed(8)})^${nTotal.toFixed(4)}
+   FV = ${formatCurrency(PV)} * ${(Math.pow((1 + iPeriodo), nTotal)).toFixed(8)} = ${formatCurrency(FV)}
+
+4. Interés Compuesto Total: I = FV - PV
+   I = ${formatCurrency(FV)} - ${formatCurrency(PV)} = ${formatCurrency(I)}`;
+        }
+        function generateProcedure_CompoundPV(FV, iAnual, tAnos, m, iPeriodo, nTotal, PV, I, originalInputs) {
+            return `Cálculo de Monto Inicial (Interés Compuesto):
+1. Datos Originales:
+   Monto Final (FV) = ${formatCurrency(FV)}
+   Tasa Nominal = ${originalInputs.tasaNominal*100}% ${originalInputs.tasaPeriodo}
+   Tiempo = ${originalInputs.tiempo} ${originalInputs.tiempoUnidad}
+   Frec. Capitalización = ${originalInputs.compoundingFreq} (${m} veces/año)
+
+2. Conversiones:
+   Tasa Anual Efectiva (i_anual) = ${(iAnual*100).toFixed(4)}%
+   Tiempo en Años (N_años) = ${tAnos.toFixed(4)} años
+   Tasa por período de cap. (i_p) = i_anual / m = ${iAnual.toFixed(6)} / ${m} = ${iPeriodo.toFixed(8)}
+   Número total de períodos (n_total) = N_años * m = ${tAnos.toFixed(4)} * ${m} = ${nTotal.toFixed(4)}
+
+3. Fórmula Valor Presente (Compuesto): PV = FV / (1 + i_p)^n_total
+   PV = ${formatCurrency(FV)} / (1 + ${iPeriodo.toFixed(8)})^${nTotal.toFixed(4)}
+   PV = ${formatCurrency(FV)} / ${(Math.pow((1 + iPeriodo), nTotal)).toFixed(8)} = ${formatCurrency(PV)}
+
+4. Interés Total: I = FV - PV
+   I = ${formatCurrency(FV)} - ${formatCurrency(PV)} = ${formatCurrency(I)}`;
+        }
+        
+        // --- Generador de Tabla de Desglose ---
+        function generateCompoundBreakdownTable(startingPrincipal, ratePerPeriod, totalPeriods, compoundingFreqDesc) {
+            if (totalPeriods > 500) { // Limitar la tabla para evitar sobrecarga del navegador
+                 return `<p>(Tabla de desglose omitida por exceder los 500 períodos para visualización)</p>`;
+            }
+            if (totalPeriods <= 0 || isNaN(totalPeriods)) {
+                return "<p>(No hay períodos para desglosar)</p>";
+            }
+
+            let tableHTML = `<div class="table-wrapper"><h4>Desglose por Período (${compoundingFreqDesc})</h4><table>
+                <thead><tr><th>Período</th><th>Saldo Inicial</th><th>Interés del Período</th><th>Saldo Final</th></tr></thead>
+                <tbody>`;
+            
+            let currentBalance = startingPrincipal;
+            for (let i = 1; i <= Math.round(totalPeriods); i++) { // Asegurar que totalPeriods sea entero para el loop
+                const interestForPeriod = currentBalance * ratePerPeriod;
+                const endingBalance = currentBalance + interestForPeriod;
+                tableHTML += `<tr>
+                                <td>${i}</td>
+                                <td>${formatCurrency(currentBalance)}</td>
+                                <td>${formatCurrency(interestForPeriod)}</td>
+                                <td>${formatCurrency(endingBalance)}</td>
+                              </tr>`;
+                currentBalance = endingBalance;
+            }
+            tableHTML += `</tbody></table></div>`;
+            return tableHTML;
+        }
+
+        // --- Mostrar Resultados en UI ---
+        function displayAllResults(results) {
+            const { calcType, calculatedPV, calculatedFV, interest, procedureText, breakdownTableHTML } = results;
+            
+            let mainValue, mainValueLabel, interestLabel;
+
+            if (calcType === 'solveFV') {
+                mainValue = calculatedFV;
+                mainValueLabel = "Monto Final Calculado (FV)";
+                interestLabel = "Interés Total Ganado";
+            } else { // solvePV
+                mainValue = calculatedPV;
+                mainValueLabel = "Monto Inicial Calculado (PV)";
+                interestLabel = "Interés Total Implícito";
+            }
+
+            const resultHTML = `
+                <div class="card result-block">
+                    <h3>Resultados del Cálculo</h3>
+                    <p><strong>${mainValueLabel}:</strong> <span>${formatCurrency(mainValue)}</span></p>
+                    <p><strong>${interestLabel}:</strong> <span>${formatCurrency(interest)}</span></p>
+                    <div class="procedure-display">
+                        <h4>Procedimiento Detallado:</h4>
+                        <pre>${procedureText}</pre>
+                    </div>
+                    ${breakdownTableHTML || ''} 
+                </div>`;
+            ui.resultadosDiv.innerHTML = resultHTML;
+            ui.resultadosDiv.classList.add('visible');
+            // Esperar a que la transición de visibilidad comience antes de hacer scroll
+            setTimeout(() => {
+                ui.resultadosDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 100); 
+        }
+        
+        // --- Funciones Auxiliares ---
+        function getCompoundingPeriodsPerYear(freq) {
+            const map = {'anual': 1, 'semestral': 2, 'trimestral': 4, 'mensual': 12, 'diaria': DAYS_IN_YEAR};
+            return map[freq] || 1;
+        }
+        function formatCurrency(value) {
+            if (typeof value !== 'number' || isNaN(value)) return '$0.00';
+            // Usar un mínimo de 2 y máximo de 4 decimales para mayor precisión si es necesario, pero para moneda final, 2 es usual.
+            return new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value);
+        }
+        function mostrarError(mensaje) {
+            ui.errorMessageDiv.textContent = mensaje;
+            ui.errorMessageDiv.classList.add('visible');
+            ui.resultadosDiv.classList.remove('visible'); // Ocultar resultados si hay error
+        }
+        function ocultarError() { ui.errorMessageDiv.classList.remove('visible'); }
+
+    }); // Fin de DOMContentLoaded
+    </script>
+</body>
+</html>
