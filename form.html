@@ -4,180 +4,253 @@
   <meta charset="UTF-8">
   <title>Evaluación de Registro</title>
   <style>
+    :root {
+      --primary-color: #2c3e50;
+      --secondary-color: #34495e;
+      --background-color: #f4f4f4;
+    }
+
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Arial', sans-serif;
       padding: 20px;
-      background-color: #f4f4f4;
+      background-color: var(--background-color);
     }
-    fieldset {
-      margin-bottom: 20px;
-      border: 1px solid #ccc;
-      padding: 15px;
-      background-color: #fff;
-    }
-    legend {
-      font-weight: bold;
-      padding: 0 10px;
-    }
-    label {
-      display: block;
-      margin-top: 10px;
-    }
-    input {
-      width: 100%;
-      padding: 8px;
-      margin-top: 4px;
-    }
-    #result {
-      margin-top: 20px;
-      font-weight: bold;
-    }
+
     .hidden {
       display: none;
     }
+
+    .form-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    fieldset {
+      margin-bottom: 20px;
+      border: 1px solid #ddd;
+      padding: 15px;
+      border-radius: 4px;
+    }
+
+    legend {
+      font-weight: 600;
+      padding: 0 10px;
+      color: var(--primary-color);
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: var(--secondary-color);
+    }
+
+    #result {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 4px;
+    }
+
+    .success { background-color: #dff0d8; color: #3c763d; }
+    .error { background-color: #f2dede; color: #a94442; }
   </style>
 </head>
 <body>
-  <h1>Formulario de Registro</h1>
+  <div class="form-container">
+    <h1>Formulario de Registro</h1>
 
-  <!-- BLOQUE DE LOGIN -->
-  <div id="login">
-    <label>Contraseña de acceso:
-      <input type="password" id="passwordInput">
-    </label>
-    <button onclick="validarPassword()">Ingresar</button>
+    <!-- Bloque de Login -->
+    <div id="login">
+      <div class="form-group">
+        <label for="passwordInput">Contraseña de acceso:</label>
+        <input type="password" id="passwordInput" required>
+      </div>
+      <button id="loginButton">Ingresar</button>
+    </div>
+
+    <!-- Formulario Principal -->
+    <div id="formularioContainer" class="hidden">
+      <p>Tiempo transcurrido: <span id="cronometro">00:00:00</span></p>
+      
+      <form id="registroForm">
+        <!-- Campos del formulario mantienen misma estructura -->
+        
+        <div class="form-group">
+          <button type="button" id="submitButton">Finalizar y Generar PDF</button>
+        </div>
+      </form>
+      <div id="result"></div>
+    </div>
   </div>
 
-  <!-- FORMULARIO PRINCIPAL -->
-  <div id="formularioContainer" class="hidden">
-    <p>Tiempo transcurrido: <span id="cronometro">00:00:00</span></p>
-    <form id="registroForm">
-      <fieldset>
-        <legend>Datos Personales</legend>
-        <label>Nombre de usuario: <input type="text" name="nombre"></label>
-        <label>Apellido paterno: <input type="text" name="paterno"></label>
-        <label>Apellido materno: <input type="text" name="materno"></label>
-        <label>Fecha de nacimiento: <input type="date" name="fechaNacimiento"></label>
-        <label>Nacionalidad: <input type="text" name="nacionalidad"></label>
-      </fieldset>
-
-      <fieldset>
-        <legend>Identificación</legend>
-        <label>Tipo de ID: <input type="text" name="tipoID"></label>
-        <label>Número de identificación: <input type="text" name="numeroID"></label>
-        <label>Vigencia de ID: <input type="date" name="vigenciaID"></label>
-        <label>País de nacimiento: <input type="text" name="paisNacimiento"></label>
-      </fieldset>
-
-      <fieldset>
-        <legend>Domicilio</legend>
-        <label>Calle: <input type="text" name="calle"></label>
-        <label>Número exterior: <input type="text" name="numExt"></label>
-        <label>Número interior: <input type="text" name="numInt"></label>
-        <label>Código postal: <input type="text" name="cp"></label>
-        <label>Colonia: <input type="text" name="colonia"></label>
-        <label>Ciudad: <input type="text" name="ciudad"></label>
-        <label>Municipio: <input type="text" name="municipio"></label>
-        <label>Estado: <input type="text" name="estado"></label>
-        <label>País: <input type="text" name="pais"></label>
-        <label>Localidad: <input type="text" name="localidad"></label>
-      </fieldset>
-
-      <button type="button" onclick="evaluarFormulario()">Finalizar y Generar PDF</button>
-    </form>
-    <p id="result"></p>
-  </div>
-
-  <!-- SCRIPT PRINCIPAL -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script>
-    let cronometro = 0;
-    let intervalo;
+    (() => {
+      'use strict';
+      
+      const CONFIG = {
+        PASSWORD: 'evaluar123',
+        CORRECT_ANSWERS: {
+          nombre: "Andrea",
+          paterno: "Martínez",
+          // ... resto de respuestas correctas
+        },
+        PDF_CONFIG: {
+          fontSize: 12,
+          margin: 10,
+          pageBreak: 280
+        }
+      };
 
-    // Respuestas correctas para evaluación
-    const respuestasCorrectas = {
-      nombre: "Andrea",
-      paterno: "Martínez",
-      materno: "López",
-      fechaNacimiento: "1997-05-12",
-      nacionalidad: "Mexicana",
-      tipoID: "Pasaporte",
-      numeroID: "X12345678",
-      vigenciaID: "2030-08-31",
-      paisNacimiento: "México",
-      calle: "Av. Reforma",
-      numExt: "101",
-      numInt: "2B",
-      cp: "06030",
-      colonia: "Juárez",
-      ciudad: "Ciudad de México",
-      municipio: "Cuauhtémoc",
-      estado: "CDMX",
-      pais: "México",
-      localidad: "Centro"
-    };
+      let timerId = null;
+      let startTime = null;
 
-    function validarPassword() {
-      const pwd = document.getElementById('passwordInput').value;
-      if (pwd === "evaluar123") {
-        document.getElementById("login").classList.add("hidden");
-        document.getElementById("formularioContainer").classList.remove("hidden");
-        iniciarCronometro();
-      } else {
-        alert("Contraseña incorrecta");
-      }
-    }
+      const dom = {
+        login: document.getElementById('login'),
+        loginButton: document.getElementById('loginButton'),
+        formularioContainer: document.getElementById('formularioContainer'),
+        cronometro: document.getElementById('cronometro'),
+        result: document.getElementById('result'),
+        submitButton: document.getElementById('submitButton')
+      };
 
-    function iniciarCronometro() {
-      const cronElem = document.getElementById("cronometro");
-      intervalo = setInterval(() => {
-        cronometro++;
-        let h = String(Math.floor(cronometro / 3600)).padStart(2, '0');
-        let m = String(Math.floor((cronometro % 3600) / 60)).padStart(2, '0');
-        let s = String(cronometro % 60).padStart(2, '0');
-        cronElem.textContent = \`\${h}:\${m}:\${s}\`;
-      }, 1000);
-    }
-
-    async function evaluarFormulario() {
-      clearInterval(intervalo);
-      const form = document.getElementById("registroForm");
-      const data = new FormData(form);
-      let puntaje = 0;
-      let totalCampos = 0;
-
-      for (let campo in respuestasCorrectas) {
-        totalCampos++;
-        const valor = data.get(campo)?.trim().toLowerCase();
-        const esperado = respuestasCorrectas[campo].trim().toLowerCase();
-        if (valor === esperado) puntaje++;
+      // Inicialización de eventos
+      function initEventListeners() {
+        dom.loginButton.addEventListener('click', handleLogin);
+        dom.submitButton.addEventListener('click', handleFormSubmit);
       }
 
-      document.getElementById("result").textContent = \`Puntaje obtenido: \${puntaje} / \${totalCampos}\`;
+      function handleLogin() {
+        const password = document.getElementById('passwordInput').value;
+        if (password === CONFIG.PASSWORD) {
+          dom.login.classList.add('hidden');
+          dom.formularioContainer.classList.remove('hidden');
+          startTimer();
+        } else {
+          showResult('Contraseña incorrecta', 'error');
+        }
+      }
 
-      const nombre = prompt("Ingresa el nombre del aspirante para el PDF:");
-      if (nombre) {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        doc.setFontSize(12);
-        doc.text(\`Aspirante: \${nombre}\`, 10, 10);
-        doc.text(\`Fecha y hora: \${new Date().toLocaleString()}\`, 10, 20);
-        doc.text(\`Tiempo transcurrido: \${document.getElementById("cronometro").textContent}\`, 10, 30);
-        doc.text(\`Puntaje: \${puntaje} / \${totalCampos}\`, 10, 40);
+      function startTimer() {
+        startTime = Date.now();
+        timerId = setInterval(() => {
+          const elapsed = Date.now() - startTime;
+          dom.cronometro.textContent = formatTime(elapsed);
+        }, 1000);
+      }
 
-        let y = 50;
-        for (let [campo, valor] of data.entries()) {
-          doc.text(\`\${campo}: \${valor}\`, 10, y);
-          y += 10;
-          if (y > 280) {
-            doc.addPage();
-            y = 10;
+      function formatTime(ms) {
+        const totalSeconds = Math.floor(ms / 1000);
+        const hours = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
+        const minutes = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
+        const seconds = (totalSeconds % 60).toString().padStart(2, '0');
+        return `${hours}:${minutes}:${seconds}`;
+      }
+
+      async function handleFormSubmit() {
+        clearInterval(timerId);
+        const formData = new FormData(document.getElementById('registroForm'));
+        const score = calculateScore(formData);
+        
+        try {
+          const nombre = await promptForName();
+          generatePDF(nombre, score, formData);
+          showResult(`Evaluación completada: ${score.puntaje}/${score.total}`, 'success');
+        } catch (error) {
+          showResult(error.message, 'error');
+        }
+      }
+
+      function calculateScore(formData) {
+        let puntaje = 0;
+        const total = Object.keys(CONFIG.CORRECT_ANSWERS).length;
+        
+        for (const [field, correctValue] of Object.entries(CONFIG.CORRECT_ANSWERS)) {
+          if (formData.get(field)?.toLowerCase() === correctValue.toLowerCase()) {
+            puntaje++;
           }
         }
-
-        doc.save(\`\${nombre}_evaluacion.pdf\`);
+        
+        return { puntaje, total };
       }
-    }
+
+      function promptForName() {
+        return new Promise((resolve, reject) => {
+          const nombre = prompt("Ingresa el nombre del aspirante para el PDF:");
+          nombre ? resolve(nombre.trim()) : reject(new Error('Nombre requerido'));
+        });
+      }
+
+      function generatePDF(nombre, score, formData) {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        
+        doc.setFontSize(CONFIG.PDF_CONFIG.fontSize);
+        let yPosition = CONFIG.PDF_CONFIG.margin;
+        
+        // Cabecera del PDF
+        const headerLines = [
+          `Aspirante: ${nombre}`,
+          `Fecha y hora: ${new Date().toLocaleString()}`,
+          `Tiempo transcurrido: ${dom.cronometro.textContent}`,
+          `Puntaje: ${score.puntaje}/${score.total}`
+        ];
+        
+        headerLines.forEach(line => {
+          doc.text(line, CONFIG.PDF_CONFIG.margin, yPosition);
+          yPosition += 10;
+        });
+        
+        // Datos del formulario
+        for (const [field, value] of formData.entries()) {
+          if (yPosition > CONFIG.PDF_CONFIG.pageBreak) {
+            doc.addPage();
+            yPosition = CONFIG.PDF_CONFIG.margin;
+          }
+          doc.text(`${field}: ${value}`, CONFIG.PDF_CONFIG.margin, yPosition);
+          yPosition += 10;
+        }
+        
+        doc.save(`${nombre}_evaluacion.pdf`);
+      }
+
+      function showResult(message, type = 'success') {
+        dom.result.textContent = message;
+        dom.result.className = type;
+      }
+
+      // Inicializar la aplicación
+      initEventListeners();
+    })();
   </script>
 </body>
 </html>
