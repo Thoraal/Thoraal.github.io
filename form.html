@@ -5,22 +5,79 @@
   <title>Formulario de Entrenamiento</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
-    body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
-    .container { max-width: 900px; margin: 40px auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-    h2, h3 { text-align: center; }
-    form { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-    label { font-weight: bold; }
-    input, select { padding: 8px; border: 1px solid #ccc; border-radius: 4px; width: 100%; }
-    .full { grid-column: span 2; }
-    .btn { grid-column: span 2; padding: 10px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
-    .btn:hover { background: #0056b3; }
-    #login { max-width: 400px; margin: 100px auto; text-align: center; background: white; padding: 30px; border-radius: 8px; }
-    .timer { text-align: center; font-size: 18px; margin-bottom: 20px; display: none; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2, h3 {
+      text-align: center;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    label {
+      font-weight: bold;
+    }
+    input, select {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      width: 100%;
+    }
+    .btn {
+      padding: 10px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    .btn:hover {
+      background: #0056b3;
+    }
+    #login {
+      max-width: 400px;
+      margin: 100px auto;
+      text-align: center;
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+    }
+    .timer {
+      text-align: center;
+      font-size: 18px;
+      margin-bottom: 20px;
+      display: none;
+    }
+    fieldset {
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 15px;
+    }
+    legend {
+      font-weight: bold;
+      font-size: 16px;
+      padding: 0 10px;
+    }
   </style>
 </head>
 <body>
 
-<!-- Login -->
+<!-- Pantalla de login -->
 <div id="login">
   <h3>Ingrese la contraseña para acceder</h3>
   <input type="password" id="password" placeholder="Contraseña">
@@ -33,39 +90,62 @@
 <div class="container" id="formulario" style="display:none;">
   <h2>Formulario de Entrenamiento</h2>
   <div class="timer" id="timer-container">Tiempo transcurrido: <span id="cronometro">00:00:00</span></div>
-  
+
   <form id="form">
-    <label>Nombre de usuario:</label><input name="nombre" required>
-    <label>Apellido paterno:</label><input name="paterno" required>
-    <label>Apellido materno:</label><input name="materno">
-    <label>Tipo de ID oficial:</label>
-    <select name="tipoID" required>
-      <option value="">Seleccione</option>
-      <option>INE</option><option>Licencia</option><option>Pasaporte</option><option>Residencia</option>
-    </select>
-    <label>Número de identificación:</label><input name="numeroID" required>
-    <label>Fecha de nacimiento:</label><input type="date" name="fechaNacimiento" required>
-    <label>Nacionalidad:</label>
-    <select name="nacionalidad" required>
-      <option value="">Seleccione</option>
-      <option>Mexicana</option><option>Estadounidense</option><option>Colombiana</option>
-    </select>
-    <label>Vigencia de la identificación:</label><input type="date" name="vigenciaID" required>
-    <label>País de nacimiento:</label><input name="paisNacimiento" required>
-    <label>Calle:</label><input name="calle" required>
-    <label>Número exterior:</label><input name="numExt" required>
-    <label>Número interior:</label><input name="numInt">
-    <label>Código postal:</label><input name="cp" required>
-    <label>Colonia:</label><input name="colonia" required>
-    <label>Ciudad:</label><input name="ciudad" required>
-    <label>Municipio o alcaldía:</label><input name="municipio" required>
-    <label>País:</label><input name="pais" required>
-    <label>Estado:</label>
-    <select name="estado" required>
-      <option value="">Seleccione</option>
-      <option>CDMX</option><option>Jalisco</option><option>Yucatán</option>
-    </select>
-    <label>Localidad:</label><input name="localidad">
+    <fieldset>
+      <legend>Datos personales</legend>
+      <label>Nombre de usuario:</label><input name="nombre" required>
+      <label>Apellido paterno:</label><input name="paterno" required>
+      <label>Apellido materno:</label><input name="materno">
+      <label>Fecha de nacimiento:</label><input type="date" name="fechaNacimiento" required>
+      <label>Nacionalidad:</label>
+      <select name="nacionalidad" required>
+        <option value="">Seleccione</option>
+        <option>Mexicana</option>
+        <option>Estadounidense</option>
+        <option>Colombiana</option>
+      </select>
+    </fieldset>
+
+    <fieldset>
+      <legend>Identificación oficial</legend>
+      <label>Tipo de ID oficial:</label>
+      <select name="tipoID" required>
+        <option value="">Seleccione</option>
+        <option>INE</option>
+        <option>Licencia</option>
+        <option>Pasaporte</option>
+        <option>Residencia</option>
+      </select>
+      <label>Número de identificación:</label><input name="numeroID" required>
+      <label>Vigencia de la identificación:</label><input type="date" name="vigenciaID" required>
+    </fieldset>
+
+    <fieldset>
+      <legend>Lugar de nacimiento</legend>
+      <label>País de nacimiento:</label><input name="paisNacimiento" required>
+    </fieldset>
+
+    <fieldset>
+      <legend>Domicilio actual</legend>
+      <label>Calle, avenida o vía:</label><input name="calle" required>
+      <label>Número exterior:</label><input name="numExt" required>
+      <label>Número interior:</label><input name="numInt">
+      <label>Código postal:</label><input name="cp" required>
+      <label>Colonia:</label><input name="colonia" required>
+      <label>Ciudad o población:</label><input name="ciudad" required>
+      <label>Municipio o alcaldía:</label><input name="municipio" required>
+      <label>Estado:</label>
+      <select name="estado" required>
+        <option value="">Seleccione</option>
+        <option>CDMX</option>
+        <option>Jalisco</option>
+        <option>Yucatán</option>
+      </select>
+      <label>País:</label><input name="pais" required>
+      <label>Localidad:</label><input name="localidad">
+    </fieldset>
+
     <button class="btn" type="submit">Generar PDF</button>
   </form>
 </div>
@@ -112,6 +192,7 @@
     const horaStr = fechaActual.toLocaleTimeString();
 
     let nombrePDF = prompt("Ingrese el nombre del aspirante para el archivo PDF:");
+    if (!nombrePDF) nombrePDF = "aspirante";
 
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
@@ -124,7 +205,6 @@
     doc.text(`Fecha: ${fechaStr}   Hora: ${horaStr}   Tiempo total: ${tiempo}`, 20, y);
     y += 10;
 
-    doc.setFontSize(12);
     doc.setLineWidth(0.5);
     doc.line(20, y, 190, y);
     y += 10;
@@ -138,7 +218,7 @@
       }
     }
 
-    doc.save(`${nombrePDF || 'aspirante'}_${fechaActual.toISOString().slice(0,10)}.pdf`);
+    doc.save(`${nombrePDF}_${fechaActual.toISOString().slice(0,10)}.pdf`);
   });
 
   function formatearCampo(texto) {
