@@ -5,35 +5,35 @@
   <title>Formulario de Entrenamiento</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
-    body { font-family: Arial, sans-serif; background: #f3f3f3; margin: 0; padding: 0; }
-    .container { max-width: 800px; margin: 40px auto; padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-    h2, h3 { text-align: center; margin-bottom: 20px; }
+    body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
+    .container { max-width: 900px; margin: 40px auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    h2, h3 { text-align: center; }
     form { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
     label { font-weight: bold; }
-    input, select { padding: 8px; width: 100%; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
-    .full-width { grid-column: span 2; }
-    button { grid-column: span 2; padding: 10px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
-    button:hover { background: #0056b3; }
-    .timer { text-align: center; font-size: 18px; margin-bottom: 10px; }
-    #formulario, #timer-container { display: none; }
-    .login { max-width: 400px; margin: 100px auto; background: white; padding: 30px; border-radius: 8px; text-align: center; }
+    input, select { padding: 8px; border: 1px solid #ccc; border-radius: 4px; width: 100%; }
+    .full { grid-column: span 2; }
+    .btn { grid-column: span 2; padding: 10px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+    .btn:hover { background: #0056b3; }
+    #login { max-width: 400px; margin: 100px auto; text-align: center; background: white; padding: 30px; border-radius: 8px; }
+    .timer { text-align: center; font-size: 18px; margin-bottom: 20px; display: none; }
   </style>
 </head>
 <body>
 
-<!-- LOGIN -->
-<div class="login" id="login">
-  <h3>Ingrese la contraseña para continuar</h3>
+<!-- Login -->
+<div id="login">
+  <h3>Ingrese la contraseña para acceder</h3>
   <input type="password" id="password" placeholder="Contraseña">
   <br><br>
-  <button onclick="verificarPassword()">Entrar</button>
+  <button class="btn" onclick="verificarPassword()">Entrar</button>
   <p id="error" style="color:red; display:none;">Contraseña incorrecta</p>
 </div>
 
-<!-- FORMULARIO -->
-<div class="container" id="formulario">
+<!-- Formulario -->
+<div class="container" id="formulario" style="display:none;">
   <h2>Formulario de Entrenamiento</h2>
-  <div id="timer-container" class="timer">Tiempo restante: <span id="timer">10:00</span></div>
+  <div class="timer" id="timer-container">Tiempo transcurrido: <span id="cronometro">00:00:00</span></div>
+  
   <form id="form">
     <label>Nombre de usuario:</label><input name="nombre" required>
     <label>Apellido paterno:</label><input name="paterno" required>
@@ -50,7 +50,7 @@
       <option value="">Seleccione</option>
       <option>Mexicana</option><option>Estadounidense</option><option>Colombiana</option>
     </select>
-    <label>Vigencia de la identificación oficial:</label><input type="date" name="vigenciaID" required>
+    <label>Vigencia de la identificación:</label><input type="date" name="vigenciaID" required>
     <label>País de nacimiento:</label><input name="paisNacimiento" required>
     <label>Calle:</label><input name="calle" required>
     <label>Número exterior:</label><input name="numExt" required>
@@ -58,7 +58,7 @@
     <label>Código postal:</label><input name="cp" required>
     <label>Colonia:</label><input name="colonia" required>
     <label>Ciudad:</label><input name="ciudad" required>
-    <label>Municipio:</label><input name="municipio" required>
+    <label>Municipio o alcaldía:</label><input name="municipio" required>
     <label>País:</label><input name="pais" required>
     <label>Estado:</label>
     <select name="estado" required>
@@ -66,64 +66,86 @@
       <option>CDMX</option><option>Jalisco</option><option>Yucatán</option>
     </select>
     <label>Localidad:</label><input name="localidad">
-    <button type="submit">Finalizar y generar PDF</button>
+    <button class="btn" type="submit">Generar PDF</button>
   </form>
 </div>
 
 <script>
-  // Acceso
+  let segundos = 0;
+  let intervalo;
+
   function verificarPassword() {
-    const pass = document.getElementById('password').value;
-    if (pass === 'entreno123') {
+    const clave = document.getElementById('password').value;
+    if (clave === 'entreno123') {
       document.getElementById('login').style.display = 'none';
       document.getElementById('formulario').style.display = 'block';
       document.getElementById('timer-container').style.display = 'block';
-      iniciarTemporizador(10 * 60); // 10 minutos
+      iniciarCronometro();
     } else {
       document.getElementById('error').style.display = 'block';
     }
   }
 
-  // Temporizador
-  function iniciarTemporizador(duracion) {
-    let tiempo = duracion;
-    const timer = document.getElementById('timer');
-    const intervalo = setInterval(() => {
-      const minutos = Math.floor(tiempo / 60);
-      const segundos = tiempo % 60;
-      timer.textContent = `${minutos}:${segundos < 10 ? '0' : ''}${segundos}`;
-      if (--tiempo < 0) {
-        clearInterval(intervalo);
-        alert("¡Tiempo agotado! Se generará tu PDF.");
-        document.getElementById("form").dispatchEvent(new Event("submit"));
-      }
+  function iniciarCronometro() {
+    const cronometro = document.getElementById('cronometro');
+    intervalo = setInterval(() => {
+      segundos++;
+      const h = Math.floor(segundos / 3600);
+      const m = Math.floor((segundos % 3600) / 60);
+      const s = segundos % 60;
+      cronometro.textContent = `${pad(h)}:${pad(m)}:${pad(s)}`;
     }, 1000);
   }
 
-  // Generar PDF
+  function pad(n) {
+    return n < 10 ? '0' + n : n;
+  }
+
   document.getElementById('form').addEventListener('submit', function(e) {
     e.preventDefault();
+    clearInterval(intervalo);
 
-    const datos = new FormData(this);
-    const nombre = datos.get('nombre') + ' ' + datos.get('paterno') + ' ' + datos.get('materno');
-    const fecha = new Date();
-    const fechaStr = fecha.toLocaleDateString() + ' ' + fecha.toLocaleTimeString();
+    const formData = new FormData(this);
+    const tiempo = document.getElementById('cronometro').textContent;
+    const fechaActual = new Date();
+    const fechaStr = fechaActual.toLocaleDateString();
+    const horaStr = fechaActual.toLocaleTimeString();
+
+    let nombrePDF = prompt("Ingrese el nombre del aspirante para el archivo PDF:");
 
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
-    doc.setFontSize(14);
-    doc.text(`Formulario de Entrenamiento`, 20, 20);
-    doc.text(`Aspirante: ${nombre}`, 20, 30);
-    doc.text(`Fecha y hora: ${fechaStr}`, 20, 40);
+    let y = 20;
 
-    let y = 50;
-    for (const [campo, valor] of datos.entries()) {
-      doc.text(`${campo}: ${valor}`, 20, y);
-      y += 10;
+    doc.setFontSize(16);
+    doc.text("Formulario de Entrenamiento", 20, y);
+    y += 10;
+    doc.setFontSize(12);
+    doc.text(`Fecha: ${fechaStr}   Hora: ${horaStr}   Tiempo total: ${tiempo}`, 20, y);
+    y += 10;
+
+    doc.setFontSize(12);
+    doc.setLineWidth(0.5);
+    doc.line(20, y, 190, y);
+    y += 10;
+
+    for (const [campo, valor] of formData.entries()) {
+      doc.text(`${formatearCampo(campo)}: ${valor}`, 20, y);
+      y += 8;
+      if (y > 270) {
+        doc.addPage();
+        y = 20;
+      }
     }
 
-    doc.save(`Formulario_${datos.get('nombre')}_${fecha.toISOString().slice(0,10)}.pdf`);
+    doc.save(`${nombrePDF || 'aspirante'}_${fechaActual.toISOString().slice(0,10)}.pdf`);
   });
+
+  function formatearCampo(texto) {
+    return texto
+      .replace(/([A-Z])/g, ' $1')
+      .replace(/^./, str => str.toUpperCase());
+  }
 </script>
 
 </body>
