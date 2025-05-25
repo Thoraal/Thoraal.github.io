@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz de Conocimientos</title>
+    <style>
+        :root {
+            --color-correcto: #28a745;
+            --color-incorrecto: #dc3545;
+            --color-tiempo: #ffc107;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            background: linear-gradient(135deg, #4b6cb7, #182848);
+            color: white;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            width: 100%;
+            max-width: 600px;
+            margin: 1rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .option {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            cursor: pointer;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-align: left;
+        }
+
+        .option:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .option:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .correct {
+            background: var(--color-correcto) !important;
+            border-color: #1e7e34 !important;
+        }
+
+        .incorrect {
+            background: var(--color-incorrecto) !important;
+            border-color: #b21f2d !important;
+        }
+
+        .hidden { display: none; }
+
+        .btn {
+            background: #ff9800;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .btn:hover {
+            background: #e68900;
+            transform: scale(1.05);
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--color-correcto);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        #tiempo {
+            font-size: 1.3rem;
+            color: var(--color-tiempo);
+            font-weight: bold;
+            margin: 15px 0;
+            animation: pulse 1s infinite;
+        }
+        .mensaje-felicidades {
+            background: linear-gradient(45deg, #28a745, #218838);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            animation: slideIn 0.5s ease;
+        }
+        .mensaje-felicidades, .mensaje-aprobado, .mensaje-deficiente {
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            animation: slideIn 0.5s ease;
+            text-align: center;
+        }
+        
+        .mensaje-felicidades {
+            background: linear-gradient(45deg, #28a745, #218838);
+            border-left: 5px solid #1e7e34;
+        }
+        
+        .mensaje-aprobado {
+            background: linear-gradient(45deg, #ffc107, #e0a800);
+            border-left: 5px solid #d39e00;
+        }
+        
+        .mensaje-deficiente {
+            background: linear-gradient(45deg, #dc3545, #c82333);
+            border-left: 5px solid #bd2130;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .historial-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            text-align: left;
+        }
+
+        .historial-correcta {
+            border-left: 4px solid var(--color-correcto);
+        }
+
+        .historial-incorrecta {
+            border-left: 4px solid var(--color-incorrecto);
+        }
+
+        .respuesta-correcta {
+            color: var(--color-correcto);
+            font-weight: bold;
+        }
+                /* Estilos para el selector de dificultad */
+        .dificultad-select {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin: 15px 0;
+            font-size: 1.1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            cursor: pointer;
+            appearance: none; /* Elimina el estilo por defecto del navegador */
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        
+        .dificultad-select:hover {
+            border-color: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .dificultad-select:focus {
+            border-color: #ff9800;
+            box-shadow: 0 0 8px rgba(255, 152, 0, 0.5);
+        }
+        
+        /* Estilo para las opciones del selector */
+        .dificultad-select option {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px;
+        }
+        
+        /* Contenedor personalizado para el ícono del selector */
+        .dificultad-container {
+            position: relative;
+            width: 100%;
+        }
+        
+        .dificultad-container::after {
+            content: "▼";
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            color: white;
+            pointer-events: none; /* Evita que el ícono interfiera con el clic */
+        }
+        /* Estilos para móviles */
+/* Estilos para móviles */
+@media (max-width: 768px) {
+    body {
+        padding: 10px 15px; /* 10px arriba/abajo, 15px izquierda/derecha */
+    }
+
+    .container {
+        padding: 1rem;
+        margin: 0.5rem;
+        width: calc(100% - 30px); /* Ajusta el ancho para compensar el padding */
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    .dificultad-select {
+        font-size: 0.9rem;
+        padding: 10px;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 10px;
+        font-size: 1rem;
+    }
+
+    .option {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    #tiempo {
+        font-size: 1rem;
+    }
+
+    #puntuacion {
+        font-size: 0.9rem;
+    }
+
+    .mensaje-felicidades {
+        padding: 15px;
+        font-size: 0.9rem;
+    }
+
+    .historial-item {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+}
+    </style>
+</head>
+<body>
+<div class="container" id="inicio">
+    <h1>🧠 Quiz de Conocimientos</h1>
+    <label for="area">Selecciona el área:</label>
+    <select id="area" class="dificultad-select">
+        <option value="bloque1">Bloque 1️⃣</option>
+        <option value="gafi40p">GAFI 40 CONCEPTO</option>
+        <option value="gafi40r">GAFI 40 RECOMENDACIÓN</option>
+        <option value="bloque3">Bloque 3️⃣</option>
+        <option value="bloque4">Bloque 4️⃣</option>
+        <option value="bloque5">Bloque 5️⃣</option>
+        <option value="bloque6">Bloque 6️⃣</option>
+        <option value="bloque7">Bloque 7️⃣</option>
+    </select>
+    <label for="dificultad">Selecciona la dificultad:</label>
+    <select id="dificultad" class="dificultad-select">
+        <option value="facil">Fácil</option>
+        <option value="medio">Medio</option>
+        <option value="dificil">Difícil</option>
+    </select>
+    <button class="btn" onclick="iniciarJuego()">Comenzar Juego 👾</button>
+</div>
+<div class="container hidden" id="juego">
+    <div class="progress-container">
+        <div class="progress-bar" id="barraProgreso"></div>
+    </div>
+    <h2 id="concepto"></h2>
+    <div id="opciones"></div>
+    <p id="tiempo"></p>
+    <div id="puntuacion">
+        <span>✅ <span id="correctas">0</span></span>
+        <span>❌ <span id="incorrectas">0</span></span>
+        <span>⭐ <span id="puntos">0</span></span>
+    </div>
+    <p>Dificultad: <span id="nivelDificultad"></span></p> <!-- Nueva línea -->
+</div>
+
+    <div class="container hidden" id="resumen">
+        <h2>📊 Resultados Finales</h2>
+        <p>Total de preguntas: <span id="totalPreguntas">0</span></p>
+        <p>Respuestas correctas: <span id="totalCorrectas">0</span></p> <!-- Nueva línea -->
+        <p>Respuestas incorrectas: <span id="totalIncorrectas">0</span></p> <!-- Nueva línea -->
+        <p>Puntuación Final: <span id="totalPuntos">0</span> puntos</p>
+        <div id="mensajeFelicidades" class="hidden"></div>
+        <h3>Detalle de Respuestas</h3>
+        <div id="detalleRespuestas"></div>
+        <button class="btn" onclick="reiniciarJuego()">Jugar de Nuevo</button>
+    </div>
+
+<script>
+let preguntas = [];
+let juego = {
+    preguntas: [],
+    preguntasIncorrectas: [],
+    preguntasPendientes: [],
+    indiceActual: 0,
+    correctas: 0,
+    incorrectas: 0,
+    puntos: 0,
+    tiempoBase: 20,
+    tiempoRestante: 0,
+    intervalo: null,
+    dificultad: 'medio',
+    historial: [],
+    intentos: {}
+};
+
+async function cargarPreguntas(area) {
+    try {
+        const respuesta = await fetch(`${area}.json`);
+        if (!respuesta.ok) throw new Error('No se pudo cargar el archivo');
+        preguntas = await respuesta.json();
+    } catch (error) {
+        console.error('Error al cargar las preguntas:', error);
+    }
+}
+
+async function iniciarJuego() {
+    const area = document.getElementById('area').value;
+    await cargarPreguntas(area);
+
+    if (preguntas.length === 0) {
+        alert('Las preguntas no se han cargado correctamente.');
+        return;
+    }
+
+    const dificultad = document.getElementById('dificultad').value;
+    let tiempo;
+    switch (dificultad) {
+        case 'facil': tiempo = 30; break;
+        case 'medio': tiempo = 25; break;
+        case 'dificil': tiempo = 20; break;
+        default: tiempo = 20;
+    }
+
+    juego = {
+        ...juego,
+        preguntas: shuffleArray([...preguntas]),
+        preguntasIncorrectas: [],
+        preguntasPendientes: [],
+        indiceActual: 0,
+        correctas: 0,
+        incorrectas: 0,
+        puntos: 0,
+        tiempoBase: tiempo,
+        dificultad,
+        historial: [],
+        intentos: {}
+    };
+
+    document.getElementById('inicio').classList.add('hidden');
+    document.getElementById('juego').classList.remove('hidden');
+    document.getElementById('resumen').classList.add('hidden');
+
+    actualizarUI();
+    cargarPregunta();
+}
+
+function cargarPregunta() {
+    clearInterval(juego.intervalo);
+
+    if (juego.preguntas.length === 0 && juego.preguntasPendientes.length === 0) {
+        finalizarJuego();
+        return;
+    }
+
+    if (juego.preguntas.length === 0 && juego.preguntasPendientes.length > 0) {
+        juego.preguntas = shuffleArray([...juego.preguntasPendientes]);
+        juego.preguntasPendientes = [];
+    }
+
+    juego.preguntaActual = juego.preguntas.shift();
+    juego.tiempoRestante = juego.tiempoBase;
+
+    const concepto = juego.preguntaActual.concepto;
+    const opciones = juego.preguntaActual.opciones;
+    const correctaIndex = juego.preguntaActual.correcta;
+
+    document.getElementById('concepto').textContent = concepto;
+    document.getElementById('tiempo').textContent = `Tiempo: ${juego.tiempoRestante}s`;
+    document.getElementById('nivelDificultad').textContent = juego.dificultad.toUpperCase();
+
+    const opcionesMezcladas = shuffleArray(opciones.map((texto, index) => ({
+        texto,
+        correcta: index === correctaIndex
+    })));
+
+    const opcionesHTML = opcionesMezcladas.map(opcion => `
+        <button class="option" 
+                onclick="verificarRespuesta(this, ${opcion.correcta}, '${opcion.texto}')"
+                data-correcta="${opcion.correcta}">
+            ${opcion.texto}
+        </button>
+    `).join('');
+
+    document.getElementById('opciones').innerHTML = opcionesHTML;
+    iniciarTemporizador();
+}
+
+function iniciarTemporizador() {
+    actualizarBarraProgreso();
+    juego.intervalo = setInterval(() => {
+        juego.tiempoRestante--;
+        document.getElementById('tiempo').textContent = `Tiempo: ${juego.tiempoRestante}s`;
+        actualizarBarraProgreso();
+
+        if (juego.tiempoRestante <= 0) {
+            manejarTiempoAgotado();
+        }
+    }, 1000);
+}
+
+function verificarRespuesta(boton, esCorrecta, textoOpcion) {
+    clearInterval(juego.intervalo);
+
+    const botones = document.querySelectorAll('.option');
+    botones.forEach(b => b.disabled = true);
+
+    const correctaIndex = juego.preguntaActual.correcta;
+    const textoCorrecto = juego.preguntaActual.opciones[correctaIndex];
+    const preguntaTexto = juego.preguntaActual.concepto;
+
+    if (!juego.intentos[preguntaTexto]) {
+        juego.intentos[preguntaTexto] = 0;
+    }
+    juego.intentos[preguntaTexto]++;
+
+    if (esCorrecta) {
+        boton.classList.add('correct');
+        juego.correctas++;
+        juego.puntos += 10;
+
+        juego.historial.push({
+            pregunta: preguntaTexto,
+            respuesta: textoOpcion,
+            correcta: true,
+            intentos: juego.intentos[preguntaTexto]
+        });
+    } else {
+        boton.classList.add('incorrect');
+        juego.incorrectas++;
+
+        juego.historial.push({
+            pregunta: preguntaTexto,
+            respuesta: textoOpcion,
+            correcta: false,
+            correctaTexto: textoCorrecto,
+            intentos: juego.intentos[preguntaTexto]
+        });
+
+        juego.preguntasPendientes.push(juego.preguntaActual);
+    }
+
+    actualizarUI();
+
+    setTimeout(() => {
+        cargarPregunta();
+    }, 1000);
+}
+
+function manejarTiempoAgotado() {
+    clearInterval(juego.intervalo);
+    juego.incorrectas++;
+
+    const preguntaTexto = juego.preguntaActual.concepto;
+    const correctaIndex = juego.preguntaActual.correcta;
+    const textoCorrecto = juego.preguntaActual.opciones[correctaIndex];
+
+    if (!juego.intentos[preguntaTexto]) {
+        juego.intentos[preguntaTexto] = 0;
+    }
+    juego.intentos[preguntaTexto]++;
+
+    juego.historial.push({
+        pregunta: preguntaTexto,
+        respuesta: 'Sin respuesta (tiempo agotado)',
+        correcta: false,
+        correctaTexto: textoCorrecto,
+        intentos: juego.intentos[preguntaTexto]
+    });
+
+    juego.preguntasPendientes.push(juego.preguntaActual);
+
+    actualizarUI();
+    setTimeout(() => {
+        cargarPregunta();
+    }, 1000);
+}
+
+function actualizarBarraProgreso() {
+    const total = preguntas.length;
+    const contestadas = juego.correctas + juego.incorrectas;
+    const porcentaje = total ? Math.min((contestadas / total) * 100, 100) : 0;
+    document.getElementById('barraProgreso').style.width = `${porcentaje}%`;
+}
+
+function actualizarUI() {
+    document.getElementById('correctas').textContent = juego.correctas;
+    document.getElementById('incorrectas').textContent = juego.incorrectas;
+    document.getElementById('puntos').textContent = juego.puntos;
+}
+
+function finalizarJuego() {
+    document.getElementById('juego').classList.add('hidden');
+    document.getElementById('resumen').classList.remove('hidden');
+
+    document.getElementById('totalPreguntas').textContent = preguntas.length;
+    document.getElementById('totalCorrectas').textContent = juego.correctas;
+    document.getElementById('totalIncorrectas').textContent = juego.incorrectas;
+    document.getElementById('totalPuntos').textContent = juego.puntos;
+
+    const detalle = document.getElementById('detalleRespuestas');
+    detalle.innerHTML = '';
+
+    juego.historial.forEach(h => {
+        const item = document.createElement('div');
+        item.classList.add('historial-item');
+        item.classList.add(h.correcta ? 'historial-correcta' : 'historial-incorrecta');
+        item.innerHTML = `
+            <strong>Pregunta:</strong> ${h.pregunta}<br>
+            <strong>Tu respuesta:</strong> ${h.respuesta}<br>
+            ${!h.correcta ? `<strong>Correcta:</strong> <span class="respuesta-correcta">${h.correctaTexto}</span><br>` : ''}
+            <strong>Intentos:</strong> ${h.intentos}
+        `;
+        detalle.appendChild(item);
+    });
+
+    const mensajeFinal = document.getElementById('mensajeFelicidades');
+    mensajeFinal.classList.remove('hidden');
+    if (juego.correctas === preguntas.length) {
+        mensajeFinal.className = 'mensaje-felicidades';
+        mensajeFinal.innerHTML = '<h3>🎉 ¡Felicidades! Respondiste todas correctamente.</h3>';
+    } else if (juego.correctas >= preguntas.length * 0.7) {
+        mensajeFinal.className = 'mensaje-aprobado';
+        mensajeFinal.innerHTML = '<h3>👍 ¡Buen trabajo! Puedes mejorar aún más.</h3>';
+    } else {
+        mensajeFinal.className = 'mensaje-deficiente';
+        mensajeFinal.innerHTML = '<h3>📚 Sigue estudiando, tú puedes.</h3>';
+    }
+}
+
+function reiniciarJuego() {
+    document.getElementById('inicio').classList.remove('hidden');
+    document.getElementById('resumen').classList.add('hidden');
+}
+
+function shuffleArray(array) {
+    return array
+        .map(a => ({ sort: Math.random(), value: a }))
+        .sort((a, b) => a.sort - b.sort)
+        .map(a => a.value);
+}
+</script>
+</body>
+</html>
