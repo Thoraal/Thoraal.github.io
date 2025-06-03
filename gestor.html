@@ -1,153 +1,335 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Calendario de Vacaciones</title>
-  <style>
-    body { font-family: sans-serif; }
-    .calendario { display: flex; flex-wrap: wrap; gap: 10px; }
-    .mes { border-collapse: collapse; width: 250px; margin-bottom: 20px; }
-    .mes th, .mes td { border: 1px solid #aaa; text-align: center; padding: 5px; }
-    .vacaciones { color: white; }
-    table#tabla-colaboradores { margin-top: 20px; border-collapse: collapse; width: 100%; }
-    #tabla-colaboradores td, #tabla-colaboradores th { border: 1px solid #ccc; padding: 5px; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestor de Vacaciones del Personal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .controls {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .controls label {
+            font-weight: bold;
+        }
+        .controls select, .controls input {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .add-row-btn, .delete-row-btn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .delete-row-btn {
+            background-color: #dc3545;
+        }
+        .add-row-btn:hover {
+            background-color: #218838;
+        }
+        .delete-row-btn:hover {
+            background-color: #c82333;
+        }
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr); /* 7 days of the week */
+            gap: 5px;
+            margin-top: 20px;
+        }
+        .day-header {
+            font-weight: bold;
+            text-align: center;
+            padding: 8px;
+            background-color: #e9e9e9;
+        }
+        .day {
+            border: 1px solid #eee;
+            padding: 10px;
+            min-height: 80px; /* Adjust as needed */
+            box-sizing: border-box;
+            background-color: #fff;
+            position: relative;
+        }
+        .day.empty {
+            background-color: #f9f9f9;
+        }
+        .date-number {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+        .vacation-entry {
+            font-size: 0.85em;
+            padding: 3px 5px;
+            border-radius: 3px;
+            margin-bottom: 2px;
+            color: white;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        /* Color codes for different staff members - You'll add these dynamically with JS */
+        .color-staff-1 { background-color: #007bff; } /* Blue */
+        .color-staff-2 { background-color: #ffc107; color: #333; } /* Yellow */
+        .color-staff-3 { background-color: #28a745; } /* Green */
+        .color-staff-4 { background-color: #fd7e14; } /* Orange */
+        .color-staff-5 { background-color: #6f42c1; } /* Purple */
+    </style>
 </head>
 <body>
 
-<h2>Gestor de Vacaciones</h2>
+    <div class="container">
+        <h1>Gestor de Vacaciones del Personal</h1>
 
-<label for="año">Selecciona año:</label>
-<select id="año" onchange="cambiarAño()">
-  <option value="2025" selected>2025</option>
-  <option value="2026">2026</option>
-</select>
+        <div class="controls">
+            <label for="select-year">Año:</label>
+            <select id="select-year"></select>
 
-<h3>Agregar vacaciones</h3>
-<form id="formulario">
-  <label>Colaborador: <input type="text" id="colaborador" required></label>
-  <label>Inicio: <input type="date" id="inicio" required></label>
-  <label>Fin: <input type="date" id="fin" required></label>
-  <button type="submit">Agregar</button>
-</form>
+            <label for="select-month">Mes:</label>
+            <select id="select-month">
+                <option value="0">Enero</option>
+                <option value="1">Febrero</option>
+                <option value="2">Marzo</option>
+                <option value="3">Abril</option>
+                <option value="4">Mayo</option>
+                <option value="5">Junio</option>
+                <option value="6">Julio</option>
+                <option value="7">Agosto</option>
+                <option value="8">Septiembre</option>
+                <option value="9">Octubre</option>
+                <option value="10">Noviembre</option>
+                <option value="11">Diciembre</option>
+            </select>
+        </div>
 
-<table id="tabla-colaboradores">
-  <thead>
-    <tr>
-      <th>Colaborador</th><th>Inicio</th><th>Fin</th><th>Color</th><th>Acción</th>
-    </tr>
-  </thead>
-  <tbody id="registros"></tbody>
-</table>
+        <h2>Registro de Vacaciones</h2>
+        <table id="vacation-table">
+            <thead>
+                <tr>
+                    <th>Colaborador</th>
+                    <th>Fecha Inicio</th>
+                    <th>Fecha Fin</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input type="text" placeholder="Nombre del Colaborador"></td>
+                    <td><input type="date"></td>
+                    <td><input type="date"></td>
+                    <td><button class="delete-row-btn">Eliminar</button></td>
+                </tr>
+            </tbody>
+        </table>
+        <button class="add-row-btn">Agregar Fila</button>
 
-<button onclick="exportarCSV()">Exportar CSV</button>
+        ---
 
-<h3>Calendario</h3>
-<div id="calendario" class="calendario"></div>
+        <h2>Calendario de Vacaciones</h2>
+        <div id="calendar-display" class="calendar">
+            <div class="day-header">Lun</div>
+            <div class="day-header">Mar</div>
+            <div class="day-header">Mié</div>
+            <div class="day-header">Jue</div>
+            <div class="day-header">Vie</div>
+            <div class="day-header">Sáb</div>
+            <div class="day-header">Dom</div>
+        </div>
+    </div>
 
-<script>
-function generarCalendario(año) {
-  const meses = [
-    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-  ];
-  let html = "";
-  for (let mes = 0; mes < 12; mes++) {
-    let fecha = new Date(año, mes, 1);
-    let dias = new Date(año, mes + 1, 0).getDate();
-    html += `<table class="mes"><thead><tr><th colspan="7">${meses[mes]}</th></tr>`;
-    html += "<tr><th>L</th><th>M</th><th>M</th><th>J</th><th>V</th><th>S</th><th>D</th></tr></thead><tbody><tr>";
-    let diaSemana = (fecha.getDay() + 6) % 7;
-    for (let i = 0; i < diaSemana; i++) html += "<td></td>";
-    for (let dia = 1; dia <= dias; dia++) {
-      const fechaStr = `${año}-${String(mes + 1).padStart(2, '0')}-${String(dia).padStart(2, '0')}`;
-      html += `<td id="${fechaStr}">${dia}</td>`;
-      if ((dia + diaSemana) % 7 === 0) html += "</tr><tr>";
-    }
-    html += "</tr></tbody></table>";
-  }
-  return html;
-}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectYear = document.getElementById('select-year');
+            const selectMonth = document.getElementById('select-month');
+            const vacationTable = document.getElementById('vacation-table').getElementsByTagName('tbody')[0];
+            const addRowBtn = document.querySelector('.add-row-btn');
+            const calendarDisplay = document.getElementById('calendar-display');
 
-let colores = ["#e74c3c", "#3498db", "#27ae60", "#9b59b6", "#f39c12", "#1abc9c", "#d35400"];
-let indiceColor = 0;
-let vacaciones = JSON.parse(localStorage.getItem("vacaciones")) || [];
+            const currentYear = new Date().getFullYear();
+            for (let i = currentYear - 5; i <= currentYear + 5; i++) {
+                const option = document.createElement('option');
+                option.value = i;
+                option.textContent = i;
+                if (i === currentYear) {
+                    option.selected = true;
+                }
+                selectYear.appendChild(option);
+            }
 
-function pintarVacaciones() {
-  document.querySelectorAll("td").forEach(td => td.style.backgroundColor = "");
-  vacaciones.forEach(v => {
-    let fechaInicio = new Date(v.inicio);
-    let fechaFin = new Date(v.fin);
-    for (let d = new Date(fechaInicio); d <= fechaFin; d.setDate(d.getDate() + 1)) {
-      let id = d.toISOString().split('T')[0];
-      let celda = document.getElementById(id);
-      if (celda) celda.style.backgroundColor = v.color;
-    }
-  });
-}
+            // Set current month
+            selectMonth.value = new Date().getMonth();
 
-function actualizarTabla() {
-  let cuerpo = document.getElementById("registros");
-  cuerpo.innerHTML = "";
-  vacaciones.forEach((v, i) => {
-    cuerpo.innerHTML += `<tr>
-      <td>${v.nombre}</td><td>${v.inicio}</td><td>${v.fin}</td>
-      <td style="background:${v.color}"></td>
-      <td><button onclick="eliminar(${i})">Eliminar</button></td>
-    </tr>`;
-  });
-}
+            // Function to add a new row to the vacation table
+            function addVacationRow() {
+                const newRow = vacationTable.insertRow();
+                newRow.innerHTML = `
+                    <td><input type="text" placeholder="Nombre del Colaborador"></td>
+                    <td><input type="date"></td>
+                    <td><input type="date"></td>
+                    <td><button class="delete-row-btn">Eliminar</button></td>
+                `;
+                newRow.querySelector('.delete-row-btn').addEventListener('click', function() {
+                    newRow.remove();
+                    updateCalendar(); // Update calendar after deleting a row
+                });
 
-function guardarDatos() {
-  localStorage.setItem("vacaciones", JSON.stringify(vacaciones));
-  actualizarTabla();
-  pintarVacaciones();
-}
+                // Add event listeners to input fields to trigger calendar update
+                newRow.querySelectorAll('input').forEach(input => {
+                    input.addEventListener('change', updateCalendar);
+                    input.addEventListener('keyup', updateCalendar); // For collaborator name
+                });
+            }
 
-document.getElementById("formulario").addEventListener("submit", e => {
-  e.preventDefault();
-  let nombre = document.getElementById("colaborador").value;
-  let inicio = document.getElementById("inicio").value;
-  let fin = document.getElementById("fin").value;
-  if (new Date(inicio) > new Date(fin)) {
-    alert("La fecha de inicio no puede ser mayor a la fecha de fin.");
-    return;
-  }
-  vacaciones.push({ nombre, inicio, fin, color: colores[indiceColor++ % colores.length] });
-  guardarDatos();
-  e.target.reset();
-});
+            // Initial row
+            addVacationRow();
 
-function eliminar(i) {
-  vacaciones.splice(i, 1);
-  guardarDatos();
-}
+            // Event listener for adding a new row
+            addRowBtn.addEventListener('click', addVacationRow);
 
-function cambiarAño() {
-  const año = parseInt(document.getElementById("año").value);
-  document.getElementById("calendario").innerHTML = generarCalendario(año);
-  pintarVacaciones();
-}
+            // Function to generate the calendar
+            function generateCalendar(year, month) {
+                calendarDisplay.innerHTML = `
+                    <div class="day-header">Lun</div>
+                    <div class="day-header">Mar</div>
+                    <div class="day-header">Mié</div>
+                    <div class="day-header">Jue</div>
+                    <div class="day-header">Vie</div>
+                    <div class="day-header">Sáb</div>
+                    <div class="day-header">Dom</div>
+                `; // Clear existing calendar days and re-add headers
 
-function exportarCSV() {
-  let csv = "Colaborador,Inicio,Fin,Color\n";
-  vacaciones.forEach(v => {
-    csv += `${v.nombre},${v.inicio},${v.fin},${v.color}\n`;
-  });
-  let blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-  let link = document.createElement("a");
-  link.setAttribute("href", URL.createObjectURL(blob));
-  link.setAttribute("download", "vacaciones.csv");
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-}
+                const firstDayOfMonth = new Date(year, month, 1);
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+                
+                // Adjust for Monday start (0=Sunday, 1=Monday, ..., 6=Saturday)
+                let startDayOfWeek = firstDayOfMonth.getDay();
+                if (startDayOfWeek === 0) startDayOfWeek = 7; // If Sunday, make it 7 for calculation
+                startDayOfWeek -= 1; // Now 0=Monday, ..., 6=Sunday
 
-window.onload = () => {
-  document.getElementById("calendario").innerHTML = generarCalendario(2025);
-  guardarDatos();
-};
-</script>
+
+                // Add empty days to align the first day of the month
+                for (let i = 0; i < startDayOfWeek; i++) {
+                    const emptyDay = document.createElement('div');
+                    emptyDay.classList.add('day', 'empty');
+                    calendarDisplay.appendChild(emptyDay);
+                }
+
+                // Add days of the month
+                for (let i = 1; i <= daysInMonth; i++) {
+                    const dayDiv = document.createElement('div');
+                    dayDiv.classList.add('day');
+                    dayDiv.innerHTML = `<div class="date-number">${i}</div>`;
+                    dayDiv.dataset.date = `${year}-${String(month + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+                    calendarDisplay.appendChild(dayDiv);
+                }
+            }
+
+            // Function to update the calendar with vacation entries
+            function updateCalendar() {
+                const year = parseInt(selectYear.value);
+                const month = parseInt(selectMonth.value);
+                generateCalendar(year, month); // Regenerate calendar for the selected month/year
+
+                const vacationEntries = [];
+                const rows = vacationTable.querySelectorAll('tbody tr');
+                let staffColorCounter = 0;
+                const staffColors = {}; // To assign a consistent color to each staff member
+
+                rows.forEach(row => {
+                    const collaboratorInput = row.querySelector('td:nth-child(1) input');
+                    const startDateInput = row.querySelector('td:nth-child(2) input');
+                    const endDateInput = row.querySelector('td:nth-child(3) input');
+
+                    const collaborator = collaboratorInput ? collaboratorInput.value.trim() : '';
+                    const startDateStr = startDateInput ? startDateInput.value : '';
+                    const endDateStr = endDateInput ? endDateInput.value : '';
+
+                    if (collaborator && startDateStr && endDateStr) {
+                        const startDate = new Date(startDateStr + 'T00:00:00'); // Add T00:00:00 for consistent parsing
+                        const endDate = new Date(endDateStr + 'T00:00:00');
+
+                        // Ensure end date is not before start date
+                        if (startDate > endDate) {
+                            // You might want to add some visual feedback here
+                            return; 
+                        }
+
+                        // Assign a unique color to each collaborator
+                        let colorClass;
+                        if (staffColors[collaborator]) {
+                            colorClass = staffColors[collaborator];
+                        } else {
+                            staffColorCounter++;
+                            colorClass = `color-staff-${(staffColorCounter % 5) + 1}`; // Cycle through 5 colors
+                            staffColors[collaborator] = colorClass;
+                        }
+
+                        let currentDate = new Date(startDate);
+                        while (currentDate <= endDate) {
+                            const currentDay = currentDate.getDate();
+                            const currentMonth = currentDate.getMonth();
+                            const currentYear = currentDate.getFullYear();
+
+                            if (currentYear === year && currentMonth === month) {
+                                const dayDiv = calendarDisplay.querySelector(`.day[data-date="${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(currentDay).padStart(2, '0')}"]`);
+                                if (dayDiv) {
+                                    const vacationEntryDiv = document.createElement('div');
+                                    vacationEntryDiv.classList.add('vacation-entry', colorClass);
+                                    vacationEntryDiv.textContent = collaborator;
+                                    dayDiv.appendChild(vacationEntryDiv);
+                                }
+                            }
+                            currentDate.setDate(currentDate.getDate() + 1);
+                        }
+                    }
+                });
+            }
+
+            // Event listeners for month and year changes
+            selectYear.addEventListener('change', updateCalendar);
+            selectMonth.addEventListener('change', updateCalendar);
+
+            // Initial calendar generation
+            updateCalendar();
+        });
+    </script>
 
 </body>
 </html>
