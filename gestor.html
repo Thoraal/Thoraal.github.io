@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Calendario de Vacaciones</title>
+  <style>
+    body { font-family: sans-serif; }
+    .calendario { display: flex; flex-wrap: wrap; gap: 10px; }
+    .mes { border-collapse: collapse; width: 250px; margin-bottom: 20px; }
+    .mes th, .mes td { border: 1px solid #aaa; text-align: center; padding: 5px; }
+    .vacaciones { color: white; }
+    table#tabla-colaboradores { margin-top: 20px; border-collapse: collapse; width: 100%; }
+    #tabla-colaboradores td, #tabla-colaboradores th { border: 1px solid #ccc; padding: 5px; }
+  </style>
+</head>
+<body>
+
+<h2>Gestor de Vacaciones</h2>
+
+<label for="año">Selecciona año:</label>
+<select id="año" onchange="cambiarAño()">
+  <option value="2025" selected>2025</option>
+  <option value="2026">2026</option>
+</select>
+
+<h3>Agregar vacaciones</h3>
+<form id="formulario">
+  <label>Colaborador: <input type="text" id="colaborador" required></label>
+  <label>Inicio: <input type="date" id="inicio" required></label>
+  <label>Fin: <input type="date" id="fin" required></label>
+  <button type="submit">Agregar</button>
+</form>
+
+<table id="tabla-colaboradores">
+  <thead>
+    <tr>
+      <th>Colaborador</th><th>Inicio</th><th>Fin</th><th>Color</th><th>Acción</th>
+    </tr>
+  </thead>
+  <tbody id="registros"></tbody>
+</table>
+
+<button onclick="exportarCSV()">Exportar CSV</button>
+
+<h3>Calendario</h3>
+<div id="calendario" class="calendario"></div>
+
+<script>
+function generarCalendario(año) {
+  const meses = [
+    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+  ];
+  let html = "";
+  for (let mes = 0; mes < 12; mes++) {
+    let fecha = new Date(año, mes, 1);
+    let dias = new Date(año, mes + 1, 0).getDate();
+    html += `<table class="mes"><thead><tr><th colspan="7">${meses[mes]}</th></tr>`;
+    html += "<tr><th>L</th><th>M</th><th>M</th><th>J</th><th>V</th><th>S</th><th>D</th></tr></thead><tbody><tr>";
+    let diaSemana = (fecha.getDay() + 6) % 7;
+    for (let i = 0; i < diaSemana; i++) html += "<td></td>";
+    for (let dia = 1; dia <= dias; dia++) {
+      const fechaStr = `${año}-${String(mes + 1).padStart(2, '0')}-${String(dia).padStart(2, '0')}`;
+      html += `<td id="${fechaStr}">${dia}</td>`;
+      if ((dia + diaSemana) % 7 === 0) html += "</tr><tr>";
+    }
+    html += "</tr></tbody></table>";
+  }
+  return html;
+}
+
+let colores = ["#e74c3c", "#3498db", "#27ae60", "#9b59b6", "#f39c12", "#1abc9c", "#d35400"];
+let indiceColor = 0;
+let vacaciones = JSON.parse(localStorage.getItem("vacaciones")) || [];
+
+function pintarVacaciones() {
+  document.querySelectorAll("td").forEach(td => td.style.backgroundColor = "");
+  vacaciones.forEach(v => {
+    let fechaInicio = new Date(v.inicio);
+    let fechaFin = new Date(v.fin);
+    for (let d = new Date(fechaInicio); d <= fechaFin; d.setDate(d.getDate() + 1)) {
+      let id = d.toISOString().split('T')[0];
+      let celda = document.getElementById(id);
+      if (celda) celda.style.backgroundColor = v.color;
+    }
+  });
+}
+
+function actualizarTabla() {
+  let cuerpo = document.getElementById("registros");
+  cuerpo.innerHTML = "";
+  vacaciones.forEach((v, i) => {
+    cuerpo.innerHTML += `<tr>
+      <td>${v.nombre}</td><td>${v.inicio}</td><td>${v.fin}</td>
+      <td style="background:${v.color}"></td>
+      <td><button onclick="eliminar(${i})">Eliminar</button></td>
+    </tr>`;
+  });
+}
+
+function guardarDatos() {
+  localStorage.setItem("vacaciones", JSON.stringify(vacaciones));
+  actualizarTabla();
+  pintarVacaciones();
+}
+
+document.getElementById("formulario").addEventListener("submit", e => {
+  e.preventDefault();
+  let nombre = document.getElementById("colaborador").value;
+  let inicio = document.getElementById("inicio").value;
+  let fin = document.getElementById("fin").value;
+  if (new Date(inicio) > new Date(fin)) {
+    alert("La fecha de inicio no puede ser mayor a la fecha de fin.");
+    return;
+  }
+  vacaciones.push({ nombre, inicio, fin, color: colores[indiceColor++ % colores.length] });
+  guardarDatos();
+  e.target.reset();
+});
+
+function eliminar(i) {
+  vacaciones.splice(i, 1);
+  guardarDatos();
+}
+
+function cambiarAño() {
+  const año = parseInt(document.getElementById("año").value);
+  document.getElementById("calendario").innerHTML = generarCalendario(año);
+  pintarVacaciones();
+}
+
+function exportarCSV() {
+  let csv = "Colaborador,Inicio,Fin,Color\n";
+  vacaciones.forEach(v => {
+    csv += `${v.nombre},${v.inicio},${v.fin},${v.color}\n`;
+  });
+  let blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  let link = document.createElement("a");
+  link.setAttribute("href", URL.createObjectURL(blob));
+  link.setAttribute("download", "vacaciones.csv");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+window.onload = () => {
+  document.getElementById("calendario").innerHTML = generarCalendario(2025);
+  guardarDatos();
+};
+</script>
+
+</body>
+</html>
