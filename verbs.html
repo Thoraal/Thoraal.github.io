@@ -935,54 +935,87 @@
         </tbody>
     </table>
 
-    <script>
+        <script>
         if ('speechSynthesis' in window) {
             const synth = window.speechSynthesis;
             const clickableVerbs = document.querySelectorAll('.clickable-verb');
-            let englishVoice = null; // Variable para almacenar la voz de inglés
+            let preferredEnglishVoice = null; // Variable para almacenar la voz preferida
 
-            // Función para cargar las voces y encontrar una voz en inglés
-            function loadVoices() {
+            // Función para encontrar y seleccionar la mejor voz en inglés
+            function selectVoice() {
                 const voices = synth.getVoices();
-                englishVoice = voices.find(voice => voice.lang === 'en-US' || voice.lang === 'en-GB');
+                
+                // Prioridad de voces:
+                // 1. Voces "Google US English" o "Google UK English" (a menudo de mejor calidad)
+                // 2. Voces del sistema "Microsoft Zira" (en-US) o "Microsoft Hazel" (en-GB)
+                // 3. Cualquier voz en-US o en-GB
+                // 4. La primera voz disponible si no hay ninguna de las anteriores
 
-                // Si no se encuentra una voz específica de inglés, intenta con la primera disponible
-                if (!englishVoice) {
-                    console.warn("No se encontró una voz específica de inglés (en-US o en-GB). Usando la primera voz disponible.");
-                    englishVoice = voices[0];
+                preferredEnglishVoice = voices.find(voice => voice.name.includes('Google US English')) ||
+                                        voices.find(voice => voice.name.includes('Google UK English')) ||
+                                        voices.find(voice => voice.name.includes('Zira') && voice.lang === 'en-US') ||
+                                        voices.find(voice => voice.name.includes('Hazel') && voice.lang === 'en-GB') ||
+                                        voices.find(voice => voice.lang === 'en-US') ||
+                                        voices.find(voice => voice.lang === 'en-GB');
+
+                // Si no se encuentra ninguna voz de inglés, usa la primera disponible (puede ser en otro idioma)
+                if (!preferredEnglishVoice && voices.length > 0) {
+                    console.warn("No se encontró una voz específica de inglés. Usando la primera voz disponible.");
+                    preferredEnglishVoice = voices[0];
                 }
 
                 // Opcional: Imprime las voces disponibles en la consola para depuración
                 // console.log("Voces disponibles:");
                 // voices.forEach(voice => console.log(`${voice.name} (${voice.lang}) - ${voice.default ? 'Default' : ''}`));
+                // if (preferredEnglishVoice) {
+                //     console.log(`Voz seleccionada: ${preferredEnglishVoice.name} (${preferredEnglishVoice.lang})`);
+                // } else {
+                //     console.log("No se pudo seleccionar una voz.");
+                // }
             }
 
-            // Las voces pueden no estar cargadas inmediatamente.
-            // Escucha el evento 'voiceschanged' o cárgalas si ya están disponibles.
+            // Cargar voces. Pueden no estar disponibles inmediatamente.
+            // Es crucial llamar a getVoices() después del evento 'voiceschanged'.
             if (synth.getVoices().length === 0) {
-                synth.onvoiceschanged = loadVoices;
+                synth.onvoiceschanged = selectVoice;
             } else {
-                loadVoices(); // Las voces ya están disponibles
+                selectVoice(); // Las voces ya están cargadas
             }
+            
+            // Función para hablar el texto
+            const speakText = (text) => {
+                if (!preferredEnglishVoice) {
+                    alert('Las voces no están cargadas aún o no hay voces de inglés disponibles. Por favor, intenta de nuevo en unos segundos y asegúrate de tener voces de inglés instaladas en tu sistema.');
+                    // Intentar recargar las voces si aún no se han encontrado
+                    if (synth.getVoices().length === 0) {
+                        synth.onvoiceschanged = selectVoice;
+                    } else {
+                         selectVoice(); // Reintentar la selección
+                    }
+                    return;
+                }
+
+                // Detener cualquier pronunciación actual para evitar superposiciones
+                synth.cancel(); 
+
+                const utterance = new SpeechSynthesisUtterance(text);
+
+                utterance.voice = preferredEnglishVoice; // Asigna la voz preferida
+                utterance.lang = preferredEnglishVoice.lang; // Asegura que el idioma de la voz se use
+
+                // Ajusta estos valores para una pronunciación más natural
+                // Experimenta con ellos. Valores típicos: rate (0.8-1.2), pitch (0.8-1.2)
+                utterance.rate = 0.9; // Velocidad: 1.0 es la normal. Menos es más lento.
+                utterance.pitch = 1.0; // Tono: 1.0 es el normal. Más alto es más agudo.
+                utterance.volume = 1.0; // Volumen: 1.0 es el máximo.
+
+                synth.speak(utterance);
+            };
 
             clickableVerbs.forEach(verbElement => {
                 verbElement.addEventListener('click', () => {
-                    if (!englishVoice) {
-                        alert('Por favor, espera un momento mientras se cargan las voces o tu navegador no tiene voces de inglés disponibles.');
-                        return;
-                    }
-
                     const textToSpeak = verbElement.textContent;
-                    const utterance = new SpeechSynthesisUtterance(textToSpeak);
-
-                    utterance.voice = englishVoice; // Asigna la voz encontrada
-                    utterance.lang = englishVoice.lang; // Asegura que el idioma de la voz se use
-
-                    // Optional: Adjust rate and pitch
-                    // utterance.rate = 1.0; // Speed of speech (0.1 to 10)
-                    // utterance.pitch = 1.0; // Pitch of speech (0 to 2)
-
-                    synth.speak(utterance);
+                    speakText(textToSpeak);
                 });
             });
         } else {
