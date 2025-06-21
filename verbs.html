@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabla de Verbos en Inglés con Pronunciación</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 20px;
+            background-color: #f4f7f6;
+            color: #333;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        table {
+            width: 90%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            background-color: #ffffff;
+        }
+        th, td {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #e2f0d9;
+        }
+        .clickable-verb {
+            cursor: pointer;
+            font-weight: bold;
+            color: #007bff; /* Un color para indicar que es clickable */
+            transition: color 0.2s ease-in-out;
+        }
+        .clickable-verb:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+        .notes-column {
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            table {
+                width: 100%;
+                font-size: 0.9em;
+            }
+            th, td {
+                padding: 8px 10px;
+            }
+        }
+        @media (max-width: 480px) {
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+            thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+            tr {
+                border: 1px solid #ccc;
+                margin-bottom: 10px;
+            }
+            td {
+                border: none;
+                border-bottom: 1px solid #eee;
+                position: relative;
+                padding-left: 50%;
+                text-align: right;
+            }
+            td:before {
+                position: absolute;
+                top: 6px;
+                left: 6px;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                content: attr(data-label);
+                text-align: left;
+                font-weight: bold;
+                color: #555;
+            }
+            /* Specific labels for responsive table */
+            td:nth-of-type(1):before { content: "Nº"; }
+            td:nth-of-type(2):before { content: "Verb"; }
+            td:nth-of-type(3):before { content: "Pron."; }
+            td:nth-of-type(4):before { content: "Past"; }
+            td:nth-of-type(5):before { content: "Pron."; }
+            td:nth-of-type(6):before { content: "Past Part."; }
+            td:nth-of-type(7):before { content: "Pron."; }
+            td:nth-of-type(8):before { content: "Meaning"; }
+            td:nth-of-type(9):before { content: "Notes"; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Tabla de Verbos en Inglés con Pronunciación</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Verb</th>
+                <th>Pronunciación (IPA)</th>
+                <th>Past</th>
+                <th>Pronunciación (IPA)</th>
+                <th>Past Participle</th>
+                <th>Pronunciación (IPA)</th>
+                <th>Meaning</th>
+                <th>Regla ED / Notas</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td data-label="#">1</td>
+                <td class="clickable-verb" data-label="Verb">Go</td>
+                <td data-label="Pron.">/ɡoʊ/</td>
+                <td class="clickable-verb" data-label="Past">Went</td>
+                <td data-label="Pron.">/wɛnt/</td>
+                <td class="clickable-verb" data-label="Past Part.">Gone</td>
+                <td data-label="Pron.">/ɡɔːn/</td>
+                <td data-label="Meaning">Ir</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">2</td>
+                <td class="clickable-verb" data-label="Verb">Work</td>
+                <td data-label="Pron.">/wɜːrk/</td>
+                <td class="clickable-verb" data-label="Past">Worked</td>
+                <td data-label="Pron.">/wɜːrkt/</td>
+                <td class="clickable-verb" data-label="Past Part.">Worked</td>
+                <td data-label="Pron.">/wɜːrkt/</td>
+                <td data-label="Meaning">Trabajar</td>
+                <td class="notes-column" data-label="Notes">ED = /t/ (sonido sordo)</td>
+            </tr>
+            <tr>
+                <td data-label="#">3</td>
+                <td class="clickable-verb" data-label="Verb">Play</td>
+                <td data-label="Pron.">/pleɪ/</td>
+                <td class="clickable-verb" data-label="Past">Played</td>
+                <td data-label="Pron.">/pleɪd/</td>
+                <td class="clickable-verb" data-label="Past Part.">Played</td>
+                <td data-label="Pron.">/pleɪd/</td>
+                <td data-label="Meaning">Jugar</td>
+                <td class="notes-column" data-label="Notes">ED = /d/ (sonido sonoro)</td>
+            </tr>
+            <tr>
+                <td data-label="#">4</td>
+                <td class="clickable-verb" data-label="Verb">Cook</td>
+                <td data-label="Pron.">/kʊk/</td>
+                <td class="clickable-verb" data-label="Past">Cooked</td>
+                <td data-label="Pron.">/kʊkt/</td>
+                <td class="clickable-verb" data-label="Past Part.">Cooked</td>
+                <td data-label="Pron.">/kʊkt/</td>
+                <td data-label="Meaning">Cocinar</td>
+                <td class="notes-column" data-label="Notes">ED = /t/ (sonido sordo)</td>
+            </tr>
+            <tr>
+                <td data-label="#">5</td>
+                <td class="clickable-verb" data-label="Verb">Eat</td>
+                <td data-label="Pron.">/iːt/</td>
+                <td class="clickable-verb" data-label="Past">Ate</td>
+                <td data-label="Pron.">/eɪt/</td>
+                <td class="clickable-verb" data-label="Past Part.">Eaten</td>
+                <td data-label="Pron.">/ˈiːtən/</td>
+                <td data-label="Meaning">Comer</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">6</td>
+                <td class="clickable-verb" data-label="Verb">Drink</td>
+                <td data-label="Pron.">/drɪŋk/</td>
+                <td class="clickable-verb" data-label="Past">Drank</td>
+                <td data-label="Pron.">/dræŋk/</td>
+                <td class="clickable-verb" data-label="Past Part.">Drunk</td>
+                <td data-label="Pron.">/drʌŋk/</td>
+                <td data-label="Meaning">Tomar</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">7</td>
+                <td class="clickable-verb" data-label="Verb">Drive</td>
+                <td data-label="Pron.">/draɪv/</td>
+                <td class="clickable-verb" data-label="Past">Drove</td>
+                <td data-label="Pron.">/droʊv/</td>
+                <td class="clickable-verb" data-label="Past Part.">Driven</td>
+                <td data-label="Pron.">/ˈdrɪvən/</td>
+                <td data-label="Meaning">Manejar</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">8</td>
+                <td class="clickable-verb" data-label="Verb">Do</td>
+                <td data-label="Pron.">/duː/</td>
+                <td class="clickable-verb" data-label="Past">Did</td>
+                <td data-label="Pron.">/dɪd/</td>
+                <td class="clickable-verb" data-label="Past Part.">Done</td>
+                <td data-label="Pron.">/dʌn/</td>
+                <td data-label="Meaning">Hacer</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">9</td>
+                <td class="clickable-verb" data-label="Verb">Get</td>
+                <td data-label="Pron.">/ɡɛt/</td>
+                <td class="clickable-verb" data-label="Past">Got</td>
+                <td data-label="Pron.">/ɡɑːt/</td>
+                <td class="clickable-verb" data-label="Past Part.">Gotten</td>
+                <td data-label="Pron.">/ˈɡɑːtən/</td>
+                <td data-label="Meaning">Obtener</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">10</td>
+                <td class="clickable-verb" data-label="Verb">Give</td>
+                <td data-label="Pron.">/ɡɪv/</td>
+                <td class="clickable-verb" data-label="Past">Gave</td>
+                <td data-label="Pron.">/ɡeɪv/</td>
+                <td class="clickable-verb" data-label="Past Part.">Given</td>
+                <td data-label="Pron.">/ˈɡɪvən/</td>
+                <td data-label="Meaning">Dar</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">11</td>
+                <td class="clickable-verb" data-label="Verb">Read</td>
+                <td data-label="Pron.">/riːd/</td>
+                <td class="clickable-verb" data-label="Past">Read</td>
+                <td data-label="Pron.">/rɛd/</td>
+                <td class="clickable-verb" data-label="Past Part.">Read</td>
+                <td data-label="Pron.">/rɛd/</td>
+                <td data-label="Meaning">Leer</td>
+                <td class="notes-column" data-label="Notes">Irregular (misma escritura, diferente sonido)</td>
+            </tr>
+            <tr>
+                <td data-label="#">12</td>
+                <td class="clickable-verb" data-label="Verb">See</td>
+                <td data-label="Pron.">/siː/</td>
+                <td class="clickable-verb" data-label="Past">Saw</td>
+                <td data-label="Pron.">/sɔː/</td>
+                <td class="clickable-verb" data-label="Past Part.">Seen</td>
+                <td data-label="Pron.">/siːn/</td>
+                <td data-label="Notes">Ver, Observar</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">13</td>
+                <td class="clickable-verb" data-label="Verb">Look</td>
+                <td data-label="Pron.">/lʊk/</td>
+                <td class="clickable-verb" data-label="Past">Looked</td>
+                <td data-label="Pron.">/lʊkt/</td>
+                <td class="clickable-verb" data-label="Past Part.">Looked</td>
+                <td data-label="Pron.">/lʊkt/</td>
+                <td data-label="Meaning">Mirar</td>
+                <td class="notes-column" data-label="Notes">ED = /t/ (sonido sordo)</td>
+            </tr>
+            <tr>
+                <td data-label="#">14</td>
+                <td class="clickable-verb" data-label="Verb">Take</td>
+                <td data-label="Pron.">/teɪk/</td>
+                <td class="clickable-verb" data-label="Past">Took</td>
+                <td data-label="Pron.">/tʊk/</td>
+                <td class="clickable-verb" data-label="Past Part.">Taken</td>
+                <td data-label="Pron.">/ˈteɪkən/</td>
+                <td data-label="Meaning">Tomar</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">15</td>
+                <td class="clickable-verb" data-label="Verb">Study</td>
+                <td data-label="Pron.">/ˈstʌdi/</td>
+                <td class="clickable-verb" data-label="Past">Studied</td>
+                <td data-label="Pron.">/ˈstʌdid/</td>
+                <td class="clickable-verb" data-label="Past Part.">Studied</td>
+                <td data-label="Pron.">/ˈstʌdid/</td>
+                <td data-label="Meaning">Estudiar</td>
+                <td class="notes-column" data-label="Notes">ED = /d/ (sonido sonoro)</td>
+            </tr>
+            <tr>
+                <td data-label="#">16</td>
+                <td class="clickable-verb" data-label="Verb">Think</td>
+                <td data-label="Pron.">/θɪŋk/</td>
+                <td class="clickable-verb" data-label="Past">Thought</td>
+                <td data-label="Pron.">/θɔːt/</td>
+                <td class="clickable-verb" data-label="Past Part.">Thought</td>
+                <td data-label="Pron.">/θɔːt/</td>
+                <td data-label="Meaning">Pensar</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">17</td>
+                <td class="clickable-verb" data-label="Verb">Wash</td>
+                <td data-label="Pron.">/wɑːʃ/</td>
+                <td class="clickable-verb" data-label="Past">Washed</td>
+                <td data-label="Pron.">/wɑːʃt/</td>
+                <td class="clickable-verb" data-label="Past Part.">Washed</td>
+                <td data-label="Pron.">/wɑːʃt/</td>
+                <td data-label="Meaning">Lavar</td>
+                <td class="notes-column" data-label="Notes">ED = /t/ (sonido sordo)</td>
+            </tr>
+            <tr>
+                <td data-label="#">18</td>
+                <td class="clickable-verb" data-label="Verb">Watch</td>
+                <td data-label="Pron.">/wɑːtʃ/</td>
+                <td class="clickable-verb" data-label="Past">Watched</td>
+                <td data-label="Pron.">/wɑːtʃt/</td>
+                <td class="clickable-verb" data-label="Past Part.">Watched</td>
+                <td data-label="Pron.">/wɑːtʃt/</td>
+                <td data-label="Meaning">Observar, Mirar</td>
+                <td class="notes-column" data-label="Notes">ED = /t/ (sonido sordo)</td>
+            </tr>
+            <tr>
+                <td data-label="#">19</td>
+                <td class="clickable-verb" data-label="Verb">Have</td>
+                <td data-label="Pron.">/hæv/</td>
+                <td class="clickable-verb" data-label="Past">Had</td>
+                <td data-label="Pron.">/hæd/</td>
+                <td class="clickable-verb" data-label="Past Part.">Had</td>
+                <td data-label="Pron.">/hæd/</td>
+                <td data-label="Meaning">Tener</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">20</td>
+                <td class="clickable-verb" data-label="Verb">Find</td>
+                <td data-label="Pron.">/faɪnd/</td>
+                <td class="clickable-verb" data-label="Past">Found</td>
+                <td data-label="Pron.">/faʊnd/</td>
+                <td class="clickable-verb" data-label="Past Part.">Found</td>
+                <td data-label="Pron.">/faʊnd/</td>
+                <td data-label="Meaning">Encontrar</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">21</td>
+                <td class="clickable-verb" data-label="Verb">Wake up</td>
+                <td data-label="Pron.">/weɪk ʌp/</td>
+                <td class="clickable-verb" data-label="Past">Woke up</td>
+                <td data-label="Pron.">/woʊk ʌp/</td>
+                <td class="clickable-verb" data-label="Past Part.">Woken up</td>
+                <td data-label="Pron.">/ˈwoʊkən ʌp/</td>
+                <td data-label="Meaning">Despertar</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">22</td>
+                <td class="clickable-verb" data-label="Verb">Learn</td>
+                <td data-label="Pron.">/lɜːrn/</td>
+                <td class="clickable-verb" data-label="Past">Learned</td>
+                <td data-label="Pron.">/lɜːrnd/</td>
+                <td class="clickable-verb" data-label="Past Part.">Learned</td>
+                <td data-label="Pron.">/lɜːrnd/</td>
+                <td data-label="Meaning">Aprender</td>
+                <td class="notes-column" data-label="Notes">ED = /d/ (sonido sonoro)</td>
+            </tr>
+            <tr>
+                <td data-label="#">23</td>
+                <td class="clickable-verb" data-label="Verb">Write</td>
+                <td data-label="Pron.">/raɪt/</td>
+                <td class="clickable-verb" data-label="Past">Wrote</td>
+                <td data-label="Pron.">/roʊt/</td>
+                <td class="clickable-verb" data-label="Past Part.">Written</td>
+                <td data-label="Pron.">/ˈrɪtn/</td>
+                <td data-label="Meaning">Escribir</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">24</td>
+                <td class="clickable-verb" data-label="Verb">Walk</td>
+                <td data-label="Pron.">/wɔːk/</td>
+                <td class="clickable-verb" data-label="Past">Walked</td>
+                <td data-label="Pron.">/wɔːkt/</td>
+                <td class="clickable-verb" data-label="Past Part.">Walked</td>
+                <td data-label="Pron.">/wɔːkt/</td>
+                <td data-label="Meaning">Caminar</td>
+                <td class="notes-column" data-label="Notes">ED = /t/ (sonido sordo)</td>
+            </tr>
+            <tr>
+                <td data-label="#">25</td>
+                <td class="clickable-verb" data-label="Verb">Make</td>
+                <td data-label="Pron.">/meɪk/</td>
+                <td class="clickable-verb" data-label="Past">Made</td>
+                <td data-label="Pron.">/meɪd/</td>
+                <td class="clickable-verb" data-label="Past Part.">Made</td>
+                <td data-label="Pron.">/meɪd/</td>
+                <td data-label="Meaning">Hacer</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">26</td>
+                <td class="clickable-verb" data-label="Verb">Listen</td>
+                <td data-label="Pron.">/ˈlɪsn/</td>
+                <td class="clickable-verb" data-label="Past">Listened</td>
+                <td data-label="Pron.">/ˈlɪsnd/</td>
+                <td class="clickable-verb" data-label="Past Part.">Listened</td>
+                <td data-label="Pron.">/ˈlɪsnd/</td>
+                <td data-label="Meaning">Escuchar</td>
+                <td class="notes-column" data-label="Notes">ED = /d/ (sonido sonoro)</td>
+            </tr>
+            <tr>
+                <td data-label="#">27</td>
+                <td class="clickable-verb" data-label="Verb">Sleep</td>
+                <td data-label="Pron.">/sliːp/</td>
+                <td class="clickable-verb" data-label="Past">Slept</td>
+                <td data-label="Pron.">/slɛpt/</td>
+                <td class="clickable-verb" data-label="Past Part.">Slept</td>
+                <td data-label="Pron.">/slɛpt/</td>
+                <td data-label="Meaning">Dormir</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">28</td>
+                <td class="clickable-verb" data-label="Verb">Live</td>
+                <td data-label="Pron.">/lɪv/</td>
+                <td class="clickable-verb" data-label="Past">Lived</td>
+                <td data-label="Pron.">/lɪvd/</td>
+                <td class="clickable-verb" data-label="Past Part.">Lived</td>
+                <td data-label="Pron.">/lɪvd/</td>
+                <td data-label="Meaning">Vivir</td>
+                <td class="notes-column" data-label="Notes">ED = /d/ (sonido sonoro)</td>
+            </tr>
+            <tr>
+                <td data-label="#">29</td>
+                <td class="clickable-verb" data-label="Verb">Brush</td>
+                <td data-label="Pron.">/brʌʃ/</td>
+                <td class="clickable-verb" data-label="Past">Brushed</td>
+                <td data-label="Pron.">/brʌʃt/</td>
+                <td class="clickable-verb" data-label="Past Part.">Brushed</td>
+                <td data-label="Pron.">/brʌʃt/</td>
+                <td data-label="Meaning">Cepillar</td>
+                <td class="notes-column" data-label="Notes">ED = /t/ (sonido sordo)</td>
+            </tr>
+            <tr>
+                <td data-label="#">30</td>
+                <td class="clickable-verb" data-label="Verb">Can</td>
+                <td data-label="Pron.">/kæn/</td>
+                <td class="clickable-verb" data-label="Past">Could</td>
+                <td data-label="Pron.">/kʊd/</td>
+                <td class="clickable-verb" data-label="Past Part.">Could</td>
+                <td data-label="Pron.">/kʊd/</td>
+                <td data-label="Meaning">Poder</td>
+                <td class="notes-column" data-label="Notes">Irregular (verbo modal)</td>
+            </tr>
+            <tr>
+                <td data-label="#">31</td>
+                <td class="clickable-verb" data-label="Verb">Want</td>
+                <td data-label="Pron.">/wɑːnt/</td>
+                <td class="clickable-verb" data-label="Past">Wanted</td>
+                <td data-label="Pron.">/ˈwɑːntɪd/</td>
+                <td class="clickable-verb" data-label="Past Part.">Wanted</td>
+                <td data-label="Pron.">/ˈwɑːntɪd/</td>
+                <td data-label="Meaning">Querer</td>
+                <td class="notes-column" data-label="Notes">ED = /ɪd/ (termina en /t/)</td>
+            </tr>
+            <tr>
+                <td data-label="#">32</td>
+                <td class="clickable-verb" data-label="Verb">Need</td>
+                <td data-label="Pron.">/niːd/</td>
+                <td class="clickable-verb" data-label="Past">Needed</td>
+                <td data-label="Pron.">/ˈniːdɪd/</td>
+                <td class="clickable-verb" data-label="Past Part.">Needed</td>
+                <td data-label="Pron.">/ˈniːdɪd/</td>
+                <td data-label="Meaning">Necesitar</td>
+                <td class="notes-column" data-label="Notes">ED = /ɪd/ (termina en /d/)</td>
+            </tr>
+            <tr>
+                <td data-label="#">33</td>
+                <td class="clickable-verb" data-label="Verb">Like</td>
+                <td data-label="Pron.">/laɪk/</td>
+                <td class="clickable-verb" data-label="Past">Liked</td>
+                <td data-label="Pron.">/laɪkt/</td>
+                <td class="clickable-verb" data-label="Past Part.">Liked</td>
+                <td data-label="Pron.">/laɪkt/</td>
+                <td data-label="Meaning">Gustar</td>
+                <td class="notes-column" data-label="Notes">ED = /t/ (sonido sordo)</td>
+            </tr>
+            <tr>
+                <td data-label="#">34</td>
+                <td class="clickable-verb" data-label="Verb">Talk</td>
+                <td data-label="Pron.">/tɔːk/</td>
+                <td class="clickable-verb" data-label="Past">Talked</td>
+                <td data-label="Pron.">/tɔːkt/</td>
+                <td class="clickable-verb" data-label="Past Part.">Talked</td>
+                <td data-label="Pron.">/tɔːkt/</td>
+                <td data-label="Meaning">Conversar</td>
+                <td class="notes-column" data-label="Notes">ED = /t/ (sonido sordo)</td>
+            </tr>
+            <tr>
+                <td data-label="#">35</td>
+                <td class="clickable-verb" data-label="Verb">Speak</td>
+                <td data-label="Pron.">/spiːk/</td>
+                <td class="clickable-verb" data-label="Past">Spoke</td>
+                <td data-label="Pron.">/spoʊk/</td>
+                <td class="clickable-verb" data-label="Past Part.">Spoken</td>
+                <td data-label="Pron.">/ˈspoʊkən/</td>
+                <td data-label="Meaning">Hablar</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">36</td>
+                <td class="clickable-verb" data-label="Verb">Remember</td>
+                <td data-label="Pron.">/rɪˈmɛmbər/</td>
+                <td class="clickable-verb" data-label="Past">Remembered</td>
+                <td data-label="Pron.">/rɪˈmɛmbərd/</td>
+                <td class="clickable-verb" data-label="Past Part.">Remembered</td>
+                <td data-label="Pron.">/rɪˈmɛmbərd/</td>
+                <td data-label="Meaning">Recordar</td>
+                <td class="notes-column" data-label="Notes">ED = /d/ (sonido sonoro)</td>
+            </tr>
+            <tr>
+                <td data-label="#">37</td>
+                <td class="clickable-verb" data-label="Verb">Understand</td>
+                <td data-label="Pron.">/ˌʌndərˈstænd/</td>
+                <td class="clickable-verb" data-label="Past">Understood</td>
+                <td data-label="Pron.">/ˌʌndərˈstʊd/</td>
+                <td class="clickable-verb" data-label="Past Part.">Understood</td>
+                <td data-label="Pron.">/ˌʌndərˈstʊd/</td>
+                <td data-label="Meaning">Entender</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">38</td>
+                <td class="clickable-verb" data-label="Verb">Spend</td>
+                <td data-label="Pron.">/spɛnd/</td>
+                <td class="clickable-verb" data-label="Past">Spent</td>
+                <td data-label="Pron.">/spɛnt/</td>
+                <td class="clickable-verb" data-label="Past Part.">Spent</td>
+                <td data-label="Pron.">/spɛnt/</td>
+                <td data-label="Meaning">Gastar</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">39</td>
+                <td class="clickable-verb" data-label="Verb">Try</td>
+                <td data-label="Pron.">/traɪ/</td>
+                <td class="clickable-verb" data-label="Past">Tried</td>
+                <td data-label="Pron.">/traɪd/</td>
+                <td class="clickable-verb" data-label="Past Part.">Tried</td>
+                <td data-label="Pron.">/traɪd/</td>
+                <td data-label="Meaning">Intentar, tratar</td>
+                <td class="notes-column" data-label="Notes">ED = /d/ (sonido sonoro)</td>
+            </tr>
+            <tr>
+                <td data-label="#">40</td>
+                <td class="clickable-verb" data-label="Verb">Swim</td>
+                <td data-label="Pron.">/swɪm/</td>
+                <td class="clickable-verb" data-label="Past">Swam</td>
+                <td data-label="Pron.">/swæm/</td>
+                <td class="clickable-verb" data-label="Past Part.">Swum</td>
+                <td data-label="Pron.">/swʌm/</td>
+                <td data-label="Meaning">Nadar</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">41</td>
+                <td class="clickable-verb" data-label="Verb">Come</td>
+                <td data-label="Pron.">/kʌm/</td>
+                <td class="clickable-verb" data-label="Past">Came</td>
+                <td data-label="Pron.">/keɪm/</td>
+                <td class="clickable-verb" data-label="Past Part.">Come</td>
+                <td data-label="Pron.">/kʌm/</td>
+                <td data-label="Meaning">Venir</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">42</td>
+                <td class="clickable-verb" data-label="Verb">Start</td>
+                <td data-label="Pron.">/stɑːrt/</td>
+                <td class="clickable-verb" data-label="Past">Started</td>
+                <td data-label="Pron.">/ˈstɑːrtɪd/</td>
+                <td class="clickable-verb" data-label="Past Part.">Started</td>
+                <td data-label="Pron.">/ˈstɑːrtɪd/</td>
+                <td data-label="Meaning">Empezar</td>
+                <td class="notes-column" data-label="Notes">ED = /ɪd/ (termina en /t/)</td>
+            </tr>
+            <tr>
+                <td data-label="#">43</td>
+                <td class="clickable-verb" data-label="Verb">Say</td>
+                <td data-label="Pron.">/seɪ/</td>
+                <td class="clickable-verb" data-label="Past">Said</td>
+                <td data-label="Pron.">/sɛd/</td>
+                <td class="clickable-verb" data-label="Past Part.">Said</td>
+                <td data-label="Pron.">/sɛd/</td>
+                <td data-label="Meaning">Decir</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">44</td>
+                <td class="clickable-verb" data-label="Verb">Tell</td>
+                <td data-label="Pron.">/tɛl/</td>
+                <td class="clickable-verb" data-label="Past">Told</td>
+                <td data-label="Pron.">/toʊld/</td>
+                <td class="clickable-verb" data-label="Past Part.">Told</td>
+                <td data-label="Pron.">/toʊld/</td>
+                <td data-label="Meaning">Decir, contar, narrar</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">45</td>
+                <td class="clickable-verb" data-label="Verb">Buy</td>
+                <td data-label="Pron.">/baɪ/</td>
+                <td class="clickable-verb" data-label="Past">Bought</td>
+                <td data-label="Pron.">/bɑːt/</td>
+                <td class="clickable-verb" data-label="Past Part.">Bought</td>
+                <td data-label="Pron.">/bɑːt/</td>
+                <td data-label="Meaning">Comprar</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">46</td>
+                <td class="clickable-verb" data-label="Verb">Bring</td>
+                <td data-label="Pron.">/brɪŋ/</td>
+                <td class="clickable-verb" data-label="Past">Brought</td>
+                <td data-label="Pron.">/brɔːt/</td>
+                <td class="clickable-verb" data-label="Past Part.">Brought</td>
+                <td data-label="Pron.">/brɔːt/</td>
+                <td data-label="Meaning">Traer</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">47</td>
+                <td class="clickable-verb" data-label="Verb">Change</td>
+                <td data-label="Pron.">/tʃeɪndʒ/</td>
+                <td class="clickable-verb" data-label="Past">Changed</td>
+                <td data-label="Pron.">/tʃeɪndʒd/</td>
+                <td class="clickable-verb" data-label="Past Part.">Changed</td>
+                <td data-label="Pron.">/tʃeɪndʒd/</td>
+                <td data-label="Meaning">Cambiar</td>
+                <td class="notes-column" data-label="Notes">ED = /d/ (sonido sonoro)</td>
+            </tr>
+            <tr>
+                <td data-label="#">48</td>
+                <td class="clickable-verb" data-label="Verb">Cut</td>
+                <td data-label="Pron.">/kʌt/</td>
+                <td class="clickable-verb" data-label="Past">Cut</td>
+                <td data-label="Pron.">/kʌt/</td>
+                <td class="clickable-verb" data-label="Past Part.">Cut</td>
+                <td data-label="Pron.">/kʌt/</td>
+                <td data-label="Meaning">Cortar</td>
+                <td class="notes-column" data-label="Notes">Irregular (igual en las 3 formas)</td>
+            </tr>
+            <tr>
+                <td data-label="#">49</td>
+                <td class="clickable-verb" data-label="Verb">Fall</td>
+                <td data-label="Pron.">/fɑːl/</td>
+                <td class="clickable-verb" data-label="Past">Fell</td>
+                <td data-label="Pron.">/fɛl/</td>
+                <td class="clickable-verb" data-label="Past Part.">Fallen</td>
+                <td data-label="Pron.">/ˈfɑːlən/</td>
+                <td data-label="Meaning">Caer</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">50</td>
+                <td class="clickable-verb" data-label="Verb">Fix</td>
+                <td data-label="Pron.">/fɪks/</td>
+                <td class="clickable-verb" data-label="Past">Fixed</td>
+                <td data-label="Pron.">/fɪkst/</td>
+                <td class="clickable-verb" data-label="Past Part.">Fixed</td>
+                <td data-label="Pron.">/fɪkst/</td>
+                <td data-label="Meaning">Arreglar, Reparar</td>
+                <td class="notes-column" data-label="Notes">ED = /t/ (sonido sordo)</td>
+            </tr>
+            <tr>
+                <td data-label="#">51</td>
+                <td class="clickable-verb" data-label="Verb">Forget</td>
+                <td data-label="Pron.">/fərˈɡɛt/</td>
+                <td class="clickable-verb" data-label="Past">Forgot</td>
+                <td data-label="Pron.">/fərˈɡɑːt/</td>
+                <td class="clickable-verb" data-label="Past Part.">Forgotten</td>
+                <td data-label="Pron.">/fərˈɡɑːtn/</td>
+                <td data-label="Meaning">Olvidar</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">52</td>
+                <td class="clickable-verb" data-label="Verb">Lose</td>
+                <td data-label="Pron.">/luːz/</td>
+                <td class="clickable-verb" data-label="Past">Lost</td>
+                <td data-label="Pron.">/lɔːst/</td>
+                <td class="clickable-verb" data-label="Past Part.">Lost</td>
+                <td data-label="Pron.">/lɔːst/</td>
+                <td data-label="Meaning">Perder</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">53</td>
+                <td class="clickable-verb" data-label="Verb">Open</td>
+                <td data-label="Pron.">/ˈoʊpən/</td>
+                <td class="clickable-verb" data-label="Past">Opened</td>
+                <td data-label="Pron.">/ˈoʊpənd/</td>
+                <td class="clickable-verb" data-label="Past Part.">Opened</td>
+                <td data-label="Pron.">/ˈoʊpənd/</td>
+                <td data-label="Meaning">Abrir</td>
+                <td class="notes-column" data-label="Notes">ED = /d/ (sonido sonoro)</td>
+            </tr>
+            <tr>
+                <td data-label="#">54</td>
+                <td class="clickable-verb" data-label="Verb">Close</td>
+                <td data-label="Pron.">/kloʊz/</td>
+                <td class="clickable-verb" data-label="Past">Closed</td>
+                <td data-label="Pron.">/kloʊzd/</td>
+                <td class="clickable-verb" data-label="Past Part.">Closed</td>
+                <td data-label="Pron.">/kloʊzd/</td>
+                <td data-label="Meaning">Cerrar</td>
+                <td class="notes-column" data-label="Notes">ED = /d/ (sonido sonoro)</td>
+            </tr>
+            <tr>
+                <td data-label="#">55</td>
+                <td class="clickable-verb" data-label="Verb">Pay</td>
+                <td data-label="Pron.">/peɪ/</td>
+                <td class="clickable-verb" data-label="Past">Paid</td>
+                <td data-label="Pron.">/peɪd/</td>
+                <td class="clickable-verb" data-label="Past Part.">Paid</td>
+                <td data-label="Pron.">/peɪd/</td>
+                <td data-label="Meaning">Pagar</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">56</td>
+                <td class="clickable-verb" data-label="Verb">Put</td>
+                <td data-label="Pron.">/pʊt/</td>
+                <td class="clickable-verb" data-label="Past">Put</td>
+                <td data-label="Pron.">/pʊt/</td>
+                <td class="clickable-verb" data-label="Past Part.">Put</td>
+                <td data-label="Pron.">/pʊt/</td>
+                <td data-label="Meaning">Poner</td>
+                <td class="notes-column" data-label="Notes">Irregular (igual en las 3 formas)</td>
+            </tr>
+            <tr>
+                <td data-label="#">57</td>
+                <td class="clickable-verb" data-label="Verb">Run</td>
+                <td data-label="Pron.">/rʌn/</td>
+                <td class="clickable-verb" data-label="Past">Ran</td>
+                <td data-label="Pron.">/ræn/</td>
+                <td class="clickable-verb" data-label="Past Part.">Run</td>
+                <td data-label="Pron.">/rʌn/</td>
+                <td data-label="Meaning">Correr</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">58</td>
+                <td class="clickable-verb" data-label="Verb">Send</td>
+                <td data-label="Pron.">/sɛnd/</td>
+                <td class="clickable-verb" data-label="Past">Sent</td>
+                <td data-label="Pron.">/sɛnt/</td>
+                <td class="clickable-verb" data-label="Past Part.">Sent</td>
+                <td data-label="Pron.">/sɛnt/</td>
+                <td data-label="Meaning">Enviar</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">59</td>
+                <td class="clickable-verb" data-label="Verb">Feel</td>
+                <td data-label="Pron.">/fiːl/</td>
+                <td class="clickable-verb" data-label="Past">Felt</td>
+                <td data-label="Pron.">/fɛlt/</td>
+                <td class="clickable-verb" data-label="Past Part.">Felt</td>
+                <td data-label="Pron.">/fɛlt/</td>
+                <td data-label="Meaning">Sentir</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">60</td>
+                <td class="clickable-verb" data-label="Verb">Teach</td>
+                <td data-label="Pron.">/tiːtʃ/</td>
+                <td class="clickable-verb" data-label="Past">Taught</td>
+                <td data-label="Pron.">/tɔːt/</td>
+                <td class="clickable-verb" data-label="Past Part.">Taught</td>
+                <td data-label="Pron.">/tɔːt/</td>
+                <td data-label="Meaning">Enseñar</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">61</td>
+                <td class="clickable-verb" data-label="Verb">Wait</td>
+                <td data-label="Pron.">/weɪt/</td>
+                <td class="clickable-verb" data-label="Past">Waited</td>
+                <td data-label="Pron.">/ˈweɪtɪd/</td>
+                <td class="clickable-verb" data-label="Past Part.">Waited</td>
+                <td data-label="Pron.">/ˈweɪtɪd/</td>
+                <td data-label="Meaning">Esperar</td>
+                <td class="notes-column" data-label="Notes">ED = /ɪd/ (termina en /t/)</td>
+            </tr>
+            <tr>
+                <td data-label="#">62</td>
+                <td class="clickable-verb" data-label="Verb">Fly</td>
+                <td data-label="Pron.">/flaɪ/</td>
+                <td class="clickable-verb" data-label="Past">Flew</td>
+                <td data-label="Pron.">/fluː/</td>
+                <td class="clickable-verb" data-label="Past Part.">Flown</td>
+                <td data-label="Pron.">/floʊn/</td>
+                <td data-label="Meaning">Volar</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">63</td>
+                <td class="clickable-verb" data-label="Verb">Leave</td>
+                <td data-label="Pron.">/liːv/</td>
+                <td class="clickable-verb" data-label="Past">Left</td>
+                <td data-label="Pron.">/lɛft/</td>
+                <td class="clickable-verb" data-label="Past Part.">Left</td>
+                <td data-label="Pron.">/lɛft/</td>
+                <td data-label="Meaning">Dejar, salir</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">64</td>
+                <td class="clickable-verb" data-label="Verb">Know</td>
+                <td data-label="Pron.">/noʊ/</td>
+                <td class="clickable-verb" data-label="Past">Knew</td>
+                <td data-label="Pron.">/nuː/</td>
+                <td class="clickable-verb" data-label="Past Part.">Known</td>
+                <td data-label="Pron.">/noʊn/</td>
+                <td data-label="Meaning">Saber, conocer</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">65</td>
+                <td class="clickable-verb" data-label="Verb">Believe</td>
+                <td data-label="Pron.">/bɪˈliːv/</td>
+                <td class="clickable-verb" data-label="Past">Believed</td>
+                <td data-label="Pron.">/bɪˈliːvd/</td>
+                <td class="clickable-verb" data-label="Past Part.">Believed</td>
+                <td data-label="Pron.">/bɪˈliːvd/</td>
+                <td data-label="Meaning">Creer</td>
+                <td class="notes-column" data-label="Notes">ED = /d/ (sonido sonoro)</td>
+            </tr>
+            <tr>
+                <td data-label="#">66</td>
+                <td class="clickable-verb" data-label="Verb">Become</td>
+                <td data-label="Pron.">/bɪˈkʌm/</td>
+                <td class="clickable-verb" data-label="Past">Became</td>
+                <td data-label="Pron.">/bɪˈkeɪm/</td>
+                <td class="clickable-verb" data-label="Past Part.">Become</td>
+                <td data-label="Pron.">/bɪˈkʌm/</td>
+                <td data-label="Meaning">Llegar a ser</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">67</td>
+                <td class="clickable-verb" data-label="Verb">Ask</td>
+                <td data-label="Pron.">/æsk/</td>
+                <td class="clickable-verb" data-label="Past">Asked</td>
+                <td data-label="Pron.">/æskt/</td>
+                <td class="clickable-verb" data-label="Past Part.">Asked</td>
+                <td data-label="Pron.">/æskt/</td>
+                <td data-label="Meaning">Preguntar, pedir</td>
+                <td class="notes-column" data-label="Notes">ED = /t/ (sonido sordo)</td>
+            </tr>
+            <tr>
+                <td data-label="#">68</td>
+                <td class="clickable-verb" data-label="Verb">Hear</td>
+                <td data-label="Pron.">/hɪr/</td>
+                <td class="clickable-verb" data-label="Past">Heard</td>
+                <td data-label="Pron.">/hɜːrd/</td>
+                <td class="clickable-verb" data-label="Past Part.">Heard</td>
+                <td data-label="Pron.">/hɜːrd/</td>
+                <td data-label="Meaning">Escuchar</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">69</td>
+                <td class="clickable-verb" data-label="Verb">Use</td>
+                <td data-label="Pron.">/juːs/</td>
+                <td class="clickable-verb" data-label="Past">Used</td>
+                <td data-label="Pron.">/juːzd/</td>
+                <td class="clickable-verb" data-label="Past Part.">Used</td>
+                <td data-label="Pron.">/juːzd/</td>
+                <td data-label="Meaning">Usar</td>
+                <td class="notes-column" data-label="Notes">ED = /d/ (sonido sonoro)</td>
+            </tr>
+            <tr>
+                <td data-label="#">70</td>
+                <td class="clickable-verb" data-label="Verb">Sing</td>
+                <td data-label="Pron.">/sɪŋ/</td>
+                <td class="clickable-verb" data-label="Past">Sang</td>
+                <td data-label="Pron.">/sæŋ/</td>
+                <td class="clickable-verb" data-label="Past Part.">Sung</td>
+                <td data-label="Pron.">/sʌŋ/</td>
+                <td data-label="Meaning">Cantar</td>
+                <td class="notes-column" data-label="Notes">Irregular</td>
+            </tr>
+            <tr>
+                <td data-label="#">71</td>
+                <td class="clickable-verb" data-label="Verb">Text</td>
+                <td data-label="Pron.">/tɛkst/</td>
+                <td class="clickable-verb" data-label="Past">Texted</td>
+                <td data-label="Pron.">/ˈtɛkstɪd/</td>
+                <td class="clickable-verb" data-label="Past Part.">Texted</td>
+                <td data-label="Pron.">/ˈtɛkstɪd/</td>
+                <td data-label="Meaning">Mensajear</td>
+                <td class="notes-column" data-label="Notes">ED = /ɪd/ (termina en /t/)</td>
+            </tr>
+            <tr>
+                <td data-label="#">72</td>
+                <td class="clickable-verb" data-label="Verb">Call</td>
+                <td data-label="Pron.">/kɔːl/</td>
+                <td class="clickable-verb" data-label="Past">Called</td>
+                <td data-label="Pron.">/kɔːld/</td>
+                <td class="clickable-verb" data-label="Past Part.">Called</td>
+                <td data-label="Pron.">/kɔːld/</td>
+                <td data-label="Meaning">Llamar</td>
+                <td class="notes-column" data-label="Notes">ED = /d/ (sonido sonoro)</td>
+            </tr>
+            <tr>
+                <td data-label="#">73</td>
+                <td class="clickable-verb" data-label="Verb">Pick up</td>
+                <td data-label="Pron.">/pɪk ʌp/</td>
+                <td class="clickable-verb" data-label="Past">Picked up</td>
+                <td data-label="Pron.">/pɪkt ʌp/</td>
+                <td class="clickable-verb" data-label="Past Part.">Picked up</td>
+                <td data-label="Pron.">/pɪkt ʌp/</td>
+                <td data-label="Meaning">Recoger</td>
+                <td class="notes-column" data-label="Notes">ED = /t/ (sonido sordo)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        if ('speechSynthesis' in window) {
+            const synth = window.speechSynthesis;
+            const clickableVerbs = document.querySelectorAll('.clickable-verb');
+            let englishVoice = null; // Variable para almacenar la voz de inglés
+
+            // Función para cargar las voces y encontrar una voz en inglés
+            function loadVoices() {
+                const voices = synth.getVoices();
+                englishVoice = voices.find(voice => voice.lang === 'en-US' || voice.lang === 'en-GB');
+
+                // Si no se encuentra una voz específica de inglés, intenta con la primera disponible
+                if (!englishVoice) {
+                    console.warn("No se encontró una voz específica de inglés (en-US o en-GB). Usando la primera voz disponible.");
+                    englishVoice = voices[0];
+                }
+
+                // Opcional: Imprime las voces disponibles en la consola para depuración
+                // console.log("Voces disponibles:");
+                // voices.forEach(voice => console.log(`${voice.name} (${voice.lang}) - ${voice.default ? 'Default' : ''}`));
+            }
+
+            // Las voces pueden no estar cargadas inmediatamente.
+            // Escucha el evento 'voiceschanged' o cárgalas si ya están disponibles.
+            if (synth.getVoices().length === 0) {
+                synth.onvoiceschanged = loadVoices;
+            } else {
+                loadVoices(); // Las voces ya están disponibles
+            }
+
+            clickableVerbs.forEach(verbElement => {
+                verbElement.addEventListener('click', () => {
+                    if (!englishVoice) {
+                        alert('Por favor, espera un momento mientras se cargan las voces o tu navegador no tiene voces de inglés disponibles.');
+                        return;
+                    }
+
+                    const textToSpeak = verbElement.textContent;
+                    const utterance = new SpeechSynthesisUtterance(textToSpeak);
+
+                    utterance.voice = englishVoice; // Asigna la voz encontrada
+                    utterance.lang = englishVoice.lang; // Asegura que el idioma de la voz se use
+
+                    // Optional: Adjust rate and pitch
+                    // utterance.rate = 1.0; // Speed of speech (0.1 to 10)
+                    // utterance.pitch = 1.0; // Pitch of speech (0 to 2)
+
+                    synth.speak(utterance);
+                });
+            });
+        } else {
+            alert('Lo siento, tu navegador no soporta la síntesis de voz.');
+        }
+    </script>
+
+</body>
+</html>
