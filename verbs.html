@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Procesador Básico de XML SAT 4.0</title>
+    <title>Procesador Múltiple y Exportador a Excel de CFDI 4.0</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -44,6 +44,7 @@
             font-weight: bold;
             transition: all 0.3s ease;
             background-color: #eaf6ff;
+            margin-right: 10px; /* Espacio entre botones */
         }
         .custom-file-upload:hover {
             background-color: #d1e7ff;
@@ -54,20 +55,38 @@
             margin-top: 10px;
             font-style: italic;
             color: #555;
+            min-height: 20px; /* Para mantener el espacio */
+        }
+        .action-buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+        #exportBtn {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+            margin-left: 10px; /* Espacio entre botones */
+        }
+        #exportBtn:hover {
+            background-color: #218838;
+        }
+        #exportBtn:disabled {
+            background-color: #94d3a2;
+            cursor: not-allowed;
         }
         .results-section {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap; /* Permite que los elementos se envuelvan en pantallas pequeñas */
-        }
-        .xml-raw, .extracted-data {
-            flex: 1; /* Permite que cada sección ocupe el espacio disponible */
-            min-width: 300px; /* Ancho mínimo para evitar que se vean muy apretados */
             background-color: #f9f9f9;
             border: 1px solid #ddd;
             border-radius: 8px;
             padding: 20px;
             box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+            min-height: 100px;
+            overflow-y: auto;
         }
         h2 {
             color: #34495e;
@@ -77,23 +96,25 @@
             margin-bottom: 20px;
             font-size: 1.5em;
         }
-        pre {
-            white-space: pre-wrap; /* Permite el ajuste de línea */
-            word-wrap: break-word; /* Rompe palabras largas */
-            max-height: 400px;
-            overflow-y: auto;
-            background-color: #e9ecef;
-            padding: 15px;
+        #processedFilesList {
+            list-style: none;
+            padding: 0;
+        }
+        #processedFilesList li {
+            background-color: #e9f7ef;
+            border: 1px solid #d4edda;
+            padding: 8px 15px;
+            margin-bottom: 5px;
             border-radius: 5px;
-            border: 1px solid #ced4da;
-            color: #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             font-size: 0.9em;
         }
-        .data-item {
-            margin-bottom: 10px;
-        }
-        .data-item strong {
-            color: #007bff;
+        #processedFilesList li.error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
         }
         #errorMessage {
             color: #dc3545;
@@ -101,34 +122,28 @@
             margin-top: 20px;
             font-weight: bold;
         }
-        .ms-3 { /* Simple margin-left para indentación de sub-items */
-            margin-left: 1rem; /* 16px */
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Procesador Básico de XML SAT 4.0</h1>
+        <h1>Procesador Múltiple y Exportador a Excel de CFDI 4.0</h1>
         <div class="input-section">
             <label for="xmlFile" class="custom-file-upload">
-                Seleccionar archivo XML
+                Seleccionar archivos XML del SAT
             </label>
-            <input type="file" id="xmlFile" accept=".xml">
+            <input type="file" id="xmlFile" accept=".xml" multiple>
             <div id="fileName">Ningún archivo seleccionado</div>
             <div id="errorMessage"></div>
+            <div class="action-buttons">
+                <button id="exportBtn" disabled>Exportar a Excel (CSV)</button>
+            </div>
         </div>
 
         <div class="results-section">
-            <div class="xml-raw">
-                <h2>Contenido XML (Raw)</h2>
-                <pre id="xmlContent"></pre>
-            </div>
-            <div class="extracted-data">
-                <h2>Datos Extraídos (Básico)</h2>
-                <div id="extractedInfo">
-                    <p>Carga un XML para ver los datos extraídos aquí.</p>
-                </div>
-            </div>
+            <h2>Archivos Procesados</h2>
+            <ul id="processedFilesList">
+                <li>Carga tus archivos XML para ver el estado del procesamiento aquí.</li>
+            </ul>
         </div>
     </div>
 
@@ -136,189 +151,163 @@
         document.addEventListener('DOMContentLoaded', () => {
             const xmlFileInput = document.getElementById('xmlFile');
             const fileNameDisplay = document.getElementById('fileName');
-            const xmlContentDisplay = document.getElementById('xmlContent');
-            const extractedInfoDisplay = document.getElementById('extractedInfo');
+            const processedFilesList = document.getElementById('processedFilesList');
             const errorMessageDisplay = document.getElementById('errorMessage');
+            const exportBtn = document.getElementById('exportBtn');
 
-            xmlFileInput.addEventListener('change', (event) => {
-                const file = event.target.files[0];
-                if (file) {
-                    fileNameDisplay.textContent = file.name;
-                    errorMessageDisplay.textContent = ''; // Limpiar mensajes de error
-                    const reader = new FileReader();
+            let extractedData = []; // Array para almacenar los datos de todos los XML procesados
 
-                    reader.onload = (e) => {
-                        const xmlString = e.target.result;
-                        xmlContentDisplay.textContent = xmlString; // Mostrar el XML raw
-
-                        try {
-                            const parser = new DOMParser();
-                            const xmlDoc = parser.parseFromString(xmlString, "text/xml");
-
-                            // Verificar si hubo errores de parseo
-                            const parserError = xmlDoc.querySelector('parsererror');
-                            if (parserError) {
-                                throw new Error('Error al parsear el XML: ' + parserError.textContent);
-                            }
-
-                            extractData(xmlDoc);
-
-                        } catch (error) {
-                            errorMessageDisplay.textContent = `Error al procesar el XML: ${error.message}`;
-                            extractedInfoDisplay.innerHTML = '<p>No se pudieron extraer datos debido a un error.</p>';
-                        }
-                    };
-
-                    reader.onerror = () => {
-                        errorMessageDisplay.textContent = 'Error al leer el archivo.';
-                        fileNameDisplay.textContent = 'Ningún archivo seleccionado';
-                        xmlContentDisplay.textContent = '';
-                        extractedInfoDisplay.innerHTML = '<p>Error al leer el archivo.</p>';
-                    };
-
-                    reader.readAsText(file);
-                } else {
+            xmlFileInput.addEventListener('change', async (event) => {
+                const files = event.target.files;
+                if (files.length === 0) {
                     fileNameDisplay.textContent = 'Ningún archivo seleccionado';
-                    xmlContentDisplay.textContent = '';
-                    extractedInfoDisplay.innerHTML = '<p>Carga un XML para ver los datos extraídos aquí.</p>';
+                    processedFilesList.innerHTML = '<li>Carga tus archivos XML para ver el estado del procesamiento aquí.</li>';
+                    exportBtn.disabled = true;
+                    extractedData = []; // Limpiar datos si no hay archivos
                     errorMessageDisplay.textContent = '';
+                    return;
+                }
+
+                fileNameDisplay.textContent = `${files.length} archivo(s) seleccionado(s).`;
+                errorMessageDisplay.textContent = '';
+                processedFilesList.innerHTML = ''; // Limpiar lista anterior
+                extractedData = []; // Limpiar datos anteriores al cargar nuevos archivos
+                exportBtn.disabled = true; // Desactivar el botón de exportar mientras se procesa
+
+                // Definir la cabecera para el CSV
+                const headers = [
+                    "Nombre Archivo", "Estado", "Version CFDI", "Serie", "Folio", "Fecha", "Total",
+                    "Emisor Nombre",
+                    "Receptor RFC", "Receptor Nombre", "Receptor Domicilio Fiscal",
+                    "Concepto 1 Descripcion", "Concepto 2 Descripcion", "Concepto 3 Descripcion", // hasta 3 conceptos para empezar
+                    "Total Impuestos Trasladados", "Total Impuestos Retenidos"
+                ];
+
+                // Limpiar y preparar extractedData con los encabezados al inicio
+                extractedData.push(headers);
+
+
+                for (const file of files) {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `Procesando: ${file.name}...`;
+                    processedFilesList.appendChild(listItem);
+
+                    try {
+                        const xmlString = await readFileAsync(file);
+                        const parser = new DOMParser();
+                        const xmlDoc = parser.parseFromString(xmlString, "text/xml");
+
+                        const parserError = xmlDoc.querySelector('parsererror');
+                        if (parserError) {
+                            throw new Error('Archivo mal formado');
+                        }
+
+                        const rowData = extractSpecificData(xmlDoc, file.name);
+                        extractedData.push(rowData);
+                        listItem.textContent = `✅ Procesado: ${file.name}`;
+
+                    } catch (error) {
+                        listItem.textContent = `❌ Error al procesar ${file.name}: ${error.message}`;
+                        listItem.classList.add('error');
+                        // Añadir una fila con el error en los datos extraídos
+                        const errorRow = [file.name, `ERROR: ${error.message}`];
+                        // Rellenar el resto de la fila con N/A para mantener la estructura
+                        for(let i = 2; i < headers.length; i++) {
+                            errorRow.push('N/A');
+                        }
+                        extractedData.push(errorRow);
+                    }
+                }
+
+                if (extractedData.length > 1) { // Si hay más que solo los encabezados
+                    exportBtn.disabled = false;
                 }
             });
 
-            function extractData(xmlDoc) {
-                let htmlOutput = '';
-                let hasData = false;
+            exportBtn.addEventListener('click', () => {
+                exportToCsv(extractedData, 'datos_cfdi.csv');
+            });
 
-                // --- Comprobante (CFDI 4.0) ---
-                // MODIFICADO: Seleccionamos el elemento "Comprobante" sin prefijo para mayor compatibilidad
-                const comprobante = xmlDoc.querySelector('Comprobante'); // Ahora busca solo 'Comprobante'
+            // Función para leer el archivo como texto (promisificado)
+            function readFileAsync(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => resolve(e.target.result);
+                    reader.onerror = reject;
+                    reader.readAsText(file);
+                });
+            }
+
+            // Función para extraer los datos específicos y devolverlos como un array
+            function extractSpecificData(xmlDoc, fileName) {
+                const row = [fileName, "OK"]; // Columna de nombre de archivo y estado
+
+                const comprobante = xmlDoc.querySelector('Comprobante'); // Sin prefijo
                 if (comprobante) {
-                    // Verificamos la versión para asegurarnos de que sea 4.0 o intentarlo
                     const version = comprobante.getAttribute('Version');
                     if (version && version.startsWith('4.')) {
-                        hasData = true;
-                        htmlOutput += `<h3>Comprobante (CFDI ${version})</h3>`;
-                        htmlOutput += `<div class="data-item"><strong>Versión:</strong> ${version || 'N/A'}</div>`;
-                        htmlOutput += `<div class="data-item"><strong>Serie:</strong> ${comprobante.getAttribute('Serie') || 'N/A'}</div>`;
-                        htmlOutput += `<div class="data-item"><strong>Folio:</strong> ${comprobante.getAttribute('Folio') || 'N/A'}</div>`;
-                        htmlOutput += `<div class="data-item"><strong>Fecha:</strong> ${comprobante.getAttribute('Fecha') || 'N/A'}</div>`;
-                        htmlOutput += `<div class="data-item"><strong>Subtotal:</strong> ${comprobante.getAttribute('SubTotal') || 'N/A'}</div>`;
-                        htmlOutput += `<div class="data-item"><strong>Total:</strong> ${comprobante.getAttribute('Total') || 'N/A'}</div>`;
-                        htmlOutput += `<div class="data-item"><strong>Moneda:</strong> ${comprobante.getAttribute('Moneda') || 'N/A'}</div>`;
-                        htmlOutput += `<div class="data-item"><strong>Tipo de Comprobante:</strong> ${comprobante.getAttribute('TipoDeComprobante') || 'N/A'}</div>`;
-                        htmlOutput += `<div class="data-item"><strong>Lugar de Expedición:</strong> ${comprobante.getAttribute('LugarExpedicion') || 'N/A'}</div>`;
-                        htmlOutput += `<div class="data-item"><strong>Método de Pago:</strong> ${comprobante.getAttribute('MetodoPago') || 'N/A'}</div>`;
-                        htmlOutput += `<div class="data-item"><strong>Forma de Pago:</strong> ${comprobante.getAttribute('FormaPago') || 'N/A'}</div>`;
-                        htmlOutput += `<div class="data-item"><strong>Exportacion:</strong> ${comprobante.getAttribute('Exportacion') || 'N/A'}</div>`;
+                        row.push(version || 'N/A');
+                        row.push(comprobante.getAttribute('Serie') || 'N/A');
+                        row.push(comprobante.getAttribute('Folio') || 'N/A');
+                        row.push(comprobante.getAttribute('Fecha') || 'N/A');
+                        row.push(comprobante.getAttribute('Total') || 'N/A');
 
-                        // --- Emisor ---
-                        // MODIFICADO: Seleccionamos el elemento "Emisor" sin prefijo
                         const emisor = comprobante.querySelector('Emisor');
-                        if (emisor) {
-                            htmlOutput += '<h4>Emisor</h4>';
-                            htmlOutput += `<div class="data-item"><strong>RFC:</strong> ${emisor.getAttribute('Rfc') || 'N/A'}</div>`;
-                            htmlOutput += `<div class="data-item"><strong>Nombre:</strong> ${emisor.getAttribute('Nombre') || 'N/A'}</div>`;
-                            htmlOutput += `<div class="data-item"><strong>Régimen Fiscal:</strong> ${emisor.getAttribute('RegimenFiscal') || 'N/A'}</div>`;
-                        }
+                        row.push(emisor ? emisor.getAttribute('Nombre') || 'N/A' : 'N/A');
 
-                        // --- Receptor ---
-                        // MODIFICADO: Seleccionamos el elemento "Receptor" sin prefijo
                         const receptor = comprobante.querySelector('Receptor');
-                        if (receptor) {
-                            htmlOutput += '<h4>Receptor</h4>';
-                            htmlOutput += `<div class="data-item"><strong>RFC:</strong> ${receptor.getAttribute('Rfc') || 'N/A'}</div>`;
-                            htmlOutput += `<div class="data-item"><strong>Nombre:</strong> ${receptor.getAttribute('Nombre') || 'N/A'}</div>`;
-                            htmlOutput += `<div class="data-item"><strong>Domicilio Fiscal Receptor:</strong> ${receptor.getAttribute('DomicilioFiscalReceptor') || 'N/A'}</div>`;
-                            htmlOutput += `<div class="data-item"><strong>Régimen Fiscal Receptor:</strong> ${receptor.getAttribute('RegimenFiscalReceptor') || 'N/A'}</div>`;
-                            htmlOutput += `<div class="data-item"><strong>Uso CFDI:</strong> ${receptor.getAttribute('UsoCFDI') || 'N/A'}</div>`;
-                        }
+                        row.push(receptor ? receptor.getAttribute('Rfc') || 'N/A' : 'N/A');
+                        row.push(receptor ? receptor.getAttribute('Nombre') || 'N/A' : 'N/A');
+                        row.push(receptor ? receptor.getAttribute('DomicilioFiscalReceptor') || 'N/A' : 'N/A');
 
-                        // --- Conceptos ---
-                        // MODIFICADO: Seleccionamos los elementos "Concepto" sin prefijo
+                        // Conceptos (Descripción): hasta 3 descripciones
                         const conceptos = comprobante.querySelectorAll('Conceptos Concepto');
-                        if (conceptos.length > 0) {
-                            htmlOutput += '<h4>Conceptos</h4>';
-                            conceptos.forEach((concepto, index) => {
-                                htmlOutput += `<div class="data-item"><strong>Concepto ${index + 1}:</strong></div>`;
-                                htmlOutput += `<div class="data-item ms-3">Código Prod/Serv: ${concepto.getAttribute('ClaveProdServ') || 'N/A'}</div>`;
-                                htmlOutput += `<div class="data-item ms-3">Cantidad: ${concepto.getAttribute('Cantidad') || 'N/A'}</div>`;
-                                htmlOutput += `<div class="data-item ms-3">Unidad: ${concepto.getAttribute('ClaveUnidad') || 'N/A'}</div>`;
-                                htmlOutput += `<div class="data-item ms-3">Descripción: ${concepto.getAttribute('Descripcion') || 'N/A'}</div>`;
-                                htmlOutput += `<div class="data-item ms-3">Valor Unitario: ${concepto.getAttribute('ValorUnitario') || 'N/A'}</div>`;
-                                htmlOutput += `<div class="data-item ms-3">Importe: ${concepto.getAttribute('Importe') || 'N/A'}</div>`;
-                                htmlOutput += `<div class="data-item ms-3">ObjetoImp: ${concepto.getAttribute('ObjetoImp') || 'N/A'}</div>`;
-                            });
+                        for (let i = 0; i < 3; i++) {
+                            row.push(conceptos[i] ? conceptos[i].getAttribute('Descripcion') || 'N/A' : 'N/A');
                         }
-
-                        // --- Impuestos (Traslados y Retenciones) ---
-                        // MODIFICADO: Seleccionamos los elementos "Impuestos", "Traslados", "Traslado", "Retenciones", "Retencion" sin prefijo
+                        
+                        // Impuestos Totales
                         const impuestos = comprobante.querySelector('Impuestos');
-                        if (impuestos) {
-                            htmlOutput += '<h4>Impuestos</h4>';
-                            const totalImpuestosTrasladados = impuestos.getAttribute('TotalImpuestosTrasladados');
-                            if (totalImpuestosTrasladados) {
-                                htmlOutput += `<div class="data-item"><strong>Total Impuestos Trasladados:</strong> ${totalImpuestosTrasladados}</div>`;
-                            }
-                            const totalImpuestosRetenidos = impuestos.getAttribute('TotalImpuestosRetenidos');
-                            if (totalImpuestosRetenidos) {
-                                htmlOutput += `<div class="data-item"><strong>Total Impuestos Retenidos:</strong> ${totalImpuestosRetenidos}</div>`;
-                            }
-
-                            const traslados = impuestos.querySelectorAll('Traslados Traslado');
-                            if (traslados.length > 0) {
-                                htmlOutput += '<h5>Traslados</h5>';
-                                traslados.forEach((traslado, index) => {
-                                    htmlOutput += `<div class="data-item ms-3">Impuesto: ${traslado.getAttribute('Impuesto') || 'N/A'}</div>`;
-                                    htmlOutput += `<div class="data-item ms-3">TipoFactor: ${traslado.getAttribute('TipoFactor') || 'N/A'}</div>`;
-                                    htmlOutput += `<div class="data-item ms-3">TasaOCuota: ${traslado.getAttribute('TasaOCuota') || 'N/A'}</div>`;
-                                    htmlOutput += `<div class="data-item ms-3">Importe: ${traslado.getAttribute('Importe') || 'N/A'}</div>`;
-                                });
-                            }
-
-                            const retenciones = impuestos.querySelectorAll('Retenciones Retencion');
-                            if (retenciones.length > 0) {
-                                htmlOutput += '<h5>Retenciones</h5>';
-                                retenciones.forEach((retencion, index) => {
-                                    htmlOutput += `<div class="data-item ms-3">Impuesto: ${retencion.getAttribute('Impuesto') || 'N/A'}</div>`;
-                                    htmlOutput += `<div class="data-item ms-3">Importe: ${retencion.getAttribute('Importe') || 'N/A'}</div>`;
-                                });
-                            }
-                        }
-
-                        // --- Complemento de Pago (si existe) ---
-                        // Busca el elemento 'Complemento' y luego 'Pagos' y 'Pago' sin prefijos
-                        const complemento = comprobante.querySelector('Complemento');
-                        if (complemento) {
-                            const pagoinf = complemento.querySelector('Pagos Pago'); // Asume que 'Pagos' y 'Pago' no tienen prefijo o se ignoran
-                            if (pagoinf) {
-                                htmlOutput += '<h3>Complemento de Pago (Información Básica)</h3>';
-                                htmlOutput += `<div class="data-item"><strong>Fecha Pago:</strong> ${pagoinf.getAttribute('FechaPago') || 'N/A'}</div>`;
-                                htmlOutput += `<div class="data-item"><strong>Monto Total Pagos:</strong> ${pagoinf.getAttribute('MontoTotalPagos') || 'N/A'}</div>`;
-                                // Puedes añadir más detalles del complemento de pago aquí
-                            }
-
-                            // --- Complemento de Nomina (si existe) ---
-                            const nomina = complemento.querySelector('Nomina'); // Asume que 'Nomina' no tiene prefijo o se ignora
-                            if (nomina) {
-                                htmlOutput += '<h3>Complemento de Nómina (Información Básica)</h3>';
-                                htmlOutput += `<div class="data-item"><strong>Tipo de Nómina:</strong> ${nomina.getAttribute('TipoNomina') || 'N/A'}</div>`;
-                                htmlOutput += `<div class="data-item"><strong>Fecha de Pago:</strong> ${nomina.getAttribute('FechaPago') || 'N/A'}</div>`;
-                                // Puedes añadir más detalles de la nómina aquí
-                            }
-                        }
+                        row.push(impuestos ? impuestos.getAttribute('TotalImpuestosTrasladados') || '0.00' : '0.00');
+                        row.push(impuestos ? impuestos.getAttribute('TotalImpuestosRetenidos') || '0.00' : '0.00');
 
                     } else {
-                        htmlOutput = '<p>La versión del Comprobante no es 4.x o no se pudo determinar. Este visor está diseñado para CFDI 4.0.</p>';
+                        // Versión incorrecta o no detectable
+                        return [fileName, "ERROR: Version CFDI no 4.x"];
                     }
                 } else {
-                    htmlOutput = '<p>No se encontró el elemento principal `Comprobante` en el XML. Asegúrate de que el archivo sea un XML de CFDI válido.</p>';
+                    // No se encontró el elemento Comprobante
+                    return [fileName, "ERROR: No es un CFDI válido o Comprobante no encontrado"];
                 }
+                return row;
+            }
 
-                extractedInfoDisplay.innerHTML = htmlOutput;
-                if (!hasData) {
-                    errorMessageDisplay.textContent = 'No se pudieron extraer datos importantes. El archivo podría no ser un CFDI 4.0 o estar mal formado.';
-                } else {
-                    errorMessageDisplay.textContent = ''; // Limpiar mensaje de error si se extrajo algo
+            // Función para exportar los datos a un archivo CSV
+            function exportToCsv(data, filename) {
+                let csvContent = "";
+                data.forEach((rowArray) => {
+                    let row = rowArray.map(item => {
+                        // Limpiar y escapar comillas dobles en el contenido para CSV
+                        let cleanedItem = String(item).replace(/"/g, '""');
+                        // Si el item contiene comas o saltos de línea, enciérralo en comillas dobles
+                        if (cleanedItem.includes(',') || cleanedItem.includes('\n')) {
+                            return `"${cleanedItem}"`;
+                        }
+                        return cleanedItem;
+                    }).join(',');
+                    csvContent += row + "\r\n";
+                });
+
+                const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                const link = document.createElement('a');
+                if (link.download !== undefined) { // Feature detection
+                    const url = URL.createObjectURL(blob);
+                    link.setAttribute('href', url);
+                    link.setAttribute('download', filename);
+                    link.style.visibility = 'hidden';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
                 }
             }
         });
