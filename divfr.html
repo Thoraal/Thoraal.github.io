@@ -1,1842 +1,303 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Herramienta para fraccionar montos en operaciones de cambio de moneda con cálculo automático según tipo de cambio.">
-    <link rel="icon" type="image/png" href="assets/img/divfr.png" />
-    <title>Fraccionador de números</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>Sitio en Mantenimiento - Fuera de Servicio</title>
     <style>
-        /* ============================================
-           VARIABLES DE TEMA
-           ============================================ */
-        :root {
-            --c-brand:          #5641b6;
-            --c-brand-light:    #7e6fff;
-            --c-brand-dark:     #3a2a8f;
-            --c-brand-soft:     rgba(86, 65, 182, 0.08);
-            --c-text:           #1f1f2e;
-            --c-text-muted:     #6b6b7d;
-            --c-text-soft:      #8a8a9a;
-            --c-bg:             #a7a7a7;
-            --c-bg-pattern:     radial-gradient(circle at 25% 15%, rgba(126, 111, 255, 0.18) 0%, transparent 50%),
-                                radial-gradient(circle at 75% 85%, rgba(86, 65, 182, 0.15) 0%, transparent 50%);
-            --c-surface:        rgba(255, 255, 255, 0.96);
-            --c-surface-soft:   rgba(255, 255, 255, 0.85);
-            --c-border:         #e8e9f0;
-            --c-border-strong:  #d4d6e0;
-            --c-error:          #d9534f;
-            --c-error-bg:       rgba(217, 83, 79, 0.08);
-            --c-success:        #16a34a;
-            --c-success-bg:     rgba(22, 163, 74, 0.08);
-            --c-info:           #337bac;
+        /* Importación de tipografía moderna */
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap');
 
-            --c-perfil-micro:   #d97706;  /* ámbar */
-            --c-perfil-pequena: #2563eb;  /* azul */
-            --c-perfil-mediana: #7c3aed;  /* violeta */
-
-            --shadow-xs: 0 1px 2px rgba(15, 15, 25, 0.06);
-            --shadow-sm: 0 2px 6px rgba(15, 15, 25, 0.08), 0 1px 2px rgba(15, 15, 25, 0.04);
-            --shadow-md: 0 6px 18px rgba(15, 15, 25, 0.10), 0 2px 4px rgba(15, 15, 25, 0.05);
-            --shadow-lg: 0 16px 40px rgba(15, 15, 25, 0.14), 0 4px 8px rgba(15, 15, 25, 0.06);
-            --shadow-brand: 0 8px 22px rgba(86, 65, 182, 0.32);
-
-            --radius-xs: 6px;
-            --radius-sm: 10px;
-            --radius-md: 14px;
-            --radius-lg: 22px;
-
-            --transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
-            --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-
-            --icon-stroke: 2;
-        }
-
-        /* ============================================
-           RESET Y BASE
-           ============================================ */
-        *, *::before, *::after {
+        * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            background: var(--c-bg);
-            background-image: var(--c-bg-pattern);
-            padding: 20px;
-            color: var(--c-text);
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            height: 100vh;
+            width: 100vw;
             overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border: 0;
-        }
-
-        /* ============================================
-           SISTEMA DE ICONOS
-           ============================================ */
-        .icon {
-            display: inline-block;
-            width: 18px;
-            height: 18px;
-            stroke: currentColor;
-            stroke-width: var(--icon-stroke);
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            fill: none;
-            flex-shrink: 0;
-            vertical-align: middle;
-        }
-
-        .icon-sm { width: 14px; height: 14px; }
-        .icon-lg { width: 24px; height: 24px; }
-        .icon-xl { width: 32px; height: 32px; }
-
-        /* ============================================
-           CONTAINER
-           ============================================ */
-        .container {
-            background: var(--c-surface);
-            padding: 40px;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-lg);
-            text-align: center;
-            max-height: 92vh;
-            overflow-y: auto;
-            width: 100%;
-            max-width: 940px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 22px;
-            position: relative;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-
-        .container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 24px;
-            right: 24px;
-            height: 4px;
-            background: linear-gradient(90deg, var(--c-brand-light), var(--c-brand), var(--c-brand-dark));
-            border-radius: 0 0 var(--radius-sm) var(--radius-sm);
-        }
-
-        /* ============================================
-           HEADER
-           ============================================ */
-        .header {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            margin-top: 4px;
-        }
-
-        .header-title {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
+            color: #f8fafc;
         }
 
-        .header-icon {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 44px;
-            height: 44px;
-            background: linear-gradient(135deg, var(--c-brand-light), var(--c-brand));
-            color: white;
-            border-radius: var(--radius-sm);
-            box-shadow: var(--shadow-brand);
-        }
-
-        .header-icon .icon { width: 24px; height: 24px; stroke-width: 2; }
-
-        h2 {
-            color: var(--c-text);
-            font-weight: 700;
-            margin: 0;
-            font-size: 1.85em;
-            letter-spacing: -0.02em;
-            line-height: 1;
-        }
-
-        .header-subtitle {
-            color: var(--c-text-muted);
-            font-size: 0.85em;
-            font-weight: 400;
-            letter-spacing: 0.02em;
-            margin: 0;
-        }
-
-        .header-subtitle span {
-            color: var(--c-brand);
-            font-weight: 600;
-        }
-
-        /* ============================================
-           INPUTS Y BOTONES
-           ============================================ */
-        .input-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: stretch;
-            gap: 12px;
-            width: 100%;
-        }
-
-        .input-field {
-            position: relative;
-            flex: 1 1 auto;
-            min-width: 200px;
-            display: flex;
-        }
-
-        .input-field .input-icon {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--c-text-soft);
-            pointer-events: none;
-            transition: color var(--transition);
-        }
-
-        .input-field input,
-        .input-field select,
-        .input-container input[type="number"]:not(.input-field input),
-        .input-container select:not(.input-field select),
-        .input-container input[type="text"]:not(.input-field input) {
-            width: 100%;
-            padding: 13px 16px 13px 42px;
-            border: 1px solid var(--c-border);
-            border-radius: var(--radius-sm);
-            font-size: 0.95em;
-            font-family: inherit;
-            font-weight: 500;
-            background: white;
-            color: var(--c-text);
-            box-shadow: var(--shadow-xs);
-            outline: none;
-            transition: all var(--transition);
-        }
-
-        .input-container button {
-            padding: 13px 18px;
-            border: none;
-            border-radius: var(--radius-sm);
-            font-size: 0.92em;
-            font-family: inherit;
-            background: linear-gradient(135deg, var(--c-brand-light), var(--c-brand));
-            color: white;
-            cursor: pointer;
-            font-weight: 600;
-            letter-spacing: 0.005em;
-            box-shadow: var(--shadow-sm);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            min-width: 150px;
-            transition: all var(--transition);
-        }
-
-        .input-field input:hover,
-        .input-field select:hover {
-            border-color: var(--c-border-strong);
-        }
-
-        .input-field input:focus,
-        .input-field select:focus {
-            border-color: var(--c-brand);
-            box-shadow: 0 0 0 3px var(--c-brand-soft), var(--shadow-xs);
-        }
-
-        .input-field input:focus ~ .input-icon,
-        .input-field select:focus ~ .input-icon,
-        .input-field:focus-within .input-icon {
-            color: var(--c-brand);
-        }
-
-        .input-field input::placeholder {
-            color: var(--c-text-soft);
-            font-weight: 400;
-        }
-
-        .input-container button:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-brand);
-        }
-
-        .input-container button:active:not(:disabled) {
-            transform: translateY(0);
-        }
-
-        .input-container button:focus-visible {
-            outline: none;
-            box-shadow: var(--shadow-sm), 0 0 0 3px rgba(86, 65, 182, 0.4);
-        }
-
-        .input-container button:disabled {
-            opacity: 0.45;
-            cursor: not-allowed;
-            background: linear-gradient(135deg, #b8b8c0, #98989f);
-            box-shadow: var(--shadow-xs);
-        }
-
-        button.btn-secondary {
-            background: white !important;
-            color: var(--c-brand) !important;
-            border: 1px solid var(--c-border-strong) !important;
-        }
-
-        button.btn-secondary:hover:not(:disabled) {
-            background: var(--c-brand-soft) !important;
-            border-color: var(--c-brand) !important;
-            box-shadow: var(--shadow-sm) !important;
-        }
-
-        button.btn-secondary:disabled {
-            background: white !important;
-            color: var(--c-text-soft) !important;
-        }
-
-        /* Select arrow personalizado para coherencia visual */
-        .input-field select {
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236b6b7d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 14px center;
-            padding-right: 38px;
-        }
-
-        /* ============================================
-           SWITCH
-           ============================================ */
-        .switch-wrapper {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            font-size: 0.85em;
-            color: var(--c-text-muted);
-            font-weight: 500;
-            padding: 8px 16px;
-            background: var(--c-surface-soft);
-            border: 1px solid var(--c-border);
-            border-radius: 999px;
-            transition: all var(--transition);
-        }
-
-        .switch-wrapper:hover {
-            border-color: var(--c-border-strong);
-        }
-
-        .switch-wrapper .icon {
-            color: var(--c-text-soft);
-            width: 16px;
-            height: 16px;
-        }
-
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 42px;
-            height: 22px;
-            flex-shrink: 0;
-        }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
+        /* Capa de los iconos flotantes interactivos */
+        #canvas-container {
+            position: fixed;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #cbd0db;
-            transition: var(--transition);
-            border-radius: 22px;
-        }
-
-        .slider::before {
-            position: absolute;
-            content: "";
-            height: 16px;
-            width: 16px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: var(--transition);
-            border-radius: 50%;
-            box-shadow: 0 2px 4px rgba(15, 15, 25, 0.2);
-        }
-
-        input:checked + .slider {
-            background: linear-gradient(135deg, var(--c-brand-light), var(--c-brand));
-        }
-
-        input:focus-visible + .slider {
-            outline: 2px solid var(--c-brand);
-            outline-offset: 2px;
-        }
-
-        input:checked + .slider::before {
-            transform: translateX(20px);
-        }
-
-        /* ============================================
-           SPINNER LOADING
-           ============================================ */
-        .loading-indicator {
-            display: none;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            font-size: 0.85em;
-            color: var(--c-brand);
-            font-style: italic;
             width: 100%;
-        }
-
-        .loading-indicator.show {
-            display: flex;
-        }
-
-        .spinner {
-            width: 14px;
-            height: 14px;
-            border: 2px solid rgba(86, 65, 182, 0.2);
-            border-top-color: var(--c-brand);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* ============================================
-           TABLA
-           ============================================ */
-        .tabla-wrapper {
-            width: 100%;
-            overflow: auto;
-            max-height: 480px;
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-md);
-            border: 1px solid var(--c-border);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: center;
-            background: white;
-        }
-
-        th, td {
-            border-bottom: 1px solid var(--c-border);
-            padding: 12px 14px;
-            text-align: center;
-            white-space: nowrap;
-            font-size: 0.92em;
-            font-variant-numeric: tabular-nums;
-        }
-
-        th {
-            background: linear-gradient(135deg, var(--c-brand), var(--c-brand-dark));
-            color: white;
-            font-weight: 600;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-            font-size: 0.72em;
-            padding: 14px 14px;
-            position: sticky;
-            top: 0;
+            height: 100%;
+            pointer-events: none;
             z-index: 1;
-            border-bottom: none;
         }
 
-        th:first-child { border-top-left-radius: var(--radius-md); }
-        th:last-child  { border-top-right-radius: var(--radius-md); }
-
-        tbody tr:nth-child(odd)  { background-color: white; }
-        tbody tr:nth-child(even) { background-color: #f7f8fc; }
-
-        tbody tr {
-            animation: rowSlideIn 0.32s ease-out backwards;
-            transition: background-color var(--transition);
+        .floating-icon {
+            position: absolute;
+            pointer-events: none;
+            will-change: transform;
+            transition: opacity 0.3s ease;
         }
 
-        tbody tr:hover {
-            background-color: #ecfdf5 !important;
-        }
-
-        tbody tr:last-child td { border-bottom: none; }
-
-        td:first-child {
-            color: var(--c-text-muted);
-            font-weight: 600;
-            font-size: 0.82em;
-        }
-
-        @keyframes rowSlideIn {
-            from { opacity: 0; transform: translateY(-4px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Marcado de perfiles: color en la columna "Cantidad a ingresar" */
-        tbody tr[data-perfil="micro"]    td:nth-child(2) { color: var(--c-perfil-micro);    font-weight: 700; }
-        tbody tr[data-perfil="pequena"]  td:nth-child(2) { color: var(--c-perfil-pequena);  font-weight: 700; }
-        tbody tr[data-perfil="mediana"]  td:nth-child(2) { color: var(--c-perfil-mediana);  font-weight: 700; }
-
-        /* Indicador discreto en la columna decorativa */
-        tbody tr[data-perfil="micro"]    td:nth-child(3)::before { content: '●'; color: var(--c-perfil-micro);    margin-right: 6px; font-size: 0.7em; vertical-align: middle; }
-        tbody tr[data-perfil="pequena"]  td:nth-child(3)::before { content: '●'; color: var(--c-perfil-pequena);  margin-right: 6px; font-size: 0.7em; vertical-align: middle; }
-        tbody tr[data-perfil="mediana"]  td:nth-child(3)::before { content: '●'; color: var(--c-perfil-mediana);  margin-right: 6px; font-size: 0.7em; vertical-align: middle; }
-
-        td:nth-child(3) {
-            color: var(--c-text-soft);
-            font-family: 'Courier New', monospace;
-            letter-spacing: -1px;
-        }
-
-        tfoot td {
-            background: linear-gradient(to right, #f8f8fc, #efeefa);
-            font-weight: 700;
-            color: var(--c-brand-dark);
-            font-size: 0.95em;
-            padding: 14px 14px;
-            position: sticky;
-            bottom: 0;
-            border-top: 2px solid var(--c-brand);
-            border-bottom: none;
-        }
-
-        tfoot td:first-child { border-bottom-left-radius: var(--radius-md); }
-        tfoot td:last-child  { border-bottom-right-radius: var(--radius-md); }
-
-        /* Leyenda de perfiles */
-        .leyenda {
-            display: none;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 16px;
-            width: 100%;
-            font-size: 0.78em;
-            color: var(--c-text-muted);
-            margin-top: -8px;
-            padding: 10px 16px;
-            background: var(--c-surface-soft);
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--c-border);
-        }
-
-        .leyenda.show { display: flex; }
-
-        .leyenda-titulo {
-            color: var(--c-text-soft);
-            font-weight: 500;
-        }
-
-        .leyenda-item {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-weight: 600;
-        }
-
-        .leyenda-item::before {
-            content: '●';
-            font-size: 1.1em;
-        }
-
-        .leyenda-item.micro    { color: var(--c-perfil-micro); }
-        .leyenda-item.pequena  { color: var(--c-perfil-pequena); }
-        .leyenda-item.mediana  { color: var(--c-perfil-mediana); }
-
-        /* ============================================
-           LABELS Y MENSAJES
-           ============================================ */
-        .info-cards {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            width: 100%;
-            justify-content: center;
-        }
-
-        .labels-container,
-        .labels-container-tc {
-            text-align: left;
-            font-size: 0.9em;
-            color: var(--c-text-muted);
-            font-weight: 500;
-            border-radius: var(--radius-md);
-            padding: 18px 20px;
-            box-shadow: var(--shadow-sm);
-            background: var(--c-surface-soft);
-            border: 1px solid var(--c-border);
-            flex: 1 1 280px;
-            max-width: 380px;
+        /* Contenedor Principal (Efecto Glassmorphism) */
+        .card {
             position: relative;
+            z-index: 10;
+            background: rgba(30, 41, 59, 0.45);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 3rem 2.5rem;
+            border-radius: 28px;
+            text-align: center;
+            max-width: 540px;
+            width: 90%;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            animation: fadeInCard 1s ease-out;
         }
 
-        .labels-container {
-            display: flex;
-            flex-direction: column;
-            gap: 0;
+        @keyframes fadeInCard {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .labels-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid var(--c-border);
-        }
-
-        .labels-header-left {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--c-text);
-            font-weight: 600;
-            font-size: 0.9em;
-        }
-
-        .labels-header-left .icon {
-            color: var(--c-brand);
-        }
-
-        .logo {
-            width: 64px;
-            height: auto;
-            opacity: 0.85;
-            transition: opacity var(--transition);
-        }
-
-        .logo:hover { opacity: 1; }
-
-        .labels-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 7px 0;
-            font-size: 0.88em;
-        }
-
-        .labels-row + .labels-row {
-            border-top: 1px dashed var(--c-border);
-        }
-
-        .labels-row span:first-child {
-            color: var(--c-text-soft);
-            font-weight: 500;
-        }
-
-        .labels-row span:last-child {
-            color: var(--c-text);
-            font-weight: 700;
-            font-variant-numeric: tabular-nums;
-        }
-
-        .labels-container-tc {
-            opacity: 0;
-            max-height: 0;
-            overflow: hidden;
-            transition: opacity var(--transition-slow), max-height var(--transition-slow), padding var(--transition-slow);
-            font-size: 0.85em;
-            color: var(--c-text-muted);
-            padding: 0 20px;
-            border: 1px solid transparent;
-        }
-
-        .labels-container-tc.show {
-            opacity: 1;
-            max-height: 420px;
-            padding: 18px 20px;
-            border-color: var(--c-border);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .dof-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--c-text);
-            font-weight: 600;
-            font-size: 0.9em;
-            margin-bottom: 8px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid var(--c-border);
-        }
-
-        .dof-header .icon { color: var(--c-brand); }
-
-        .labels-container-tc p {
-            margin: 6px 0;
-            line-height: 1.5;
-        }
-
-        .labels-container-tc input[type="date"] {
-            border: 1px solid var(--c-border);
-            border-radius: var(--radius-xs);
-            padding: 6px 10px;
-            font-family: inherit;
-            font-size: 0.9em;
-            color: var(--c-text);
-            background: white;
-        }
-
-        .labels-container-tc input[type="date"]:focus {
-            outline: none;
-            border-color: var(--c-brand);
-            box-shadow: 0 0 0 2px var(--c-brand-soft);
-        }
-
-        /* Mensajes con iconos */
-        .message {
-            display: none;
-            align-items: flex-start;
-            gap: 10px;
-            padding: 10px 14px;
-            border-radius: var(--radius-sm);
-            font-weight: 500;
-            font-size: 0.88em;
-            margin-top: 10px;
-            line-height: 1.4;
-            text-align: left;
-        }
-
-        .message.show { display: flex; }
-
-        .message .icon {
-            margin-top: 1px;
-            flex-shrink: 0;
-        }
-
-        .message-success {
-            color: var(--c-success);
-            background: var(--c-success-bg);
-            border: 1px solid rgba(22, 163, 74, 0.18);
-        }
-
-        .message-error {
-            color: var(--c-error);
-            background: var(--c-error-bg);
-            border: 1px solid rgba(217, 83, 79, 0.18);
-        }
-
-        #footer {
-            width: 100%;
-            margin-top: 4px;
-            font-size: 0.78em;
-            color: var(--c-text-soft);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-
-        #footer a {
-            color: var(--c-brand);
-            text-decoration: none;
-            font-weight: 600;
+        /* Icono de Alerta Principal Animado */
+        .main-alert-icon {
             display: inline-flex;
             align-items: center;
-            gap: 4px;
+            justify-content: center;
+            width: 80px;
+            height: 80px;
+            background: rgba(24a, 158, 11, 0.1);
+            border: 2px solid #f59e0b;
+            color: #f59e0b;
+            border-radius: 50%;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.2);
+            animation: pulseGlow 2s infinite alternate ease-in-out;
         }
 
-        #footer a:hover {
-            text-decoration: underline;
+        @keyframes pulseGlow {
+            0% { transform: scale(1); box-shadow: 0 0 20px rgba(245, 158, 11, 0.2); }
+            100% { transform: scale(1.06); box-shadow: 0 0 35px rgba(245, 158, 11, 0.4); }
         }
 
-        #footer a .icon {
-            width: 12px;
-            height: 12px;
+        /* Títulos y Textos */
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.75rem;
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        /* ============================================
-           RESPONSIVE
-           ============================================ */
-        @media (max-width: 480px) {
-            body { padding: 10px; }
-            .container { padding: 20px; gap: 14px; }
-            h2 { font-size: 1.5em; }
-
-            .input-container input[type="number"],
-            .input-container select,
-            .input-container button,
-            .input-container input[type="text"] {
-                min-width: 100%;
-                padding: 12px 14px;
-            }
-
-            th, td { padding: 8px; font-size: 0.85em; }
+        .status-badge {
+            display: inline-block;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #f87171;
+            padding: 0.35rem 1rem;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1.5rem;
         }
 
-        /* ============================================
-           PRINT
-           ============================================ */
-        @media print {
-            body { background: white; padding: 0; }
+        p {
+            color: #94a3b8;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
 
-            .container {
-                box-shadow: none;
-                background: white;
-                padding: 10px;
-                max-height: none;
-                overflow: visible;
-            }
+        /* Barra de Progreso / Simulación de Carga Estilizada */
+        .progress-container {
+            width: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            height: 8px;
+            border-radius: 100px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
 
-            .input-container,
-            .switch-wrapper,
-            #footer,
-            .loading-indicator,
-            .labels-container-tc,
-            .leyenda {
-                display: none !important;
-            }
+        .progress-bar {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                #facc15 0%, 
+                #eab308 25%, 
+                #facc15 50%, 
+                #eab308 75%, 
+                #facc15 100%
+            );
+            background-size: 200% 100%;
+            animation: barberPole 2.5s linear infinite;
+            border-radius: 100px;
+        }
 
-            tbody tr { animation: none !important; }
+        @keyframes barberPole {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
 
-            table {
-                border: 1px solid black;
-                border-collapse: collapse;
-                width: 100%;
-            }
-
-            th, td { border: 1px solid black; padding: 10px; }
-
-            th {
-                background-color: #d3d3d3 !important;
-                color: black !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-
-            tbody tr:nth-child(odd) {
-                background-color: #f0f0f0 !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-
-            tbody tr:nth-child(even) {
-                background-color: #ffffff !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
+        /* Pie de página sutil */
+        .footer-note {
+            margin-top: 2rem;
+            font-size: 0.85rem;
+            color: #64748b;
         }
     </style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 </head>
-
 <body>
-    <!-- ================================================
-         BIBLIOTECA DE ICONOS SVG (definidos una vez,
-         referenciados con <use href="#icon-name">)
-         ================================================ -->
-    <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-        <defs>
-            <symbol id="i-calculator" viewBox="0 0 24 24">
-                <rect x="4" y="2" width="16" height="20" rx="2"/>
-                <line x1="8" y1="6" x2="16" y2="6"/>
-                <line x1="16" y1="14" x2="16" y2="18"/>
-                <path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/>
-                <path d="M12 14h.01"/><path d="M8 14h.01"/>
-                <path d="M12 18h.01"/><path d="M8 18h.01"/>
-            </symbol>
-            <symbol id="i-dollar" viewBox="0 0 24 24">
-                <line x1="12" y1="2" x2="12" y2="22"/>
-                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-            </symbol>
-            <symbol id="i-coins" viewBox="0 0 24 24">
-                <circle cx="8" cy="8" r="6"/>
-                <path d="M18.09 10.37A6 6 0 1 1 10.34 18"/>
-                <path d="M7 6h1v4"/>
-                <path d="m16.71 13.88.7.71-2.82 2.82"/>
-            </symbol>
-            <symbol id="i-trending" viewBox="0 0 24 24">
-                <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/>
-                <polyline points="16 7 22 7 22 13"/>
-            </symbol>
-            <symbol id="i-printer" viewBox="0 0 24 24">
-                <polyline points="6 9 6 2 18 2 18 9"/>
-                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
-                <rect x="6" y="14" width="12" height="8"/>
-            </symbol>
-            <symbol id="i-receipt" viewBox="0 0 24 24">
-                <path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/>
-                <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/>
-                <path d="M12 17.5v-11"/>
-            </symbol>
-            <symbol id="i-trash" viewBox="0 0 24 24">
-                <path d="M3 6h18"/>
-                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
-                <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-            </symbol>
-            <symbol id="i-check" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="10"/>
-                <path d="m9 12 2 2 4-4"/>
-            </symbol>
-            <symbol id="i-alert" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="10"/>
-                <line x1="12" y1="8" x2="12" y2="12"/>
-                <line x1="12" y1="16" x2="12.01" y2="16"/>
-            </symbol>
-            <symbol id="i-document" viewBox="0 0 24 24">
-                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                <polyline points="14 2 14 8 20 8"/>
-                <line x1="16" y1="13" x2="8" y2="13"/>
-                <line x1="16" y1="17" x2="8" y2="17"/>
-                <line x1="10" y1="9" x2="8" y2="9"/>
-            </symbol>
-            <symbol id="i-info" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="10"/>
-                <line x1="12" y1="16" x2="12" y2="12"/>
-                <line x1="12" y1="8" x2="12.01" y2="8"/>
-            </symbol>
-            <symbol id="i-external" viewBox="0 0 24 24">
-                <path d="M15 3h6v6"/>
-                <path d="M10 14 21 3"/>
-                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-            </symbol>
-            <symbol id="i-clipboard" viewBox="0 0 24 24">
-                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
-                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
-            </symbol>
-        </defs>
-    </svg>
 
-    <main class="container">
-        <!-- ===== HEADER ===== -->
-        <header class="header">
-            <div class="header-title">
-                <span class="header-icon">
-                    <svg class="icon"><use href="#i-calculator"/></svg>
-                </span>
-                <h2>Fraccionador de números</h2>
-            </div>
-            <p class="header-subtitle">Operaciones de <span>cambio de moneda</span></p>
-        </header>
+    <!-- Contenedor donde se inyectan los iconos móviles mediante JS -->
+    <div id="canvas-container"></div>
 
-        <!-- ===== INPUTS Y BOTONES ===== -->
-        <div class="input-container">
-            <div class="input-field">
-                <label for="numero" class="sr-only">Monto a fraccionar</label>
-                <input type="number" id="numero" placeholder="Monto (máx. $20,000)" min="1" max="20000" step="1" />
-                <svg class="icon icon-sm input-icon"><use href="#i-dollar"/></svg>
-            </div>
-
-            <div class="input-field">
-                <label for="moneda" class="sr-only">Moneda</label>
-                <select id="moneda" aria-label="Moneda de origen">
-                    <option value="usd">Dólar americano</option>
-                    <option value="eur">Euro</option>
-                    <option value="cad">Canadiense</option>
-                    <option value="otro">Otro</option>
-                </select>
-                <svg class="icon icon-sm input-icon"><use href="#i-coins"/></svg>
-            </div>
-
-            <div class="input-field" id="monedaOtroWrapper" style="display:none;">
-                <label for="monedaOtro" class="sr-only">Especificar otra moneda</label>
-                <input type="text" id="monedaOtro" placeholder="Especificar otra moneda" />
-                <svg class="icon icon-sm input-icon"><use href="#i-coins"/></svg>
-            </div>
-
-            <div class="input-field">
-                <label for="tipoCambio" class="sr-only">Tipo de cambio</label>
-                <input type="number" id="tipoCambio" step="0.0001" min="0" placeholder="Tipo de cambio" />
-                <svg class="icon icon-sm input-icon"><use href="#i-trending"/></svg>
-            </div>
-
-            <button id="imprimirBtn" type="button" title="Complete los campos para habilitar la impresión" disabled>
-                <svg class="icon icon-sm"><use href="#i-printer"/></svg>
-                Imprimir
-            </button>
-            <button id="imprimirRolloBtn" type="button" title="Elija la impresora Epson o Tickets">
-                <svg class="icon icon-sm"><use href="#i-receipt"/></svg>
-                Ticket
-            </button>
-            <button id="borrarBtn" type="button" class="btn-secondary">
-                <svg class="icon icon-sm"><use href="#i-trash"/></svg>
-                Borrar
-            </button>
+    <!-- Tarjeta Central informativa -->
+    <div class="card">
+        <div class="main-alert-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+        </div>
+        <div class="status-badge">Fuera de Servicio</div>
+        <h1>Estamos mejorando</h1>
+        <p>Nuestro sitio web se encuentra temporalmente inactivo por tareas de mantenimiento y optimización técnica. Volveremos a estar en línea muy pronto con mejoras increíbles.</p>
+        
+        <div class="progress-container">
+            <div class="progress-bar"></div>
         </div>
 
-        <!-- ===== SWITCH DOF ===== -->
-        <div class="switch-wrapper">
-            <svg class="icon"><use href="#i-document"/></svg>
-            <label class="switch">
-                <input type="checkbox" id="toggleDof" aria-label="Mostrar datos del Diario Oficial de la Federación">
-                <span class="slider"></span>
-            </label>
-            <span>Mostrar tipo de cambio DOF</span>
+        <div class="footer-note">
+            Disculpa las molestias operativas · © 2026
         </div>
-
-        <!-- ===== LOADING ===== -->
-        <div class="loading-indicator" id="loadingIndicator" role="status" aria-live="polite">
-            <span class="spinner" aria-hidden="true"></span>
-            <span>Consultando Banxico…</span>
-        </div>
-
-        <!-- ===== INFO CARDS ===== -->
-        <div class="info-cards">
-            <div class="labels-container">
-                <div class="labels-header">
-                    <div class="labels-header-left">
-                        <svg class="icon"><use href="#i-clipboard"/></svg>
-                        <span>Resumen</span>
-                    </div>
-                    <a href="https://thoraal.github.io/" target="_blank" rel="noopener" aria-label="Ir al portafolio de Alejandro Toral">
-                        <img src="assets/img/logo.png" alt="Logo Thoraal" class="logo" />
-                    </a>
-                </div>
-                <div class="labels-row">
-                    <span>Monto</span>
-                    <span id="labelMonto">—</span>
-                </div>
-                <div class="labels-row">
-                    <span>Tipo de cambio</span>
-                    <span id="labelTipoCambio">—</span>
-                </div>
-                <div class="labels-row">
-                    <span>Total MXN</span>
-                    <span id="labelTotal">—</span>
-                </div>
-                <p id="estadoMensaje" class="message message-success" role="status" aria-live="polite">
-                    <svg class="icon icon-sm"><use href="#i-check"/></svg>
-                    <span></span>
-                </p>
-                <p id="verificacionMensaje" class="message message-error" role="alert">
-                    <svg class="icon icon-sm"><use href="#i-alert"/></svg>
-                    <span></span>
-                </p>
-            </div>
-
-            <div class="labels-container-tc">
-                <div class="dof-header">
-                    <svg class="icon"><use href="#i-document"/></svg>
-                    <span>Diario Oficial de la Federación</span>
-                </div>
-                <p>Acuerdo que consigna la equivalencia de las monedas de los diversos países con el peso mexicano, para efectos fiscales.</p>
-                <div class="labels-row">
-                    <label for="fechaTipoCambio" style="font-size:0.85em;color:var(--c-text-soft);font-weight:500;">Fecha</label>
-                    <input type="date" id="fechaTipoCambio" />
-                </div>
-                <div class="labels-row">
-                    <span>TC DOF</span>
-                    <span id="tipoDeCambio">—</span>
-                </div>
-                <div class="labels-row">
-                    <span>Div / TC DOF</span>
-                    <span id="calculoAdicional">—</span>
-                </div>
-                <div class="labels-row">
-                    <span>Máximo</span>
-                    <span id="maximoValor">—</span>
-                </div>
-                <div class="labels-row">
-                    <span>Mínimo</span>
-                    <span id="minimoValor">—</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- ===== TABLA ===== -->
-        <div class="tabla-wrapper">
-            <table id="resultado">
-                <thead>
-                    <tr>
-                        <th># Op</th>
-                        <th>Cantidad a ingresar</th>
-                        <th aria-hidden="true"></th>
-                        <th>Monto (MXN)</th>
-                        <th>Restante</th>
-                        <th>Total (MXN)</th>
-                        <th>Desglosado</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-                <tfoot id="resultadoFooter" style="display:none;">
-                    <tr>
-                        <td colspan="2">Total operaciones: <span id="totalPartes">0</span></td>
-                        <td aria-hidden="true"></td>
-                        <td>$<span id="totalMontoMXN">0.00</span></td>
-                        <td></td>
-                        <td>—</td>
-                        <td>$<span id="totalDesglose">0.00</span></td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
-
-        <!-- ===== LEYENDA ===== -->
-        <div class="leyenda" id="leyenda" aria-label="Leyenda de tipos de fracción">
-            <span class="leyenda-titulo">Tipos de fracción:</span>
-            <span class="leyenda-item micro">Micro (10–50)</span>
-            <span class="leyenda-item pequena">Pequeña (50–200)</span>
-            <span class="leyenda-item mediana">Mediana (200–400)</span>
-        </div>
-
-        <!-- ===== FOOTER ===== -->
-        <footer id="footer">
-            <span>Desarrollado por</span>
-            <a href="https://thoraal.github.io/#work" target="_blank" rel="noopener">
-                Alejandro Toral
-                <svg class="icon"><use href="#i-external"/></svg>
-            </a>
-        </footer>
-    </main>
+    </div>
 
     <script>
-        (function () {
-            'use strict';
-
-            // ============================================
-            // CONFIGURACIÓN
-            // ============================================
-            const CONFIG = {
-                MONTO_MAX: 20000,
-                TIPO_CAMBIO_MAX: 1000,
-                MAX_USD_OPERACION: 990,
-                // El TOTAL absoluto de fracciones nunca excede MAX_PARTES_TOTAL.
-                // GENERACION es el límite del while principal (con fracciones únicas).
-                // El cierre forzado puede agregar hasta TOTAL-GENERACION partes
-                // (con duplicados permitidos) para garantizar suma exacta.
-                MAX_PARTES_GENERACION: 38,
-                MAX_PARTES_TOTAL: 44,
-                MAX_INTENTOS_FRACCIONAR: 8000,
-                DEBOUNCE_API_MS: 400,
-                STORAGE_KEY: 'divfr_prefs_v1',
-
-                ESCALONES_MINIMO: [
-                    { hasta: 5000,    min: 50  },
-                    { hasta: 10000,   min: 300 },
-                    { hasta: 15000,   min: 400 },
-                    { hasta: 20000,   min: 500 },
-                    { hasta: Infinity, min: 550 }
-                ],
-
-                // Perfiles de fracción "especial". Probabilidades planas (sin
-                // atenuación por monto) para que la variabilidad se note igual
-                // en operaciones de $500 que en $20,000. Pesos balanceados para
-                // que el algoritmo cuadre 100% en MAX_PARTES_TOTAL=44.
-                PERFILES_FRACCION: [
-                    { nombre: 'micro',   prob: 0.08, lo: 10,  hi: 50,  multiplo: 5, restanteMin: 60  },
-                    { nombre: 'pequena', prob: 0.15, lo: 50,  hi: 200, multiplo: 5, restanteMin: 220 },
-                    { nombre: 'mediana', prob: 0.10, lo: 200, hi: 400, multiplo: 5, restanteMin: 420 }
-                ],
-
-                BANXICO_TOKENS: [
-                    '812a7355fa14f189ea64e3112c255d3993069dee78d526892de342526057c6ad',
-                    'ea9e2067b75621dad3e50a21cd6f7f094060da2f1d0c6d6d4a65520c2e29459b'
-                ],
-                BANXICO_SERIE: 'SF60653'
-            };
-
-            // ============================================
-            // REFERENCIAS DOM
-            // ============================================
-            const $ = (id) => document.getElementById(id);
-
-            const dom = {
-                numero:              $('numero'),
-                moneda:              $('moneda'),
-                monedaOtro:          $('monedaOtro'),
-                monedaOtroWrapper:   $('monedaOtroWrapper'),
-                tipoCambio:          $('tipoCambio'),
-                imprimirBtn:         $('imprimirBtn'),
-                imprimirRolloBtn:    $('imprimirRolloBtn'),
-                borrarBtn:           $('borrarBtn'),
-                toggleDof:           $('toggleDof'),
-                loadingIndicator:    $('loadingIndicator'),
-                fechaTipoCambio:     $('fechaTipoCambio'),
-                tipoDeCambio:        $('tipoDeCambio'),
-                calculoAdicional:    $('calculoAdicional'),
-                maximoValor:         $('maximoValor'),
-                minimoValor:         $('minimoValor'),
-                labelMonto:          $('labelMonto'),
-                labelTipoCambio:     $('labelTipoCambio'),
-                labelTotal:          $('labelTotal'),
-                estadoMensaje:       $('estadoMensaje'),
-                verificacionMensaje: $('verificacionMensaje'),
-                resultado:           $('resultado'),
-                resultadoFooter:     $('resultadoFooter'),
-                totalPartes:         $('totalPartes'),
-                totalMontoMXN:       $('totalMontoMXN'),
-                totalDesglose:       $('totalDesglose'),
-                leyenda:             $('leyenda'),
-                labelsContainerTc:   document.querySelector('.labels-container-tc')
-            };
-
-            // Helpers para mensajes con iconos: actualizan el span interno del .message
-            function setMensaje(elem, texto) {
-                const span = elem.querySelector('span');
-                if (span) span.textContent = texto || '';
-                if (texto) elem.classList.add('show');
-                else elem.classList.remove('show');
-            }
-
-            // Cache en memoria para respuestas de Banxico (clave: fecha YYYY-MM-DD)
-            const banxicoCache = new Map();
-
-            // ============================================
-            // UTILIDADES
-            // ============================================
-            function debounce(fn, ms) {
-                let timeout;
-                return function (...args) {
-                    clearTimeout(timeout);
-                    timeout = setTimeout(() => fn.apply(this, args), ms);
-                };
-            }
-
-            function numberWithCommas(x) {
-                const n = typeof x === 'number' ? x : parseFloat(x);
-                if (isNaN(n)) return '0.00';
-                return n.toLocaleString('es-MX', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2
-                });
-            }
-
-            function obtenerFechaFormateada() {
-                const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-                return new Date().toLocaleDateString('es-ES', opciones);
-            }
-
-            function obtenerFechaISO() {
-                const ahora = new Date();
-                ahora.setMinutes(ahora.getMinutes() - ahora.getTimezoneOffset());
-                return ahora.toISOString().split('T')[0];
-            }
-
-            // PRNG determinístico: el mismo monto produce las mismas fracciones (auditable).
-            function xoshiro128ss(a) {
-                const s = new Uint32Array(4);
-                s[0] = a >>> 0;
-                s[1] = (a * 0x9e3779bb) >>> 0;
-                s[2] = (a * 0x85ebca6b) >>> 0;
-                s[3] = (a * 0xc2b2ae35) >>> 0;
-                return function () {
-                    const result = (s[0] + s[3]) >>> 0;
-                    const t = s[1] << 9;
-                    s[2] ^= s[0];
-                    s[3] ^= s[1];
-                    s[1] ^= s[2];
-                    s[0] ^= s[3];
-                    s[2] ^= t;
-                    s[3] = (s[3] << 11) | (s[3] >>> 21);
-                    return result / 0x100000000;
-                };
-            }
-
-            // ============================================
-            // STORAGE: PREFERENCIAS DEL USUARIO
-            // ============================================
-            function guardarPrefs() {
-                try {
-                    const prefs = {
-                        moneda: dom.moneda.value,
-                        toggleDof: dom.toggleDof.checked
-                    };
-                    localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(prefs));
-                } catch (e) { /* ignorar (modo incógnito, etc.) */ }
-            }
-
-            function cargarPrefs() {
-                try {
-                    const raw = localStorage.getItem(CONFIG.STORAGE_KEY);
-                    if (!raw) return;
-                    const prefs = JSON.parse(raw);
-                    if (prefs.moneda && ['usd', 'eur', 'cad', 'otro'].includes(prefs.moneda)) {
-                        dom.moneda.value = prefs.moneda;
-                        mostrarTipoCambio();
-                    }
-                    if (prefs.toggleDof) {
-                        dom.toggleDof.checked = true;
-                        toggleLabelsContainerTc();
-                    }
-                } catch (e) { /* ignorar */ }
-            }
-
-            // ============================================
-            // VALIDACIONES
-            // ============================================
-            function validarMaximo() {
-                const valor = parseInt(dom.numero.value, 10);
-                if (valor > CONFIG.MONTO_MAX) {
-                    setMensaje(dom.verificacionMensaje,
-                        `Error: El monto no puede exceder $${CONFIG.MONTO_MAX.toLocaleString('es-MX')}.`);
-                    dom.numero.value = CONFIG.MONTO_MAX;
-                }
-            }
-
-            function validarNumero(numero) {
-                return !isNaN(numero) && numero > 0 && numero <= CONFIG.MONTO_MAX && Number.isInteger(numero);
-            }
-
-            function validarTipoCambio(tipoCambio) {
-                return !isNaN(tipoCambio) && tipoCambio > 0 && tipoCambio <= CONFIG.TIPO_CAMBIO_MAX;
-            }
-
-            function validarMonedaOtro() {
-                if (dom.moneda.value === 'otro') {
-                    return dom.monedaOtro.value.trim().length > 0;
-                }
-                return true;
-            }
-
-            // ============================================
-            // CÁLCULO DE MÍNIMO NORMAL
-            // ============================================
-            function actualizarMinimo() {
-                const numero = parseInt(dom.numero.value, 10);
-                if (isNaN(numero)) {
-                    dom.minimoValor.textContent = '';
-                    return;
-                }
-                const escalon = CONFIG.ESCALONES_MINIMO.find(e => numero < e.hasta);
-                dom.minimoValor.textContent = escalon ? String(escalon.min) : '600';
-            }
-
-            // ============================================
-            // TOGGLE DOF
-            // ============================================
-            function toggleLabelsContainerTc() {
-                if (dom.toggleDof.checked) {
-                    dom.labelsContainerTc.classList.add('show');
-                } else {
-                    dom.labelsContainerTc.classList.remove('show');
-                }
-            }
-
-            // ============================================
-            // CAMPO "OTRA MONEDA"
-            // ============================================
-            function mostrarTipoCambio() {
-                if (dom.moneda.value === 'otro') {
-                    dom.monedaOtroWrapper.style.display = 'flex';
-                } else {
-                    dom.monedaOtroWrapper.style.display = 'none';
-                    dom.monedaOtro.value = '';
-                }
-            }
-
-            function formatearMonedaOtro() {
-                const v = dom.monedaOtro.value;
-                if (v.length > 0) {
-                    dom.monedaOtro.value = v.charAt(0).toUpperCase() + v.slice(1).toLowerCase();
-                }
-            }
-
-            // ============================================
-            // LIMPIAR
-            // ============================================
-            function limpiarResultado() {
-                setMensaje(dom.estadoMensaje, '');
-                setMensaje(dom.verificacionMensaje, '');
-                dom.resultado.getElementsByTagName('tbody')[0].innerHTML = '';
-                dom.resultadoFooter.style.display = 'none';
-                dom.leyenda.classList.remove('show');
-                dom.labelMonto.textContent = "—";
-                dom.labelTipoCambio.textContent = "—";
-                dom.labelTotal.textContent = "—";
-                dom.imprimirBtn.disabled = true;
-                dom.imprimirBtn.title = 'Complete los campos para habilitar la impresión';
-                dom.calculoAdicional.textContent = '';
-                dom.minimoValor.textContent = '';
-            }
-
-            function hayResultados() {
-                return dom.resultado.getElementsByTagName('tbody')[0].rows.length > 0;
-            }
-
-            function borrarTodo() {
-                if (hayResultados() && !confirm('¿Borrar todo? Se perderán los resultados actuales.')) {
-                    return;
-                }
-                dom.numero.value = '';
-                dom.tipoCambio.value = '';
-                dom.monedaOtro.value = '';
-                setMensaje(dom.verificacionMensaje, '');
-                limpiarResultado();
-            }
-
-            // ============================================
-            // GENERADOR DE FRACCIONES CON PERFILES
-            // ============================================
-            //
-            // Para cada fracción se tira un dado contra los perfiles "especiales"
-            // (micro / pequeña / mediana). Si ninguno aplica, se cae al perfil
-            // "normal" que usa el rango calculado por monto. Las probabilidades
-            // son planas: la variabilidad se nota tanto en $500 como en $30,000.
-            // La regla `restanteMin` de cada perfil evita elegirlo cuando el
-            // resto sería demasiado chico para cerrar la suma.
-            //
-            function generarFraccion(rng, restante, minNormal, maxNormal) {
-                const dado = rng();
-
-                let acum = 0;
-                let perfilElegido = null;
-
-                for (const perfil of CONFIG.PERFILES_FRACCION) {
-                    acum += perfil.prob;
-                    if (dado < acum && restante >= perfil.restanteMin) {
-                        perfilElegido = perfil;
-                        break;
-                    }
-                }
-
-                let lo, hi, multiplo, nombre;
-                if (perfilElegido) {
-                    lo = perfilElegido.lo;
-                    hi = Math.min(perfilElegido.hi, restante);
-                    multiplo = perfilElegido.multiplo;
-                    nombre = perfilElegido.nombre;
-                } else {
-                    lo = minNormal;
-                    hi = Math.min(maxNormal, restante);
-                    multiplo = 5;
-                    nombre = 'normal';
-                }
-
-                if (hi < lo) {
-                    // Rango inválido: usar restante directamente como cierre
-                    return { fraccion: restante, perfil: 'normal' };
-                }
-
-                let fraccion = Math.floor(rng() * (hi - lo + 1)) + lo;
-                fraccion = Math.round(fraccion / multiplo) * multiplo;
-                fraccion = Math.max(multiplo, Math.min(fraccion, restante));
-
-                return { fraccion, perfil: nombre };
-            }
-
-            // ============================================
-            // FRACCIONAR NÚMERO (núcleo)
-            // ============================================
-            function fraccionarNumero() {
-                const numeroVal = dom.numero.value;
-                const tipoCambioVal = dom.tipoCambio.value;
-
-                if (numeroVal === '' || tipoCambioVal === '') {
-                    setMensaje(dom.verificacionMensaje, 'Error: Todos los campos deben estar llenos.');
-                    setMensaje(dom.estadoMensaje, '');
-                    dom.imprimirBtn.disabled = true;
-                    limpiarResultado();
-                    return;
-                }
-
-                const numeroInt = parseInt(numeroVal, 10);
-                const tipoCambioFloat = parseFloat(tipoCambioVal);
-
-                if (!validarNumero(numeroInt)) {
-                    setMensaje(dom.verificacionMensaje, 'Error: Monto inválido.');
-                    limpiarResultado();
-                    return;
-                }
-                if (!validarTipoCambio(tipoCambioFloat)) {
-                    setMensaje(dom.verificacionMensaje, 'Error: Tipo de cambio inválido.');
-                    limpiarResultado();
-                    return;
-                }
-                if (!validarMonedaOtro()) {
-                    setMensaje(dom.verificacionMensaje, 'Error: Debe especificar el nombre de la otra moneda.');
-                    limpiarResultado();
-                    return;
-                }
-
-                const totalMonedaNacional = numeroInt * tipoCambioFloat;
-                dom.labelMonto.textContent = `$${numberWithCommas(numeroInt)}`;
-                dom.labelTipoCambio.textContent = tipoCambioFloat.toFixed(4);
-                dom.labelTotal.textContent = `$${numberWithCommas(totalMonedaNacional)}`;
-
-                const rng = xoshiro128ss(numeroInt);
-                const minNormal = parseInt(dom.minimoValor.textContent, 10) || 400;
-                const maxNormal = parseInt(dom.maximoValor.textContent, 10) || 990;
-
-                const partesGeneradas = []; // [{fraccion, perfil}]
-                const valoresVistos = new Set();
-                let restante = numeroInt;
-                let intentos = 0;
-
-                while (
-                    restante > 0 &&
-                    partesGeneradas.length < CONFIG.MAX_PARTES_GENERACION &&
-                    intentos < CONFIG.MAX_INTENTOS_FRACCIONAR
-                ) {
-                    intentos++;
-                    const { fraccion, perfil } = generarFraccion(rng, restante, minNormal, maxNormal);
-
-                    if (fraccion <= 0 || fraccion > restante) continue;
-                    if (valoresVistos.has(fraccion)) continue;
-
-                    valoresVistos.add(fraccion);
-                    partesGeneradas.push({ fraccion, perfil });
-                    restante -= fraccion;
-                }
-
-                // Cierre forzado: completa la suma permitiendo duplicados, sin
-                // exceder nunca MAX_PARTES_TOTAL. Si llegamos aquí con restante
-                // muy grande respecto al espacio disponible, la verificación
-                // posterior detectará que la suma no cuadra y mostrará error.
-                while (restante > 0 && partesGeneradas.length < CONFIG.MAX_PARTES_TOTAL) {
-                    const chunk = restante <= maxNormal ? restante : maxNormal;
-                    partesGeneradas.push({ fraccion: chunk, perfil: 'normal' });
-                    restante -= chunk;
-                }
-
-                const sumaPartes = partesGeneradas.reduce((a, b) => a + b.fraccion, 0);
-                if (sumaPartes !== numeroInt) {
-                    setMensaje(dom.verificacionMensaje, 'Error: No fue posible fraccionar el monto con los parámetros actuales. Ajuste el tipo de cambio o el monto.');
-                    setMensaje(dom.estadoMensaje, '');
-                    limpiarResultado();
-                    return;
-                }
-
-                setMensaje(dom.verificacionMensaje, '');
-                setMensaje(dom.estadoMensaje, 'Fraccionamiento completado correctamente.');
-                dom.imprimirBtn.disabled = false;
-                dom.imprimirBtn.title = 'Elija la impresora Brother';
-                mostrarResultado(partesGeneradas, numeroInt);
-            }
-
-            // ============================================
-            // MOSTRAR RESULTADO EN TABLA
-            // ============================================
-            function mostrarResultado(partes, numeroInicial) {
-                const tipoCambio = parseFloat(dom.tipoCambio.value) || 1;
-                const tbody = dom.resultado.getElementsByTagName('tbody')[0];
-
-                let html = '';
-                let restante = numeroInicial;
-                let totalMXN = 0;
-                let desglosado = 0;
-                const perfilesEncontrados = new Set();
-
-                partes.forEach((item, index) => {
-                    const { fraccion, perfil } = item;
-                    restante -= fraccion;
-                    const montoMXN = fraccion * tipoCambio;
-                    totalMXN += montoMXN;
-                    desglosado += fraccion;
-                    if (perfil !== 'normal') perfilesEncontrados.add(perfil);
-
-                    // Stagger limitado a 800ms total para que series largas no se sientan lentas
-                    const delay = Math.min(index * 25, 800);
-
-                    html += `
-                        <tr data-perfil="${perfil}" style="animation-delay:${delay}ms">
-                            <td>${(index + 1).toString().padStart(2, '0')}</td>
-                            <td>${numberWithCommas(fraccion)}</td>
-                            <td aria-hidden="true">[  ]====&gt;</td>
-                            <td>$${numberWithCommas(montoMXN)}</td>
-                            <td>$${numberWithCommas(restante > 0 ? restante : 0)}</td>
-                            <td>$${numberWithCommas(totalMXN)}</td>
-                            <td>$${numberWithCommas(desglosado)}</td>
-                        </tr>`;
-                });
-
-                tbody.innerHTML = html;
-
-                // Footer con totales
-                dom.totalPartes.textContent = String(partes.length);
-                dom.totalMontoMXN.textContent = numberWithCommas(totalMXN);
-                dom.totalDesglose.textContent = numberWithCommas(desglosado);
-                dom.resultadoFooter.style.display = '';
-
-                // Leyenda solo si hay perfiles especiales
-                if (perfilesEncontrados.size > 0) {
-                    dom.leyenda.classList.add('show');
-                } else {
-                    dom.leyenda.classList.remove('show');
-                }
-            }
-
-            // ============================================
-            // IMPRESIÓN PDF
-            // ============================================
-            function imprimirPDF() {
-                const { jsPDF } = window.jspdf;
-                const doc = new jsPDF({ unit: 'pt', format: 'letter' });
-
-                const numero = parseInt(dom.numero.value, 10);
-                const tipoCambio = parseFloat(dom.tipoCambio.value) || 1;
-                const moneda = dom.moneda.value === 'otro'
-                    ? dom.monedaOtro.value
-                    : dom.moneda.options[dom.moneda.selectedIndex].text;
-                const totalMonedaNacional = numero * tipoCambio;
-
-                doc.setFontSize(12);
-                doc.text(
-                    `Fecha: ${obtenerFechaFormateada()} | ${moneda}  $${numberWithCommas(numero)} * ${numberWithCommas(tipoCambio)} = $${numberWithCommas(totalMonedaNacional)}`,
-                    40, 60
-                );
-
-                const cols = [40, 80, 120, 170, 250, 330, 420];
-                const headers = ['#Op', 'Can a ingresar', '', 'Monto (MXN)', 'Restante', 'Total (MXN)', 'Desglosado'];
-                let y = 100;
-
-                doc.setFontSize(12);
-                doc.setFont(undefined, 'bold');
-                headers.forEach((h, i) => doc.text(h, cols[i], y));
-                y += 20;
-
-                doc.setFont(undefined, 'normal');
-                const tbody = dom.resultado.tBodies[0];
-
-                for (let i = 0; i < tbody.rows.length; i++) {
-                    const row = tbody.rows[i];
-                    const celdas = Array.from(row.cells);
-                    celdas.forEach((celda, j) => {
-                        doc.text(celda.textContent, cols[j], y);
-                    });
-                    y += 15;
-                }
-
-                doc.autoPrint();
-                window.open(doc.output('bloburl'), '_blank');
-            }
-
-            // ============================================
-            // IMPRESIÓN ROLLO TÉRMICO
-            // ============================================
-            function imprimirRolloTermico() {
-                const tabla = dom.resultado;
-                const filas = Array.from(tabla.getElementsByTagName('tbody')[0].rows);
-
-                if (filas.length === 0) {
-                    alert('No hay datos para imprimir. Genere primero un fraccionamiento.');
-                    return;
-                }
-
-                const numero = parseInt(dom.numero.value, 10);
-                const tipoCambio = parseFloat(dom.tipoCambio.value) || 1;
-                const moneda = dom.moneda.value === 'otro'
-                    ? dom.monedaOtro.value
-                    : dom.moneda.options[dom.moneda.selectedIndex].text;
-                const totalMonedaNacional = numberWithCommas(numero * tipoCambio);
-
-                const sinSimbolo = (texto) => texto.replace('$', '').trim();
-
-                const maxLengths = [0, 0, 0, 0, 0, 0];
-                filas.forEach((fila) => {
-                    const c = Array.from(fila.cells);
-                    maxLengths[0] = Math.max(maxLengths[0], c[0].textContent.trim().length);
-                    maxLengths[1] = Math.max(maxLengths[1], c[1].textContent.trim().length);
-                    maxLengths[2] = Math.max(maxLengths[2], sinSimbolo(c[3].textContent).length);
-                    maxLengths[3] = Math.max(maxLengths[3], sinSimbolo(c[4].textContent).length);
-                    maxLengths[4] = Math.max(maxLengths[4], sinSimbolo(c[5].textContent).length);
-                    maxLengths[5] = Math.max(maxLengths[5], sinSimbolo(c[6].textContent).length);
-                });
-
-                const headerLabels = ['#', 'Cant', 'Monto MXN', 'Falta Des', 'Total MXN', 'Desglosado'];
-                headerLabels.forEach((label, i) => {
-                    maxLengths[i] = Math.max(maxLengths[i], label.length);
-                });
-
-                const headers = headerLabels
-                    .map((label, i) => label.padEnd(maxLengths[i], ' '))
-                    .join('|');
-                const totalWidth = maxLengths.reduce((a, b) => a + b, 0) + (maxLengths.length - 1);
-                const separator = '-'.repeat(totalWidth);
-
-                let contenido = 'Fraccionador de numeros\n';
-                contenido += separator + '\n';
-                contenido += `Fecha: ${obtenerFechaFormateada()}\n\n`;
-                contenido += `${moneda}  $${numberWithCommas(numero)} * ${numberWithCommas(tipoCambio)} = $${totalMonedaNacional}\n\n`;
-                contenido += separator + '\n';
-                contenido += headers + '\n';
-                contenido += separator + '\n';
-
-                filas.forEach((fila) => {
-                    const c = Array.from(fila.cells);
-                    contenido += [
-                        c[0].textContent.trim().padEnd(maxLengths[0], ' '),
-                        c[1].textContent.trim().padEnd(maxLengths[1], ' '),
-                        sinSimbolo(c[3].textContent).padEnd(maxLengths[2], ' '),
-                        sinSimbolo(c[4].textContent).padEnd(maxLengths[3], ' '),
-                        sinSimbolo(c[5].textContent).padEnd(maxLengths[4], ' '),
-                        sinSimbolo(c[6].textContent).padEnd(maxLengths[5], ' ')
-                    ].join('|') + '\n';
-                });
-
-                contenido += separator + '\n';
-                contenido += `Total operaciones: ${filas.length}\n`;
-                contenido += separator + '\n';
-                printTextInThermal(contenido);
-            }
-
-            function printTextInThermal(text) {
-                const newWindow = window.open('', '', 'width=1000,height=600');
-                if (!newWindow) {
-                    alert('No se pudo abrir la ventana de impresión. Verifique los bloqueadores de ventanas emergentes.');
-                    return;
-                }
-
-                const safeText = text
-                    .replace(/&/g, '&amp;')
-                    .replace(/</g, '&lt;')
-                    .replace(/>/g, '&gt;');
-
-                newWindow.document.write(
-                    '<!DOCTYPE html>' +
-                    '<html><head><meta charset="UTF-8"><title>Ticket</title>' +
-                    '<style>' +
-                        '@page { margin: 14px; }' +
-                        'body { margin: 0; padding: 0; font-size: 13px; font-family: monospace; }' +
-                        'pre { margin: 0; }' +
-                    '</style>' +
-                    '</head><body><pre>' + safeText + '</pre></body></html>'
-                );
-                newWindow.document.close();
-                newWindow.print();
-            }
-
-            // ============================================
-            // API BANXICO (con cache + fallback de tokens)
-            // ============================================
-            async function fetchDataForDate() {
-                const selectedDate = dom.fechaTipoCambio.value || obtenerFechaISO();
-
-                // Cache hit: usar dato guardado sin llamar a la red
-                if (banxicoCache.has(selectedDate)) {
-                    procesarDatosBanxico(banxicoCache.get(selectedDate));
-                    return;
-                }
-
-                dom.loadingIndicator.classList.add('show');
-
-                for (const token of CONFIG.BANXICO_TOKENS) {
-                    const url = `https://www.banxico.org.mx/SieAPIRest/service/v1/series/${CONFIG.BANXICO_SERIE}/datos/${selectedDate}/${selectedDate}/?token=${token}`;
-                    try {
-                        const response = await fetch(url);
-                        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-                        const data = await response.json();
-                        const serieData = data?.bmx?.series?.[0]?.datos?.[0];
-                        if (!serieData) throw new Error('Sin datos en la respuesta');
-
-                        banxicoCache.set(selectedDate, serieData);
-                        procesarDatosBanxico(serieData);
-                        dom.loadingIndicator.classList.remove('show');
-                        return;
-                    } catch (error) {
-                        console.warn('Token Banxico falló:', error.message);
-                    }
-                }
-
-                dom.loadingIndicator.classList.remove('show');
-                console.error('Todos los tokens de Banxico fallaron.');
-            }
-
-            function procesarDatosBanxico(serieData) {
-                dom.tipoDeCambio.textContent = `${serieData.dato} (${serieData.fecha})`;
-
-                const tipoCambioUsuario = parseFloat(dom.tipoCambio.value);
-                if (!isNaN(tipoCambioUsuario) && tipoCambioUsuario > 0) {
-                    const calculoAdicional = (parseFloat(serieData.dato) * 1000 / tipoCambioUsuario).toFixed(2);
-                    dom.calculoAdicional.textContent = calculoAdicional;
-
-                    const calculoNum = parseFloat(calculoAdicional);
-                    if (dom.moneda.value === 'usd' && calculoNum > CONFIG.MAX_USD_OPERACION) {
-                        dom.maximoValor.textContent = String(CONFIG.MAX_USD_OPERACION);
-                    } else {
-                        dom.maximoValor.textContent = calculoAdicional;
-                    }
-                } else {
-                    dom.calculoAdicional.textContent = '—';
-                }
-            }
-
-            // ============================================
-            // ORQUESTACIÓN
-            // ============================================
-            const fetchDataDebounced = debounce(fetchDataForDate, CONFIG.DEBOUNCE_API_MS);
-
-            function onInputChange() {
-                validarMaximo();
-                actualizarMinimo();
-                fraccionarNumero();
-                fetchDataDebounced();
-            }
-
-            function onMonedaChange() {
-                mostrarTipoCambio();
-                actualizarMinimo();
-                fraccionarNumero();
-                fetchDataDebounced();
-                guardarPrefs();
-            }
-
-            // ============================================
-            // INICIALIZACIÓN
-            // ============================================
-            document.addEventListener('DOMContentLoaded', () => {
-                dom.fechaTipoCambio.value = obtenerFechaISO();
-
-                cargarPrefs();
-
-                dom.numero.addEventListener('input', onInputChange);
-                dom.tipoCambio.addEventListener('input', onInputChange);
-                dom.moneda.addEventListener('change', onMonedaChange);
-                dom.monedaOtro.addEventListener('input', () => {
-                    formatearMonedaOtro();
-                    fraccionarNumero();
-                });
-                dom.fechaTipoCambio.addEventListener('change', () => {
-                    fetchDataForDate();
-                    fraccionarNumero();
-                });
-                dom.toggleDof.addEventListener('change', () => {
-                    toggleLabelsContainerTc();
-                    guardarPrefs();
-                });
-
-                dom.imprimirBtn.addEventListener('click', imprimirPDF);
-                dom.imprimirRolloBtn.addEventListener('click', imprimirRolloTermico);
-                dom.borrarBtn.addEventListener('click', borrarTodo);
-
-                fetchDataForDate();
+        // Definición de iconos vectoriales relacionados (Engranaje, Llave inglesa, Alerta, Tuerca)
+        const iconsSVG = [
+            // Engranaje
+            `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>`,
+            // Llave inglesa
+            `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.7,19l-9.1-9.1c0.9-2.3,0.4-5-1.5-6.9c-2-2-5.1-2.4-7.5-1.2L7.9,5.1L6.4,6.6L3.1,3.3C1.9,5.7,2.2,8.9,4.2,10.9c1.9,1.9,4.6,2.4,6.9,1.5l9.1,9.1c0.4,0.4,1,0.4,1.4,0l1.1-1.1C23.1,20,23.1,19.4,22.7,19z"/></svg>`,
+            // Señal de Advertencia / Exclamación
+            `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12,2L1,21h22L12,2z M13,18h-2v-2h2V18z M13,14h-2v-4h2V14z"/></svg>`,
+            // Tuerca / Destornillador alternativo
+            `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12,2C6.48,2,2,6.48,2,12s4.48,10,10,10s10-4.48,10-10S17.52,2,12,2z M12,16c-2.21,0-4-1.79-4-4s1.79-4,4-4s4,1.79,4,4S14.21,16,12,16z"/></svg>`
+        ];
+
+        const container = document.getElementById('canvas-container');
+        const totalIcons = 16; // Número de iconos de fondo en movimiento
+        const items = [];
+        let mouse = { x: -1000, y: -1000 };
+
+        // Capturar movimiento del ratón para el efecto interactivo de repulsión
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        // Crear dinámicamente los elementos en la pantalla
+        for (let i = 0; i < totalIcons; i++) {
+            const el = document.createElement('div');
+            el.className = 'floating-icon';
+            el.innerHTML = iconsSVG[Math.floor(Math.random() * iconsSVG.length)];
+            container.appendChild(el);
+
+            const size = Math.random() * 35 + 25; // Tamaños variados entre 25px y 60px
+            el.style.width = size + 'px';
+            el.style.height = size + 'px';
+            
+            // Opacidad baja para servir como fondo elegante y no entorpecer la lectura
+            el.style.opacity = Math.random() * 0.12 + 0.06;
+            
+            // Asignar colores temáticos sutiles (amarillo advertencia o gris azulado)
+            el.style.color = Math.random() > 0.6 ? '#facc15' : '#475569';
+
+            items.push({
+                el: el,
+                x: Math.random() * window.innerWidth,
+                y: Math.random() * window.innerHeight,
+                vx: (Math.random() - 0.5) * 1.2, // Velocidad en X
+                vy: (Math.random() - 0.5) * 1.2, // Velocidad en Y
+                size: size,
+                angle: Math.random() * 360,
+                rotationSpeed: (Math.random() - 0.5) * 0.8
             });
-        })();
+        }
+
+        // Bucle de animación (Smooth 60fps con requestAnimationFrame)
+        function animate() {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+
+            items.forEach(item => {
+                // Actualizar posiciones básicas por su velocidad
+                item.x += item.vx;
+                item.y += item.vy;
+                item.angle += item.rotationSpeed;
+
+                // --- EFECTO INTERACTIVO: El ratón empuja sutilmente a los iconos ---
+                const dx = item.x + item.size / 2 - mouse.x;
+                const dy = item.y + item.size / 2 - mouse.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                const maxDistance = 160; // Radio de interacción
+
+                if (distance < maxDistance) {
+                    const force = (maxDistance - distance) / maxDistance;
+                    // Empujar suavemente en la dirección opuesta al puntero
+                    item.x += (dx / distance) * force * 2.5;
+                    item.y += (dy / distance) * force * 2.5;
+                }
+
+                // --- COLISIONES CON LOS BORDES DE LA PANTALLA (Rebote continuo) ---
+                if (item.x < 0) { 
+                    item.x = 0; 
+                    item.vx *= -1; 
+                } else if (item.x > w - item.size) { 
+                    item.x = w - item.size; 
+                    item.vx *= -1; 
+                }
+
+                if (item.y < 0) { 
+                    item.y = 0; 
+                    item.vy *= -1; 
+                } else if (item.y > h - item.size) { 
+                    item.y = h - item.size; 
+                    item.vy *= -1; 
+                }
+
+                // Aplicar transformaciones usando aceleración por hardware (translate3d)
+                item.el.style.transform = `translate3d(${item.x}px, ${item.y}px, 0) rotate(${item.angle}deg)`;
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        // Reajuste fluido en caso de cambiar el tamaño de la ventana
+        window.addEventListener('resize', () => {
+            items.forEach(item => {
+                if (item.x > window.innerWidth) item.x = window.innerWidth - item.size;
+                if (item.y > window.innerHeight) item.y = window.innerHeight - item.size;
+            });
+        });
     </script>
 </body>
-
 </html>
