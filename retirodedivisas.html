@@ -2,725 +2,302 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <link rel="icon" type="image/png" href="assets/img/retiro.png"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Retiro de Divisas</title>
+    <title>Sitio en Mantenimiento - Fuera de Servicio</title>
     <style>
-    /* =====================================
-    1. VARIABLES & GLOBAL SETTINGS
-    ===================================== */
-    :root {
-    /* Paleta de colores estilo iOS */
-    --color-bg: #f7f8fa;               /* Fondo general */
-    --color-primary: #007aff;          /* Azul iOS */
-    --color-primary-hover: #006add;    /* Hover azul más oscuro */
-    --color-secondary: #34c759;        /* Verde estilo iOS */
-    --color-secondary-hover: #2aa94d;
-    --color-highlight: #00ffbf;        /* Por si deseas resaltar algo */
-    --color-error: #ff3b30;            /* Rojo de error iOS */
+        /* Importación de tipografía moderna */
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap');
 
-    --color-title: #1c1c1e;
-    --color-text: #3a3a3c;
-    --color-text-dark: #111;
-    --color-white: #fff;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
 
-    /* Sombras y transparencias */
-    --shadow-main: 0 6px 18px rgba(0, 0, 0, 0.08);
-    --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.12); /* Sombra un poco más intensa en hover */
-    --shadow-footer: 0 4px 10px rgba(0, 0, 0, 0.05);
-    --bg-overlay: rgba(255, 255, 255, 0.6);
+        body {
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #f8fafc;
+        }
 
-    /* Efecto de desenfoque */
-    --blur-radius: 14px;
+        /* Capa de los iconos flotantes interactivos */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
 
-    /* Tipografía y tamaños */
-    --font-family-base: 'Roboto', sans-serif;
-    --font-size-base: 0.9rem;
+        .floating-icon {
+            position: absolute;
+            pointer-events: none;
+            will-change: transform;
+            transition: opacity 0.3s ease;
+        }
 
-    /* Radios y transiciones */
-    --border-radius-base: 12px;        /* Bordes más redondeados estilo iOS */
-    --transition-base: all 0.3s ease;  /* Transición suave */
+        /* Contenedor Principal (Efecto Glassmorphism) */
+        .card {
+            position: relative;
+            z-index: 10;
+            background: rgba(30, 41, 59, 0.45);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 3rem 2.5rem;
+            border-radius: 28px;
+            text-align: center;
+            max-width: 540px;
+            width: 90%;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            animation: fadeInCard 1s ease-out;
+        }
 
-    /* Duración animaciones */
-    --animation-duration: 0.6s;
-    }
+        @keyframes fadeInCard {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-    /* =====================================
-    2. GLOBAL RESET & BODY
-    ===================================== */
-    html, body {
-    margin: 0;
-    padding: 0;
-    font-family: var(--font-family-base);
-    text-align: center;
-    }
+        /* Icono de Alerta Principal Animado */
+        .main-alert-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 80px;
+            height: 80px;
+            background: rgba(24a, 158, 11, 0.1);
+            border: 2px solid #f59e0b;
+            color: #f59e0b;
+            border-radius: 50%;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 0 20px rgba(245, 158, 11, 0.2);
+            animation: pulseGlow 2s infinite alternate ease-in-out;
+        }
 
-    body {
-    background-color: var(--color-bg);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh; /* Permite que el body se expanda si es necesario */
-    overflow-y: auto;  /* Habilita la navegación vertical */
-    }
+        @keyframes pulseGlow {
+            0% { transform: scale(1); box-shadow: 0 0 20px rgba(245, 158, 11, 0.2); }
+            100% { transform: scale(1.06); box-shadow: 0 0 35px rgba(245, 158, 11, 0.4); }
+        }
 
-    /* =====================================
-    3. ANIMACIONES
-    ===================================== */
-    @keyframes fadeInUp {
-    0% {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-    }
+        /* Títulos y Textos */
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 0.75rem;
+            background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-    /* =====================================
-    4. TIPOGRAFÍA
-    ===================================== */
-    h1 {
-    color: var(--color-title);
-    font-size: 1.2rem;
-    font-weight: 700;
-    margin-bottom: 15px;
-    /* Pequeña animación de entrada */
-    animation: fadeInUp var(--animation-duration) ease forwards;
-    }
+        .status-badge {
+            display: inline-block;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #f87171;
+            padding: 0.35rem 1rem;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1.5rem;
+        }
 
-    label {
-    display: block;
-    margin-bottom: 6px;
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--color-text-dark);
-    }
+        p {
+            color: #94a3b8;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
 
-    .error-message {
-    color: var(--color-error);
-    font-size: 0.8rem;
-    margin-top: -10px;
-    margin-bottom: 10px;
-    }
+        /* Barra de Progreso / Simulación de Carga Estilizada */
+        .progress-container {
+            width: 100%;
+            background: rgba(15, 23, 42, 0.6);
+            height: 8px;
+            border-radius: 100px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
 
-    .total {
-    margin-top: 15px;
-    font-size: 1rem;
-    font-weight: bold;
-    color: var(--color-text);
-    }
+        .progress-bar {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                #facc15 0%, 
+                #eab308 25%, 
+                #facc15 50%, 
+                #eab308 75%, 
+                #facc15 100%
+            );
+            background-size: 200% 100%;
+            animation: barberPole 2.5s linear infinite;
+            border-radius: 100px;
+        }
 
-    /* =====================================
-    5. CONTAINERS & LAYOUT
-    ===================================== */
-    .container {
-    width: 320px;
-    padding: 20px;
-    background-color: var(--bg-overlay);
-    border-radius: var(--border-radius-base);
-    box-shadow: var(--shadow-main);
-    backdrop-filter: blur(var(--blur-radius));
-    transition: var(--transition-base);
-    /* Animación de entrada suave */
-    animation: fadeInUp var(--animation-duration) ease forwards;
-    }
+        @keyframes barberPole {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
 
-    /* 
-    HOVER en el .container:
-    - Pequeño "scale" para dar efecto
-    - Sombra ligeramente más marcada 
-    */
-    .container:hover {
-    transform: scale(1.02);
-    box-shadow: var(--shadow-hover);
-    }
-
-    .denomination-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 8px;
-    width: 100%;
-    border-radius: var(--border-radius-base);
-    }
-
-    /* =====================================
-    6. FORMULARIOS & INPUTS
-    ===================================== */
-    select,
-    input {
-    margin-bottom: 10px;
-    padding: 12px;
-    font-size: var(--font-size-base);
-    border: 1.5px solid #d1d1d6; 
-    border-radius: var(--border-radius-base);
-    transition: var(--transition-base);
-    background-color: var(--color-white);
-    /* Se añade un leve "escalado" en hover */
-    }
-
-    select:hover,
-    input:hover {
-    border-color: var(--color-primary-hover);
-    transform: scale(1.01);
-    }
-
-    /* :focus, cuando el usuario hace clic */
-    select:focus,
-    input:focus {
-    outline: none;
-    border-color: var(--color-primary);
-    box-shadow: 0 0 6px rgba(0, 122, 255, 0.3);
-    }
-
-    /* Inputs dentro de la denominación */
-    .denomination-input-container input {
-    width: 50%;
-    padding: 10px;
-    font-size: var(--font-size-base);
-    text-align: center;
-    border: 1.5px solid #d1d1d6;
-    border-radius: var(--border-radius-base);
-    transition: var(--transition-base);
-    background-color: var(--color-white);
-    }
-
-    .denomination-input-container input:hover {
-    transform: scale(1.01);
-    border-color: var(--color-primary-hover);
-    }
-
-    .denomination-input-container input:focus {
-    outline: none;
-    border-color: var(--color-primary);
-    box-shadow: 0 0 6px rgba(0, 122, 255, 0.3);
-    }
-
-    /* =====================================
-    7. BOTONES
-    ===================================== */
-    .button {
-    margin: 5px;
-    padding: 10px 20px;
-    font-size: var(--font-size-base);
-    color: var(--color-white);
-    background-color: var(--color-primary);
-    border: none;
-    border-radius: var(--border-radius-base);
-    cursor: pointer;
-    transition: var(--transition-base);
-    }
-
-    /*
-    BOTONES: 
-    - Sutil escalado en hover
-    - Cambio de color a var(--color-primary-hover)
-    */
-    .button:hover {
-    background-color: var(--color-primary-hover);
-    transform: scale(1.03);
-    }
-
-    .button.print {
-    background-color: var(--color-secondary);
-    }
-
-    .button.print:hover {
-    background-color: var(--color-secondary-hover);
-    transform: scale(1.03);
-    }
-
-    /* =====================================
-    8. UTILIDADES
-    ===================================== */
-    .error {
-    border-color: var(--color-error) !important;
-    }
-
-    .hidden {
-    display: none;
-    }
-
-    /* =====================================
-    9. FOOTER
-    ===================================== */
-    footer {
-    margin: 40px auto 0;
-    padding: 20px;
-    width: fit-content;
-    font-size: 0.9rem;
-    color: var(--color-white);
-    text-align: center;
-    background-color: var(--bg-overlay);
-    backdrop-filter: blur(var(--blur-radius));
-    border-radius: var(--border-radius-base);
-    box-shadow: var(--shadow-footer);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    animation: fadeInUp var(--animation-duration) ease forwards;
-    transition: var(--transition-base);
-    }
-
-    /* 
-    HOVER en el footer:
-    - Ligero cambio de escala y sombra
-    */
-    footer:hover {
-    transform: scale(1.02);
-    box-shadow: var(--shadow-main);
-    }
+        /* Pie de página sutil */
+        .footer-note {
+            margin-top: 2rem;
+            font-size: 0.85rem;
+            color: #64748b;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Retiro de Divisas</h1>
-        <div id="date-time" style="font-size: 0.8rem; color: #003cff; margin-bottom: 10px;"></div>
-        <hr style="border-color:#4d46a7;">
-        <input type="text" id="user-input" placeholder="Nombre de usuario 👤" aria-label="Nombre de usuario" />
-        <div id="user-error" class="error-message hidden">El nombre de usuario es requerido.</div>
-        <hr style="border-color:#4d46a7;">
-        <select id="sucursal" aria-label="Seleccione una sucursal" onchange="toggleSucursalInput()">
-            <option value="">--- Seleccione una sucursal ---</option>
-            <option value="ADO">ADO</option>
-            <option value="COBA">COBA</option>
-            <option value="OTRA">OTRA SUCURSAL</option>
-        </select>
-        <input type="text" id="sucursal-input" placeholder="Ingresa el nombre de otra sucursal" class="hidden" aria-label="Nombre de sucursal" />
-        <div id="sucursal-error" class="error-message hidden">La sucursal es requerida.</div>
-        <hr style="border-color:#4d46a7;">
-        <input type="number" id="currency-key" placeholder="Clave divisa 🔑" aria-label="Clave de divisa" oninput="selectCurrencyByKey()" />
-        <div id="currency-key-error" class="error-message hidden">Clave de divisa no válida.</div>
-        <select id="currency" aria-label="Seleccione una divisa" onchange="updateCurrencyKey()">
-            <option value="">--- Seleccione una divisa ---</option>
-            <!-- PRIMERO: Moneda Nacional y las más usadas -->
-            <option value="MXN">Moneda Nacional (MXN)</option>
-            <option value="USD">Dólar Americano (USD)</option>
-            <option value="EUR">Euro (EUR)</option>
-            <option value="CAD">Canada (CAD)</option>
-            <option value="GBP">Inglaterra (GBP)</option>
-            <option value="BRL">Brasil (BRL)</option>
-            <option value="MOR_USD">Morralla Americana (MOR_USD)</option>
-            <option value="MOR_CAD">Morralla Canada (MOR_CAD)</option>
-            <option value="MOR_EUR">Morralla Euro (MOR_EUR)</option>
-            <option value="MOR_GBP">Morralla Sterlina (MOR_GBP)</option>
-            <!-- RESTO DE DIVISAS EN ORDEN ALFABÉTICO POR NOMBRE -->
-            <option value="AUD">Australia (AUD)</option>
-            <option value="BZD">Belice (BZD)</option>
-            <option value="CLP">Chile (CLP)</option>
-            <option value="CNY">China (CNY)</option>
-            <option value="COP">Colombia (COP)</option>
-            <option value="KRW">Corea del Sur (KRW)</option>
-            <option value="CRC">Costa Rica (CRC)</option>
-            <option value="CUP">Cuba Convertible (CUP)</option>
-            <option value="DKK">Dinamarca (DKK)</option>
-            <option value="SGBP">Escocia (SGBP)</option> 
-            <option value="GTQ">Guatemala (GTQ)</option>
-            <option value="HKD">Hong Kong (HKD)</option>
-            <option value="ILS">Israel (ILS)</option>
-            <option value="JPY">Japón (JPY)</option>
-            <option value="NOK">Noruega (NOK)</option>
-            <option value="NZD">Nueva Zelanda (NZD)</option>
-            <option value="PEN">Perú (PEN)</option>
-            <option value="ARS">Pesos Argentinos (ARS)</option>
-            <option value="RUB">Rusia (RUB)</option>
-            <option value="SEK">Suecia (SEK)</option>
-            <option value="CHF">Suiza (CHF)</option>
-            <option value="TRY">Turquia (TRY)</option>
-        </select>
-        <div id="denominations-container"></div>
-        <div class="total" id="total">Monto total: $0.00</div>
-        <button class="button print" onclick="printForm()">Imprimir</button>
+
+    <!-- Contenedor donde se inyectan los iconos móviles mediante JS -->
+    <div id="canvas-container"></div>
+
+    <!-- Tarjeta Central informativa -->
+    <div class="card">
+        <div class="main-alert-icon">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+        </div>
+        <div class="status-badge">Fuera de Servicio</div>
+        <h1>Estamos mejorando</h1>
+        <p>Nuestro sitio web se encuentra temporalmente inactivo por tareas de mantenimiento y optimización técnica. Volveremos a estar en línea muy pronto con mejoras increíbles.</p>
+        
+        <div class="progress-container">
+            <div class="progress-bar"></div>
+        </div>
+
+        <div class="footer-note">
+            Disculpa las molestias operativas · © 2026
+        </div>
     </div>
-    <footer style="text-align: center; margin-top: 20px; font-size: 0.9rem; color: #555;">
-        <a 
-           href="https://wa.me/9982358520?text=¡Hola!%20Vi%20tu%20trabajo%20y%20me%20encantaría%20contactarte" 
-           target="_blank" 
-           rel="noopener noreferrer"
-           style="color: inherit; text-decoration: none;"
-        >
-            Creado por Alejandro Toral 🚀
-        </a>
-    </footer>
-    
-</body>
+
     <script>
-    
-document.body.addEventListener('keydown', function(e) {
-  if (e.key === 'Enter' && ['INPUT', 'SELECT', 'TEXTAREA', 'BUTTON'].includes(e.target.tagName)) {
-    e.preventDefault();
-    // Obtenemos todos los elementos focusables visibles y habilitados
-    const focusable = Array.from(document.querySelectorAll('input, select, textarea, button'))
-      .filter(el => !el.disabled && el.offsetParent !== null);
-    
-    const index = focusable.indexOf(e.target);
-    if (index > -1 && index < focusable.length - 1) {
-      focusable[index + 1].focus();
-    }
-  }
-});
-        // Datos de denominaciones por divisa
-    const denominationsByCurrency = {
-    MXN: [1000, 500, 200, 100, 50, 20, 10, 5, 2, 1, 0.5],
-    USD: [100, 50, 20, 10, 5, 2, 1],
-    CAD: [100, 50, 20, 10, 5],
-    CHF: [1000, 200, 100, 50, 20, 10, 5],
-    AUD: [100, 50, 20, 10, 5],
-    EUR: [500, 200, 100, 50, 20, 10, 5],
-    BRL: [200, 100, 50, 20, 10, 5, 2, 1],
-    GBP: [50, 20, 10, 5],
-    JPY: [10000, 5000, 2000, 1000],
-    CUP: [100, 50, 20, 10, 5, 3, 1],
-    MOR_USD: [1, 0.5, 0.25, 0.1, 0.05],
-    MOR_CAD: [2, 1],
-    MOR_EUR: [2, 1, 0.5],
-    MOR_GBP: [2, 1],
-    ARS: [1000, 500, 200, 100, 50, 20, 10, 5, 2],
-    COP: [100000, 50000, 20000, 10000, 5000, 2000, 1000],
-    BZD: [100, 50, 20, 10, 5, 2, 1],
-    CLP: [20000, 10000, 5000, 2000, 1000],
-    CNY: [100, 50, 20, 10, 5],
-    DKK: [1000, 500, 200, 100, 50],
-    GTQ: [200, 100, 50, 20, 10, 5],
-    HKD: [1000, 500, 100, 50, 20, 10],
-    ILS: [200, 100, 50, 20],
-    NOK: [1000, 500, 200, 100, 50],
-    PEN: [200, 100, 50, 20, 10],
-    RUB: [5000, 2000, 1000, 500, 200, 100, 50, 10, 5],
-    SEK: [1000, 500, 200, 100, 50, 20],
-    CRC: [20000, 10000, 5000, 2000, 1000],
-    KRW: [50000, 10000, 5000, 2000, 1000],
-    NZD: [100, 50, 20, 10, 5],
-    TRY: [200, 100, 50, 20, 10, 5],
-    SGBP: [100, 50, 20, 10, 5]
-    };
+        // Definición de iconos vectoriales relacionados (Engranaje, Llave inglesa, Alerta, Tuerca)
+        const iconsSVG = [
+            // Engranaje
+            `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/></svg>`,
+            // Llave inglesa
+            `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.7,19l-9.1-9.1c0.9-2.3,0.4-5-1.5-6.9c-2-2-5.1-2.4-7.5-1.2L7.9,5.1L6.4,6.6L3.1,3.3C1.9,5.7,2.2,8.9,4.2,10.9c1.9,1.9,4.6,2.4,6.9,1.5l9.1,9.1c0.4,0.4,1,0.4,1.4,0l1.1-1.1C23.1,20,23.1,19.4,22.7,19z"/></svg>`,
+            // Señal de Advertencia / Exclamación
+            `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12,2L1,21h22L12,2z M13,18h-2v-2h2V18z M13,14h-2v-4h2V14z"/></svg>`,
+            // Tuerca / Destornillador alternativo
+            `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12,2C6.48,2,2,6.48,2,12s4.48,10,10,10s10-4.48,10-10S17.52,2,12,2z M12,16c-2.21,0-4-1.79-4-4s1.79-4,4-4s4,1.79,4,4S14.21,16,12,16z"/></svg>`
+        ];
 
-    // Mapa de claves de divisa
-    const currencyMap = {
-    4: 'CAD',
-    2: 'USD',
-    7: 'EUR',
-    9: 'GBP',
-    8: 'BRL',
-    18: 'COP',
-    1: 'MXN',
-    6: 'AUD',
-    19: 'BZD',
-    20: 'CLP',
-    21: 'CNY',
-    32: 'KRW',
-    33: 'CRC',
-    11: 'CUP',
-    22: 'DKK',
-    30: 'SGBP',
-    23: 'GTQ',
-    24: 'HKD',
-    25: 'ILS',
-    10: 'JPY',
-    12: 'MOR_USD',
-    13: 'MOR_CAD',
-    14: 'MOR_EUR',
-    15: 'MOR_GBP',
-    26: 'NOK',
-    31: 'NZD',
-    27: 'PEN',
-    17: 'ARS',
-    28: 'RUB',
-    29: 'SEK',
-    5: 'CHF',
-    34: 'TRY'
-    };
-        // Actualiza la fecha y hora
-        function updateDateTime() {
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
-            const now = new Date().toLocaleString('es-ES', options);
-            document.getElementById('date-time').textContent = now;
-        }
+        const container = document.getElementById('canvas-container');
+        const totalIcons = 16; // Número de iconos de fondo en movimiento
+        const items = [];
+        let mouse = { x: -1000, y: -1000 };
 
-        // Muestra u oculta el campo de sucursal
-        function toggleSucursalInput() {
-            const sucursalSelect = document.getElementById('sucursal');
-            const sucursalInput = document.getElementById('sucursal-input');
-            const sucursalError = document.getElementById('sucursal-error');
+        // Capturar movimiento del ratón para el efecto interactivo de repulsión
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
 
-            if (sucursalSelect.value === 'OTRA') {
-                sucursalInput.classList.remove('hidden');
-                sucursalError.classList.add('hidden');
-            } else {
-                sucursalInput.classList.add('hidden');
-                sucursalInput.value = "";
-                sucursalError.classList.add('hidden');
-            }
-        }
+        // Crear dinámicamente los elementos en la pantalla
+        for (let i = 0; i < totalIcons; i++) {
+            const el = document.createElement('div');
+            el.className = 'floating-icon';
+            el.innerHTML = iconsSVG[Math.floor(Math.random() * iconsSVG.length)];
+            container.appendChild(el);
 
-        // Actualiza las denominaciones según la divisa seleccionada
-        function updateDenominations() {
-            const currency = document.getElementById('currency').value;
-            const denominations = denominationsByCurrency[currency];
-            const denominationsContainer = document.getElementById('denominations-container');
+            const size = Math.random() * 35 + 25; // Tamaños variados entre 25px y 60px
+            el.style.width = size + 'px';
+            el.style.height = size + 'px';
+            
+            // Opacidad baja para servir como fondo elegante y no entorpecer la lectura
+            el.style.opacity = Math.random() * 0.12 + 0.06;
+            
+            // Asignar colores temáticos sutiles (amarillo advertencia o gris azulado)
+            el.style.color = Math.random() > 0.6 ? '#facc15' : '#475569';
 
-            denominationsContainer.innerHTML = ""; // Limpia el contenedor
-
-            if (!denominations) return;
-
-            denominations.forEach(denomination => {
-                const row = document.createElement('div');
-                row.className = 'denomination-container';
-
-                const label = document.createElement('label');
-                label.textContent = `${denomination}:`;
-
-                const input = document.createElement('input');
-                input.type = 'number';
-                input.setAttribute('data-denomination', denomination);
-                input.placeholder = '-';
-                input.addEventListener('input', updateTotal);
-
-                row.appendChild(label);
-                row.appendChild(input);
-                denominationsContainer.appendChild(row);
+            items.push({
+                el: el,
+                x: Math.random() * window.innerWidth,
+                y: Math.random() * window.innerHeight,
+                vx: (Math.random() - 0.5) * 1.2, // Velocidad en X
+                vy: (Math.random() - 0.5) * 1.2, // Velocidad en Y
+                size: size,
+                angle: Math.random() * 360,
+                rotationSpeed: (Math.random() - 0.5) * 0.8
             });
         }
 
-        // Calcula y actualiza el monto total
-        function updateTotal() {
-            let total = 0;
-            const inputs = document.querySelectorAll('.denomination-container input');
-            inputs.forEach(input => {
-                const denomination = parseFloat(input.getAttribute('data-denomination'));
-                const value = parseInt(input.value) || 0;
-                total += denomination * value;
-            });
-            document.getElementById('total').textContent = `Monto total: ${total.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}`;
-        }
+        // Bucle de animación (Smooth 60fps con requestAnimationFrame)
+        function animate() {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
 
-        // Selecciona la divisa por clave
-        function selectCurrencyByKey() {
-            const key = parseInt(document.getElementById('currency-key').value);
-            const currency = currencyMap[key] || "";
-            const currencyKeyInput = document.getElementById('currency-key');
-            const errorMessage = document.getElementById('currency-key-error');
+            items.forEach(item => {
+                // Actualizar posiciones básicas por su velocidad
+                item.x += item.vx;
+                item.y += item.vy;
+                item.angle += item.rotationSpeed;
 
-            if (currency) {
-                document.getElementById('currency').value = currency;
-                currencyKeyInput.classList.remove('error');
-                errorMessage.classList.add('hidden');
-                updateDenominations();
-            } else {
-                currencyKeyInput.classList.add('error');
-                errorMessage.classList.remove('hidden');
-            }
-        }
+                // --- EFECTO INTERACTIVO: El ratón empuja sutilmente a los iconos ---
+                const dx = item.x + item.size / 2 - mouse.x;
+                const dy = item.y + item.size / 2 - mouse.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                const maxDistance = 160; // Radio de interacción
 
-        // Actualiza la clave de divisa según la selección
-        function updateCurrencyKey() {
-            const currency = document.getElementById('currency').value;
-            const key = Object.keys(currencyMap).find(key => currencyMap[key] === currency);
-            document.getElementById('currency-key').value = key || "";
-            updateDenominations();
-        }
-        function validateForm() {
-    let isValid = true;
-
-    // Validar nombre de usuario
-    const userInput = document.getElementById('user-input').value.trim();
-    const userError = document.getElementById('user-error');
-    if (userInput === "") {
-        userError.classList.remove('hidden');
-        isValid = false;
-    } else {
-        userError.classList.add('hidden');
-    }
-
-    // Validar sucursal
-    const sucursalSelect = document.getElementById('sucursal').value;
-    const sucursalInput = document.getElementById('sucursal-input').value.trim();
-    const sucursalError = document.getElementById('sucursal-error');
-    if (sucursalSelect === "") {
-        sucursalError.textContent = "La sucursal es requerida.";
-        sucursalError.classList.remove('hidden');
-        isValid = false;
-    } else if (sucursalSelect === "OTRA" && sucursalInput === "") {
-        sucursalError.textContent = "El nombre de la sucursal es requerido.";
-        sucursalError.classList.remove('hidden');
-        isValid = false;
-    } else {
-        sucursalError.classList.add('hidden');
-    }
-
-    // Validar clave de divisa o divisa seleccionada
-    const currencyKey = document.getElementById('currency-key').value.trim();
-    const currencySelect = document.getElementById('currency').value;
-    const currencyKeyError = document.getElementById('currency-key-error');
-    if (currencyKey === "" && currencySelect === "") {
-        currencyKeyError.textContent = "La clave de divisa o la divisa seleccionada es requerida.";
-        currencyKeyError.classList.remove('hidden');
-        isValid = false;
-    } else {
-        currencyKeyError.classList.add('hidden');
-    }
-
-    // Validar al menos una denominación con valor mayor a 0
-    const denominationInputs = document.querySelectorAll('.denomination-container input');
-    let hasValidDenomination = false;
-    denominationInputs.forEach(input => {
-        if (parseInt(input.value) > 0) {
-            hasValidDenomination = true;
-        }
-    });
-    if (!hasValidDenomination) {
-        alert("Debe ingresar al menos una denominación con un valor mayor a 0.");
-        isValid = false;
-    }
-
-    return isValid;
-}
-
-        // Imprime el comprobante de retiro
-        function printForm() {
-            if (!validateForm()) {
-        return; // Detener la impresión si hay errores
-    }
-            const transaction = {
-                user: document.getElementById('user-input').value.trim(),
-                sucursal: document.getElementById('sucursal').value === 'OTRA' ? document.getElementById('sucursal-input').value.trim() : document.getElementById('sucursal').value,
-                currency: document.getElementById('currency').value,
-                total: document.getElementById('total').textContent,
-                dateTime: new Date().toLocaleString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true }),
-                denominations: []
-            };
-
-            // Obtener las denominaciones ingresadas
-            const inputs = document.querySelectorAll('.denomination-container input');
-            inputs.forEach(input => {
-                const denomination = parseFloat(input.getAttribute('data-denomination'));
-                const value = parseInt(input.value) || 0;
-                if (value > 0) {
-                    transaction.denominations.push({ denomination, value });
+                if (distance < maxDistance) {
+                    const force = (maxDistance - distance) / maxDistance;
+                    // Empujar suavemente en la dirección opuesta al puntero
+                    item.x += (dx / distance) * force * 2.5;
+                    item.y += (dy / distance) * force * 2.5;
                 }
+
+                // --- COLISIONES CON LOS BORDES DE LA PANTALLA (Rebote continuo) ---
+                if (item.x < 0) { 
+                    item.x = 0; 
+                    item.vx *= -1; 
+                } else if (item.x > w - item.size) { 
+                    item.x = w - item.size; 
+                    item.vx *= -1; 
+                }
+
+                if (item.y < 0) { 
+                    item.y = 0; 
+                    item.vy *= -1; 
+                } else if (item.y > h - item.size) { 
+                    item.y = h - item.size; 
+                    item.vy *= -1; 
+                }
+
+                // Aplicar transformaciones usando aceleración por hardware (translate3d)
+                item.el.style.transform = `translate3d(${item.x}px, ${item.y}px, 0) rotate(${item.angle}deg)`;
             });
-// Generar el contenido del comprobante
-const printContent = `
-    <div style="font-family: Arial, sans-serif; width: 80mm; padding: 2px; font-size: 11px;">
-        <h1 style="text-align: center; font-size: 18px; margin: 5px 0; color: #000;">Retiro de Divisas</h1>
-        
-        <!-- Línea divisoria -->
-        <div style="text-align: center; margin: 10px 0;">
-            <hr style="border: 0; border-top: 2px dashed #000; margin: 5px 0;">
-        </div>
-        
-        <div style="margin-bottom: 5px;">
-            <p style="margin: 4px 0; font-size: 14px;"><strong>Fecha y Hora:</strong> ${transaction.dateTime}</p>
-            <p style="margin: 4px 0; font-size: 14px;"><strong>Usuario:</strong> ${transaction.user}</p>
-            <p style="margin: 4px 0; font-size: 14px;"><strong>Sucursal:</strong> ${transaction.sucursal}</p>
-            <p style="margin: 4px 0; font-size: 14px;"><strong>Divisa:</strong> ${getCurrencyFullName(transaction.currency)}</p>
-        </div>
-        
-        <!-- Línea divisoria -->
-        <div style="text-align: center; margin: 10px 0;">
-            <hr style="border: 0; border-top: 2px dashed #000; margin: 5px 0;">
-        </div>
-        
-        <div style="margin-bottom: 5px;">
-    <h3 style="font-size: 16px; margin: 5px 0; color: #000; text-align: left;">Detalle de Denominaciones:</h3>
-    <ul style="list-style-type: none; padding: 0; margin: 0; text-align: left;">
-        ${transaction.denominations.map(d => `
-            <li style="margin: 6px 0; padding: 8px; font-size: 13px; background-color: #f9f9f9; border: 1.5px solid #000; border-radius: 6px; color: #000; display: flex; justify-content: space-between; align-items: center;">
-                        <span>${d.value} de ${d.denomination}</span>
-                        <span style="font-weight: bold; color: #007aff;">${(d.value * d.denomination).toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })}</span>
-                    </li>
-        `).join('')}
-    </ul>
-</div>
-        
-        <!-- Línea divisoria -->
-        <div style="text-align: center; margin: 10px 0;">
-            <hr style="border: 0; border-top: 2px dashed #000; margin: 5px 0;">
-        </div>
-        
-        <div style="text-align: left; font-size: 18px; font-weight: bold; margin-top: 5px;">
-            ${transaction.total}
-        </div>
-        
-        <!-- Línea divisoria -->
-        <div style="text-align: center; margin: 10px 0;">
-            <hr style="border: 0; border-top: 2px dashed #000; margin: 5px 0;">
-        </div>
-        
-        <div style="text-align: center; margin-top: 5px; font-size: 12px; color: #000;">
-            <p>Desarrollado por Toral</p>
-        </div>
-    </div>
-`;
-// Función para obtener el nombre completo de la divisa
-function getCurrencyFullName(currencyCode) {
-  const currencyNames = {
-    MXN: "Moneda Nacional (MXN)",
-    USD: "Dólar Americano (USD)",
-    CAD: "Dólar Canadiense (CAD)",
-    CHF: "Franco Suizo (CHF)",
-    AUD: "Dólar Australiano (AUD)",
-    EUR: "Euro (EUR)",
-    BRL: "Real Brasileño (BRL)",
-    GBP: "Libra Esterlina (GBP)",
-    JPY: "Yen Japonés (JPY)",
-    CUP: "Peso Cubano Convertible (CUP)",
-    MOR_USD: "Morralla Americana (MOR_USD)",
-    MOR_CAD: "Morralla Canadiense (MOR_CAD)",
-    MOR_EUR: "Morralla Euro (MOR_EUR)",
-    MOR_GBP: "Morralla Libra Esterlina (MOR_GBP)",
-    ARS: "Peso Argentino (ARS)",
-    COP: "Peso Colombiano (COP)",
-    BZD: "Dólar Beliceño (BZD)",
-    CLP: "Peso Chileno (CLP)",
-    CNY: "Yuan Chino (CNY)",
-    DKK: "Corona Danesa (DKK)",
-    GTQ: "Quetzal Guatemalteco (GTQ)",
-    HKD: "Dólar de Hong Kong (HKD)",
-    ILS: "Nuevo Shekel Israelí (ILS)",
-    NOK: "Corona Noruega (NOK)",
-    PEN: "Sol Peruano (PEN)",
-    RUB: "Rublo Ruso (RUB)",
-    SEK: "Corona Sueca (SEK)",
-    CRC: "Colón Costarricense (CRC)",
-    KRW: "Won Surcoreano (KRW)",
-    NZD: "Dólar Neozelandés (NZD)",
-    TRY: "Lira Turca (TRY)",
-    SGBP: "Libra Esterlina Escocesa (SGBP)"
-    };
 
-    return currencyNames[currencyCode] || currencyCode;
-    }
+            requestAnimationFrame(animate);
+        }
 
+        animate();
 
-    // Abrir una ventana de impresión
-    const printWindow = window.open('', '', 'width=600,height=600');
-    printWindow.document.write(printContent);
-    printWindow.document.close();
-
-    // Imprimir utilizando el cuadro de diálogo del sistema y repetir la impresión dos veces
-    printWindow.print();
-    setTimeout(() => {
-        printWindow.print();
-        printWindow.close();
-    }, 1000); // Espera 1 segundo antes de la segunda impresión
-
-    resetForm();
-}
-        // Función para reiniciar el formulario
-function resetForm() {
-    document.getElementById('currency-key').value = "";
-    document.getElementById('currency').value = "";
-    document.getElementById('denominations-container').innerHTML = "";
-    document.getElementById('total').textContent = "Monto total: $0.00";
-    updateDenominations();
-}
-
-        // Inicialización
-        updateDateTime();
-        setInterval(updateDateTime, 1000);
-        updateDenominations();
+        // Reajuste fluido en caso de cambiar el tamaño de la ventana
+        window.addEventListener('resize', () => {
+            items.forEach(item => {
+                if (item.x > window.innerWidth) item.x = window.innerWidth - item.size;
+                if (item.y > window.innerHeight) item.y = window.innerHeight - item.size;
+            });
+        });
     </script>
 </body>
 </html>
