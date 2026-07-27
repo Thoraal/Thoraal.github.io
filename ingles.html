@@ -3,29 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>English Numbers - Voice Recognition</title>
+    <title>English Numbers - Professional App</title>
+    <!-- FontAwesome para iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <style>
+        /* Variables de Tema */
         :root[data-theme="light"] {
-            --bg-color: #f8fafc;
-            --surface: #ffffff;
+            --bg-body: #f1f5f9;
+            --bg-surface: #ffffff;
+            --bg-nav: rgba(255, 255, 255, 0.8);
             --primary: #2563eb;
             --primary-hover: #1d4ed8;
-            --secondary: #f1f5f9;
-            --secondary-hover: #e2e8f0;
+            --secondary: #e2e8f0;
+            --secondary-hover: #cbd5e1;
             --text-main: #0f172a;
             --text-muted: #64748b;
             --border-color: #e2e8f0;
-            --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
             --success: #10b981;
             --error: #ef4444;
+            --interim-text: #94a3b8;
         }
 
         :root[data-theme="dark"] {
-            --bg-color: #0f172a;
-            --surface: #1e293b;
+            --bg-body: #0f172a;
+            --bg-surface: #1e293b;
+            --bg-nav: rgba(30, 41, 59, 0.8);
             --primary: #3b82f6;
             --primary-hover: #60a5fa;
             --secondary: #334155;
@@ -33,9 +41,12 @@
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --border-color: #334155;
-            --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
             --success: #10b981;
             --error: #ef4444;
+            --interim-text: #64748b;
         }
 
         * {
@@ -47,56 +58,48 @@
         }
 
         body {
-            background-color: var(--bg-color);
+            background-color: var(--bg-body);
             color: var(--text-main);
             min-height: 100vh;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 1rem;
+            flex-direction: column;
         }
 
-        .card {
-            background-color: var(--surface);
-            width: 100%;
-            max-width: 500px;
-            border-radius: 16px;
-            box-shadow: var(--shadow-lg);
-            padding: 2rem;
-            border: 1px solid var(--border-color);
-        }
-
-        /* Header */
-        .header {
+        /* Navbar */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background-color: var(--bg-nav);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--border-color);
         }
 
-        .header h1 {
+        .navbar-brand {
             font-size: 1.25rem;
-            font-weight: 600;
+            font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
+            letter-spacing: -0.5px;
         }
 
-        .header h1 i { color: var(--primary); }
-
-        .header-actions { display: flex; gap: 0.5rem; }
+        .navbar-brand i { color: var(--primary); }
 
         .btn-icon {
             background: transparent;
             border: none;
             color: var(--text-muted);
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             cursor: pointer;
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -107,10 +110,30 @@
             color: var(--text-main);
         }
 
-        /* Área de Pantalla */
+        /* Main Content */
+        .main-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem 1rem;
+        }
+
+        .card {
+            background-color: var(--bg-surface);
+            width: 100%;
+            max-width: 520px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+            padding: 2.5rem;
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        /* Área Interactiva */
         .display-area {
             text-align: center;
-            padding: 1rem 0;
+            padding: 1rem 0 2rem 0;
             position: relative;
         }
 
@@ -119,165 +142,254 @@
             background: transparent;
             border: none;
             text-align: center;
-            font-size: 4rem;
-            font-weight: 700;
+            font-size: 5rem;
+            font-weight: 800;
             color: var(--text-main);
             outline: none;
-            letter-spacing: -1px;
+            letter-spacing: -2px;
             padding: 0.5rem;
-            border-radius: 12px;
+            border-radius: 16px;
         }
 
         .main-number-input:focus {
-            background-color: var(--secondary);
+            background-color: rgba(37, 99, 235, 0.05);
             color: var(--primary);
         }
 
-        .translation-container {
-            margin-top: 0.5rem;
-            min-height: 2em;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
         .translation {
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             color: var(--text-muted);
             font-weight: 500;
             opacity: 0;
-            transform: translateY(5px);
+            transform: translateY(10px);
             transition: all 0.3s ease;
+            margin-top: 0.5rem;
+            min-height: 1.5em;
         }
+
         .translation.visible {
             opacity: 1;
             transform: translateY(0);
             color: var(--primary);
         }
 
-        /* Feedback de Voz */
-        .voice-feedback {
-            margin-top: 1rem;
-            font-size: 0.9rem;
+        /* Transcripción en Tiempo Real */
+        .live-transcript-container {
+            margin-top: 1.5rem;
+            min-height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .live-transcript {
+            background-color: var(--secondary);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-size: 1rem;
             font-weight: 500;
-            min-height: 1.5em;
+            color: var(--text-main);
+            max-width: 90%;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: all 0.3s ease;
+            display: none;
+            position: relative;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .live-transcript.active {
+            opacity: 1;
+            transform: scale(1);
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            opacity: 0;
-            transition: opacity 0.3s;
         }
-        .voice-feedback.show { opacity: 1; }
-        .voice-feedback.listening { color: var(--primary); }
-        .voice-feedback.success { color: var(--success); }
-        .voice-feedback.error { color: var(--error); }
+
+        /* Texto gris mientras hablas (Interim) */
+        .interim-text {
+            color: var(--interim-text);
+            font-style: italic;
+        }
+
+        /* Animación de puntos suspensivos escuchando */
+        .listening-indicator {
+            display: flex;
+            gap: 4px;
+        }
+        .listening-indicator span {
+            width: 6px;
+            height: 6px;
+            background-color: var(--primary);
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+        .listening-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .listening-indicator span:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        /* Feedback Veredicto */
+        .feedback-message {
+            font-size: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .feedback-message.success { color: var(--success); }
+        .feedback-message.error { color: var(--error); }
 
         /* Controles */
         .controls {
             display: flex;
             flex-direction: column;
-            gap: 0.75rem;
-            margin-top: 1.5rem;
+            gap: 1rem;
         }
 
-        .row-btns { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+        .row-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
 
         .btn {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
-            padding: 0.8rem;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            font-weight: 500;
+            padding: 1rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
             border: none;
             flex: 1;
-            min-width: 120px;
+            box-shadow: var(--shadow-sm);
         }
 
+        .btn:active { transform: translateY(1px); }
+
         .btn-primary { background-color: var(--primary); color: white; }
-        .btn-primary:hover { background-color: var(--primary-hover); }
+        .btn-primary:hover { background-color: var(--primary-hover); box-shadow: var(--shadow-md); }
 
         .btn-secondary { background-color: var(--secondary); color: var(--text-main); }
         .btn-secondary:hover { background-color: var(--secondary-hover); }
 
         .btn-mic {
-            background-color: var(--surface);
-            border: 1px solid var(--border-color);
+            background-color: var(--bg-surface);
+            border: 2px solid var(--border-color);
             color: var(--text-main);
-            position: relative;
-            overflow: hidden;
         }
-        
-        .btn-mic:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-        }
+        .btn-mic:hover { border-color: var(--primary); color: var(--primary); }
 
-        /* Animación de escuchando */
-        .btn-mic.listening {
+        .btn-mic.is-listening {
             border-color: var(--error);
             color: var(--error);
+            background-color: rgba(239, 68, 68, 0.05);
             animation: pulse-border 1.5s infinite;
         }
 
         @keyframes pulse-border {
-            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.3); }
             70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
             100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
         }
 
+        /* Footer */
+        .footer {
+            background-color: var(--bg-nav);
+            border-top: 1px solid var(--border-color);
+            padding: 1.5rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: auto;
+        }
+
+        .footer p { display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+        .footer i { color: var(--error); } /* Corazón rojo */
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .card { padding: 1.5rem; border-radius: 0; border-left: none; border-right: none; }
+            .main-number-input { font-size: 4rem; }
+            .navbar { padding: 1rem; }
+            .row-btns { flex-direction: column; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <div class="header">
-            <h1><i class="fa-solid fa-language"></i> English Numbers</h1>
-            <div class="header-actions">
-                <button class="btn-icon" id="btnTheme" title="Cambiar Tema">
-                    <i class="fa-solid fa-moon"></i>
-                </button>
-            </div>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <i class="fa-solid fa-graduation-cap"></i> EnglishNum Pro
         </div>
-
-        <div class="display-area">
-            <input type="text" inputmode="numeric" id="mainNumberInput" class="main-number-input" value="0">
-            
-            <div class="translation-container">
-                <div class="translation" id="translationDisplay">Zero</div>
-                <!-- Aquí se muestra si lo dijiste bien o mal -->
-                <div class="voice-feedback" id="voiceFeedback"></div>
-            </div>
-        </div>
-
-        <div class="controls">
-            <button class="btn btn-primary" id="btnGenerate">
-                <i class="fa-solid fa-shuffle"></i> Generar Random
+        <div>
+            <button class="btn-icon" id="btnTheme" title="Cambiar Tema">
+                <i class="fa-solid fa-moon"></i>
             </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <div class="card">
             
-            <div class="row-btns">
-                <button class="btn btn-secondary" id="btnReveal">
-                    <i class="fa-regular fa-eye"></i> Ver Letras
+            <div class="display-area">
+                <!-- Hint visual -->
+                <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+                    <i class="fa-solid fa-pen"></i> Toca el número para editarlo
+                </div>
+                
+                <input type="text" inputmode="numeric" id="mainNumberInput" class="main-number-input" value="0">
+                <div class="translation" id="translationDisplay">Zero</div>
+            </div>
+
+            <!-- Área de Transcripción en Tiempo Real -->
+            <div class="live-transcript-container">
+                <div class="live-transcript" id="liveTranscript">
+                    <!-- Contenido inyectado por JS -->
+                </div>
+            </div>
+
+            <!-- Controles -->
+            <div class="controls">
+                <button class="btn btn-primary" id="btnGenerate">
+                    <i class="fa-solid fa-shuffle"></i> Generar Nuevo
                 </button>
-                <button class="btn btn-secondary" id="btnListen">
-                    <i class="fa-solid fa-volume-high"></i> Escuchar
-                </button>
+                
+                <div class="row-btns">
+                    <button class="btn btn-secondary" id="btnReveal">
+                        <i class="fa-regular fa-eye"></i> Ver Letras
+                    </button>
+                    <button class="btn btn-secondary" id="btnListen">
+                        <i class="fa-solid fa-volume-high"></i> Pronunciación
+                    </button>
+                </div>
+                
+                <!-- Botón de Micrófono Principal -->
                 <button class="btn btn-mic" id="btnMic">
-                    <i class="fa-solid fa-microphone"></i> Hablar
+                    <i class="fa-solid fa-microphone"></i> Empezar a Hablar
                 </button>
             </div>
         </div>
-    </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Hecho con <i class="fa-solid fa-heart"></i> para aprender inglés • <span id="currentYear"></span></p>
+    </footer>
 
     <script>
-        // Tema Claro/Oscuro
+        // Configuración de Año en Footer
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // Configuración de Tema
         const html = document.documentElement;
         const btnTheme = document.getElementById('btnTheme');
-        let currentTheme = localStorage.getItem('themeVR') || 'light';
+        let currentTheme = localStorage.getItem('themeProApp') || 'light';
         html.setAttribute('data-theme', currentTheme);
         updateThemeIcon();
 
@@ -290,17 +402,17 @@
         btnTheme.addEventListener('click', () => {
             currentTheme = currentTheme === 'light' ? 'dark' : 'light';
             html.setAttribute('data-theme', currentTheme);
-            localStorage.setItem('themeVR', currentTheme);
+            localStorage.setItem('themeProApp', currentTheme);
             updateThemeIcon();
         });
 
-        // DOM Elementos principales
+        // DOM Elements principales
         const mainInput = document.getElementById('mainNumberInput');
         const translationDisplay = document.getElementById('translationDisplay');
         const btnMic = document.getElementById('btnMic');
-        const voiceFeedback = document.getElementById('voiceFeedback');
+        const liveTranscript = document.getElementById('liveTranscript');
 
-        // Formateo de números
+        // Formateo de Números (comas)
         function formatNumber(numStr) {
             let raw = numStr.replace(/\D/g, '');
             if (raw === '') return '0';
@@ -334,7 +446,7 @@
             return words.trim();
         }
 
-        // Interacción Input
+        // Lógica de Input Manual
         mainInput.addEventListener('input', (e) => {
             let cursorPosition = e.target.selectionStart;
             let lengthBefore = e.target.value.length;
@@ -342,115 +454,145 @@
             cursorPosition += (e.target.value.length - lengthBefore);
             e.target.setSelectionRange(cursorPosition, cursorPosition);
             
-            translationDisplay.classList.remove('visible');
-            voiceFeedback.classList.remove('show');
+            resetFeedback();
             translationDisplay.textContent = numberToEnglish(getRawNumber());
         });
 
         mainInput.addEventListener('click', function() { this.select(); });
 
-        // Generar Random
+        function resetFeedback() {
+            translationDisplay.classList.remove('visible');
+            liveTranscript.classList.remove('active');
+        }
+
+        // Acciones Botones
         function generateNumber() {
             const randomNum = Math.floor(Math.random() * 1000) + 1;
-            translationDisplay.classList.remove('visible');
-            voiceFeedback.classList.remove('show');
+            resetFeedback();
             mainInput.value = randomNum.toLocaleString('en-US');
             translationDisplay.textContent = numberToEnglish(randomNum);
         }
 
-        // Escuchar Sistema (TTS)
         function speakNumber() {
             if (window.speechSynthesis.speaking) window.speechSynthesis.cancel();
-            const textToSpeak = numberToEnglish(getRawNumber());
-            const utterance = new SpeechSynthesisUtterance(textToSpeak);
+            const utterance = new SpeechSynthesisUtterance(numberToEnglish(getRawNumber()));
             utterance.lang = 'en-US';
             window.speechSynthesis.speak(utterance);
         }
 
-        // RECONOCIMIENTO DE VOZ (Speech-to-Text)
+        document.getElementById('btnGenerate').addEventListener('click', generateNumber);
+        document.getElementById('btnReveal').addEventListener('click', () => {
+            translationDisplay.classList.add('visible');
+            liveTranscript.classList.remove('active');
+        });
+        document.getElementById('btnListen').addEventListener('click', speakNumber);
+
+        // RECONOCIMIENTO DE VOZ EN TIEMPO REAL
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         let recognition = null;
 
         if (SpeechRecognition) {
             recognition = new SpeechRecognition();
-            recognition.lang = 'en-US'; // Escuchar en inglés americano
-            recognition.interimResults = false;
+            recognition.lang = 'en-US';
+            recognition.interimResults = true; // ACTIVADO PARA TIEMPO REAL
             recognition.maxAlternatives = 1;
 
             recognition.onstart = () => {
-                btnMic.classList.add('listening');
-                btnMic.innerHTML = '<i class="fa-solid fa-microphone-lines"></i> Escuchando...';
-                voiceFeedback.className = 'voice-feedback show listening';
-                voiceFeedback.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Te escucho...';
-                translationDisplay.classList.remove('visible'); // Ocultar chivo expiatorio
+                resetFeedback();
+                btnMic.classList.add('is-listening');
+                btnMic.innerHTML = '<i class="fa-solid fa-microphone-lines"></i> Te escucho...';
+                
+                liveTranscript.className = 'live-transcript active';
+                liveTranscript.innerHTML = `
+                    <div class="listening-indicator">
+                        <span></span><span></span><span></span>
+                    </div>
+                `;
             };
 
             recognition.onresult = (event) => {
-                const transcript = event.results[0][0].transcript.toLowerCase();
-                const targetNumber = getRawNumber();
-                const targetWords = numberToEnglish(targetNumber).toLowerCase().replace(/-/g, ' ').replace(/ and /g, ' ');
-                
-                // La API a veces devuelve el número en dígitos ("100") y a veces en letras ("one hundred")
-                // Limpiamos la transcripción para quitar guiones y la palabra 'and' (para ser menos estrictos)
-                const cleanTranscript = transcript.replace(/-/g, ' ').replace(/ and /g, ' ');
-                const targetDigitString = targetNumber.toString();
+                let interimTranscript = '';
+                let finalTranscript = '';
 
-                let isCorrect = false;
-
-                // Verificamos si dijo las palabras exactas, o si la API lo convirtió directamente al dígito numérico
-                if (cleanTranscript.includes(targetDigitString) || cleanTranscript === targetWords) {
-                    isCorrect = true;
+                // Separar lo que está procesando (interim) de lo definitivo (final)
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    if (event.results[i].isFinal) {
+                        finalTranscript += event.results[i][0].transcript;
+                    } else {
+                        interimTranscript += event.results[i][0].transcript;
+                    }
                 }
 
-                if (isCorrect) {
-                    voiceFeedback.className = 'voice-feedback show success';
-                    voiceFeedback.innerHTML = '<i class="fa-solid fa-check-circle"></i> ¡Excelente pronunciación!';
-                } else {
-                    voiceFeedback.className = 'voice-feedback show error';
-                    voiceFeedback.innerHTML = `<i class="fa-solid fa-xmark-circle"></i> Dijiste: "${transcript}". Intenta de nuevo.`;
+                // Mostrar texto en tiempo real
+                if (interimTranscript !== '') {
+                    liveTranscript.innerHTML = `
+                        <i class="fa-solid fa-microphone-lines" style="color: var(--primary);"></i>
+                        <span class="interim-text">${interimTranscript}...</span>
+                    `;
+                }
+
+                // Cuando el navegador decide que terminaste de hablar esa frase
+                if (finalTranscript !== '') {
+                    validateSpeech(finalTranscript);
                 }
             };
 
             recognition.onerror = (event) => {
-                voiceFeedback.className = 'voice-feedback show error';
+                liveTranscript.className = 'live-transcript active';
                 if(event.error === 'not-allowed') {
-                    voiceFeedback.innerHTML = '<i class="fa-solid fa-microphone-slash"></i> Permiso de micrófono denegado.';
+                    liveTranscript.innerHTML = '<div class="feedback-message error"><i class="fa-solid fa-microphone-slash"></i> Micro denegado</div>';
                 } else {
-                    voiceFeedback.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> No te escuché bien, intenta de nuevo.';
+                    liveTranscript.innerHTML = '<div class="feedback-message error"><i class="fa-solid fa-triangle-exclamation"></i> No te entendí bien</div>';
                 }
             };
 
             recognition.onend = () => {
-                btnMic.classList.remove('listening');
-                btnMic.innerHTML = '<i class="fa-solid fa-microphone"></i> Hablar';
+                btnMic.classList.remove('is-listening');
+                btnMic.innerHTML = '<i class="fa-solid fa-microphone"></i> Empezar a Hablar';
+                
+                // Si terminó y no se actualizó el texto, es que no detectó nada
+                if(liveTranscript.innerHTML.includes('listening-indicator')) {
+                    liveTranscript.innerHTML = '<div class="feedback-message error"><i class="fa-solid fa-comment-slash"></i> No se detectó voz</div>';
+                }
             };
 
         } else {
-            // Fallback si el navegador no soporta Speech API
             btnMic.style.display = 'none';
         }
 
-        // Eventos Botones
-        document.getElementById('btnGenerate').addEventListener('click', generateNumber);
-        document.getElementById('btnReveal').addEventListener('click', () => {
-            translationDisplay.classList.add('visible');
-            voiceFeedback.classList.remove('show');
-        });
-        document.getElementById('btnListen').addEventListener('click', speakNumber);
-        
         btnMic.addEventListener('click', () => {
             if (recognition) {
                 try {
                     recognition.start();
                 } catch (e) {
-                    // Prevenir error si ya está iniciado
                     recognition.stop();
                     setTimeout(() => recognition.start(), 100);
                 }
             } else {
-                alert("Tu navegador no soporta reconocimiento de voz. Usa Google Chrome.");
+                alert("Navegador no compatible con Speech API.");
             }
         });
+
+        // Función para validar lo que dijiste vs el número
+        function validateSpeech(transcript) {
+            const lowerTranscript = transcript.toLowerCase();
+            const targetNumber = getRawNumber();
+            const targetWords = numberToEnglish(targetNumber).toLowerCase().replace(/-/g, ' ').replace(/ and /g, ' ');
+            const cleanTranscript = lowerTranscript.replace(/-/g, ' ').replace(/ and /g, ' ');
+            const targetDigitString = targetNumber.toString();
+
+            let isCorrect = cleanTranscript.includes(targetDigitString) || cleanTranscript === targetWords;
+
+            if (isCorrect) {
+                liveTranscript.className = 'live-transcript active';
+                liveTranscript.innerHTML = `<div class="feedback-message success"><i class="fa-solid fa-circle-check"></i> ¡Excelente! "${transcript}"</div>`;
+            } else {
+                liveTranscript.className = 'live-transcript active';
+                liveTranscript.innerHTML = `<div class="feedback-message error"><i class="fa-solid fa-circle-xmark"></i> Dijiste: "${transcript}"</div>`;
+                // Mostrar escritura correcta automáticamente para aprender
+                translationDisplay.classList.add('visible');
+            }
+        }
 
         // Inicializar
         window.onload = generateNumber;
