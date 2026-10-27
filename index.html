@@ -1,240 +1,118 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="icon" type="image/png" href="assets/img/favicon.png"/>
-        <link rel="stylesheet" href="assets/css/styles.css">
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f6f3ee" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#141311" media="(prefers-color-scheme: dark)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Audio M4A">
+  <meta name="description" content="Extrae el audio de un MP4 en tu iPhone, edita título, artista, álbum y portada, y guárdalo como M4A. Todo se procesa en tu dispositivo.">
+  <title>Audio M4A</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="wrap">
+    <header class="hero">
+      <p class="eyebrow">Procesamiento 100 % local</p>
+      <h1>Del MP4 a una canción M4A con etiquetas</h1>
+      <p class="lead">Extrae el audio, ponle título, artista, álbum y portada, y guárdalo en tu iPhone. Ningún archivo sale de tu dispositivo.</p>
+    </header>
 
-        <!-- =====BOX ICONS===== -->
-        <link href="https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <aside class="notice" role="note">
+      <strong>Importante, antes de empezar.</strong>
+      Esta app <em>no puede</em> añadir la canción a la app Música de Apple. iOS no permite que ninguna página web ni app de terceros escriba en esa biblioteca; el archivo final se guarda en Archivos o se comparte.
+      <a href="#por-que">¿Por qué?</a>
+    </aside>
 
+    <!-- Paso 1 -->
+    <section class="card" id="step-file">
+      <h2><span class="num">1</span> Elige el archivo</h2>
+      <label class="drop" for="file">
+        <input id="file" type="file" accept="video/mp4,video/quicktime,audio/mp4,audio/*,.mp4,.m4v,.mov,.m4a,.mp3,.wav,.aac">
+        <span class="drop-icon" aria-hidden="true">♪</span>
+        <span class="drop-text" id="file-label">Toca para seleccionar desde Archivos o iCloud Drive</span>
+      </label>
+      <dl class="info" id="file-info" hidden>
+        <div><dt>Tamaño</dt><dd id="i-size">—</dd></div>
+        <div><dt>Contenedor</dt><dd id="i-container">—</dd></div>
+        <div><dt>Audio</dt><dd id="i-audio">—</dd></div>
+        <div><dt>Duración</dt><dd id="i-duration">—</dd></div>
+      </dl>
+    </section>
 
-        <title>Alejandro Toral</title>
-    </head>
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-L97GVNWPE5"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <!-- Paso 2 -->
+    <section class="card" id="step-meta">
+      <h2><span class="num">2</span> Datos de la canción</h2>
+      <div class="meta-grid">
+        <label class="cover" for="cover">
+          <input id="cover" type="file" accept="image/*">
+          <img id="cover-img" alt="" hidden>
+          <span id="cover-ph">Añadir<br>portada</span>
+        </label>
+        <div class="fields">
+          <label>Título<input id="m-title" type="text" autocomplete="off" placeholder="Nombre de la canción"></label>
+          <label>Artista<input id="m-artist" type="text" autocomplete="off" placeholder="Artista"></label>
+          <label>Álbum<input id="m-album" type="text" autocomplete="off" placeholder="Álbum (opcional)"></label>
+          <div class="row2">
+            <label>Año<input id="m-year" type="text" inputmode="numeric" maxlength="4" placeholder="2026"></label>
+            <label>Género<input id="m-genre" type="text" autocomplete="off" placeholder="Opcional"></label>
+          </div>
+        </div>
+      </div>
+      <button class="link" id="cover-clear" type="button" hidden>Quitar portada</button>
+    </section>
 
-  gtag('config', 'G-L97GVNWPE5');
-</script>
-    <body>
-        <!--===== HEADER =====-->
-        <header class="l-header">
-            <nav class="nav bd-grid">
-                <div>
-                    <a href="#" class="nav__logo">Alejandro</a>
-                </div>
+    <!-- Paso 3 -->
+    <section class="card" id="step-run">
+      <h2><span class="num">3</span> Crear el M4A</h2>
+      <button class="primary" id="run" type="button" disabled>Selecciona un archivo primero</button>
+      <div class="progress" id="progress" hidden>
+        <div class="bar"><span id="bar-fill"></span></div>
+        <p id="status" aria-live="polite">Preparando…</p>
+      </div>
+      <p class="error" id="error" role="alert" hidden></p>
+      <p class="hint">La primera vez se descarga el motor de conversión (≈ 31 MB) desde unpkg.com; después Safari lo guarda en caché. Tu canción no se sube a ningún sitio.</p>
+    </section>
 
-                <div class="nav__menu" id="nav-menu">
-                    <ul class="nav__list">
-                        <li class="nav__item"><a href="#home" class="nav__link active-link">Inicio</a></li>
-                        <li class="nav__item"><a href="#about" class="nav__link">Sobre mí</a></li>
-                        <li class="nav__item"><a href="#skills" class="nav__link">Educación</a></li>
-                        <li class="nav__item"><a href="#work" class="nav__link">Proyectos</a></li>
-                        <li class="nav__item"><a href="#contact" class="nav__link">Contacto</a></li>
-                    </ul>
-                </div>
+    <!-- Resultado -->
+    <section class="card result" id="result" hidden>
+      <h2><span class="num ok">✓</span> Archivo listo</h2>
+      <div class="result-head">
+        <img id="r-cover" alt="" hidden>
+        <div>
+          <p class="r-title" id="r-title"></p>
+          <p class="r-sub" id="r-sub"></p>
+          <p class="r-file" id="r-file"></p>
+        </div>
+      </div>
+      <audio id="player" controls preload="metadata"></audio>
+      <div class="actions">
+        <button class="primary" id="share" type="button">Compartir / Guardar en Archivos</button>
+        <a class="secondary" id="download" download>Descargar M4A</a>
+      </div>
+      <p class="truth">El archivo está en tu iPhone, <strong>no en la app Música</strong>. Puedes reproducirlo desde Archivos (incluso con la pantalla bloqueada) o llevarlo a Música cuando tengas acceso a una computadora.</p>
+    </section>
 
-                <div class="nav__toggle" id="nav-toggle">
-                    <i class='bx bx-menu'></i>
-                </div>
-            </nav>
-        </header>
+    <!-- Explicación -->
+    <section class="card explain" id="por-que">
+      <h2>¿Por qué no llega directo a Música?</h2>
+      <p>La biblioteca de la app Música en iPhone solo recibe archivos personales por dos vías oficiales, y las dos parten de una computadora:</p>
+      <ol>
+        <li><strong>Sincronización con cable o Wi-Fi</strong> desde la app Música / Finder en Mac, o desde la app Dispositivos Apple / iTunes en Windows.</li>
+        <li><strong>Sincronizar biblioteca (iCloud)</strong> con suscripción a Apple Music o iTunes Match: aun así, la canción se añade primero en la app Música de una computadora y desde ahí sube a iCloud.</li>
+      </ol>
+      <p>Apple Music API y MusicKit solo trabajan con el catálogo de Apple Music y con la biblioteca de suscriptores; no tienen ninguna función para subir archivos propios. Safari tampoco puede escribir en la biblioteca de Música, y la app Música no aparece como destino al compartir un archivo de audio.</p>
+      <p><strong>Requisito mínimo para lograrlo:</strong> usar <em>una vez</em> una computadora (propia o prestada) con la app Música o iTunes: añadir el M4A que crea esta app y sincronizar el iPhone. No hace falta suscripción.</p>
+    </section>
 
-        <main class="l-main">
-            <!--===== HOME =====-->
-            <section class="home bd-grid" id="home">
-                <div class="home__data">
-                    <h1 class="home__title">Hola,<br>Soy <span class="home__title-color">Alejandro Toral</span><br>Desarrollador</h1>
+    <footer class="foot">
+      <p>Hecho con <a href="https://github.com/ffmpegwasm/ffmpeg.wasm" target="_blank" rel="noopener">ffmpeg.wasm</a>. Usa solo audio que te pertenezca o que tengas derecho a copiar.</p>
+    </footer>
+  </main>
 
-                    <a href="https://wa.me/+528142555089" class="button">Escribeme</a>
-                </div>
-
-                <div class="home__social">
-                    <a href="https://wa.me/+528142555089" class="home__social-icon"><i class='bx bxl-whatsapp'></i></a>
-                    <a href="" class="home__social-icon"><i class='bx bxl-telegram' ></i></a>
-                    <a href="" class="home__social-icon"><i class='bx bxl-github' ></i></a>
-                </div>
-
-                <div class="home__img">
-                    <svg class="home__blob" viewBox="0 0 479 467" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                        <mask id="mask0" mask-type="alpha">
-                            <path d="M9.19024 145.964C34.0253 76.5814 114.865 54.7299 184.111 29.4823C245.804 6.98884 311.86 -14.9503 370.735 14.143C431.207 44.026 467.948 107.508 477.191 174.311C485.897 237.229 454.931 294.377 416.506 344.954C373.74 401.245 326.068 462.801 255.442 466.189C179.416 469.835 111.552 422.137 65.1576 361.805C17.4835 299.81 -17.1617 219.583 9.19024 145.964Z"/>
-                        </mask>
-                        <g mask="url(#mask0)">
-                            <path d="M9.19024 145.964C34.0253 76.5814 114.865 54.7299 184.111 29.4823C245.804 6.98884 311.86 -14.9503 370.735 14.143C431.207 44.026 467.948 107.508 477.191 174.311C485.897 237.229 454.931 294.377 416.506 344.954C373.74 401.245 326.068 462.801 255.442 466.189C179.416 469.835 111.552 422.137 65.1576 361.805C17.4835 299.81 -17.1617 219.583 9.19024 145.964Z"/>
-                            
-                            <image class="home__blob-img" x="120" y="60" href="assets/img/perfil.png"/>
-                        </g>
-                    </svg>
-                </div>
-            </section>
-
-            <!--===== ABOUT =====-->
-            <section class="about section " id="about">
-                <h2 class="section-title">Sobre mí</h2>
-
-                <div class="about__container bd-grid">
-                    <div class="about__img">
-                        <img src="assets/img/perfil.png" alt="">
-                    </div>
-                    
-                    <div>
-                        <h2 class="about__subtitle">Me llamo Alejandro Toral 🚀</h2>
-                        <p class="about__text">Apasionado de la tecnología siempre en búsqueda de nuevas oportunidades para aprender y crecer en un mundo que cambia rápidamente. Me encanta explorar soluciones creativas y eficientes que conecten la tecnología con las necesidades de las personas..</p>
-                        <p class="about__text">Disfruto especialmente enfrentar retos que me permitan combinar mi lado analítico con mi creatividad, siempre con el objetivo de generar un impacto positivo</p>
-                    </div>
-                    
-                                                     
-                </div>
-            </section>
-
-            <!--===== SKILLS =====-->
-            <section class="skills section" id="skills">
-                <h2 class="section-title">Conocimiento</h2>
-
-                <div class="skills__container bd-grid">          
-                    <div>
-                        <h2 class="skills__subtitle">Tecnologias</h2>
-                        <p class="skills__text">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Velit optio id vero amet, alias architecto consectetur error eum eaque sit.</p>
-                        <div class="skills__data">
-                            <div class="skills__names">
-                                <i class='bx bxl-python skills__icon'></i>
-                                <span class="skills__name">Diseño frontend</span>
-                            </div>
-                            <div class="skills__bar skills__html">
-
-                            </div>
-                            <div>
-                                <span class="skills__percentage">95%</span>
-                            </div>
-                        </div>
-                        <div class="skills__data">
-                            <div class="skills__names">
-                                <i class='bx bxl-html5 skills__icon'></i>
-                                <span class="skills__name">Backend</span>
-                            </div>
-                            <div class="skills__bar skills__css">
-                                
-                            </div>
-                            <div>
-                                <span class="skills__percentage">85%</span>
-                            </div>
-                        </div>
-                        <div class="skills__data">
-                            <div class="skills__names">
-                                <i class='bx bx-code-alt skills__icon' ></i>
-                                <span class="skills__name">Programación</span>
-                            </div>
-                            <div class="skills__bar skills__js">
-                                
-                            </div>
-                            <div>
-                                <span class="skills__percentage">65%</span>
-                            </div>
-                        </div>
-                        <div class="skills__data">
-                            <div class="skills__names">
-                                <i class='bx bxs-paint skills__icon'></i>
-                                <span class="skills__name">UX/UI</span>
-                            </div>
-                            <div class="skills__bar skills__ux">
-                                
-                            </div>
-                            <div>
-                                <span class="skills__percentage">85%</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div>              
-                        <img src="assets/img/work3.jpg" alt="" class="skills__img">
-                    </div>
-                </div>
-            </section>
-
-           <!--===== WORK =====-->
-<section class="work section" id="work">
-    <h2 class="section-title">Proyectos</h2>
-
-    <div class="work__container bd-grid">
-        <a href="https://github.com/Thoraal/Temporizador/raw/refs/heads/main/Temporizador.exe" class="work__img">
-            <img src="assets/img/images.gif" alt="">
-            <div class="download-icon">
-                <i class="fas fa-download"></i>
-            </div>
-        </a>
-        <a href="/qr.html" class="work__img">
-            <img src="assets/img/qr.png" alt="">
-            <div class="download-icon">
-                <i class="fas fa-download"></i>
-            </div>
-        </a>
-        <a href="/finanzasp.html" class="work__img">
-            <img src="assets/img/fi.png" alt="">
-            <div class="download-icon">
-                <i class="fas fa-download"></i>
-            </div>
-        </a>
-        <a href="/divisas.html" class="work__img">
-            <img src="assets/img/work4.jpg" alt="">
-            <div class="download-icon">
-                <i class="fas fa-download"></i>
-            </div>
-        </a>
-        <a href="" class="work__img">
-            <img src="assets/img/work5.jpg" alt="">
-            <div class="download-icon">
-                <i class="fas fa-download"></i>
-            </div>
-        </a>
-        <a href="" class="work__img">
-            <img src="assets/img/work6.jpg" alt="">
-            <div class="download-icon">
-                <i class="fas fa-download"></i>
-            </div>
-        </a>
-    </div>
-</section>
-
-<!-- Font Awesome for the download icon -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
-            <!--===== CONTACT =====-->
-            <section class="contact section" id="contact">
-                <h2 class="section-title">Contacto</h2>
-
-                <div class="contact__container bd-grid">
-                    <form action="" class="contact__form">
-                        <input type="text" placeholder="Name" class="contact__input">
-                        <input type="mail" placeholder="Email" class="contact__input">
-                        <textarea name="" id="" cols="0" rows="10" class="contact__input"></textarea>
-                        <input type="button" value="Enviar" class="contact__button button">
-                    </form>
-                </div>
-            </section>
-        </main>
-
-        <!--===== FOOTER =====-->
-        <footer class="footer">
-            <p class="footer__title">Alejandro</p>
-            <div class="footer__social">
-                <a href="#" class="footer__icon"><i class='bx bxl-facebook' ></i></a>
-                <a href="#" class="footer__icon"><i class='bx bxl-instagram' ></i></a>
-                <a href="#" class="footer__icon"><i class='bx bxl-twitter' ></i></a>
-            </div>
-            <p class="footer__copy">&#169; Tdev. All rigths reserved</p>
-        </footer>
-
-
-        <!--===== SCROLL REVEAL =====-->
-        <script src="https://unpkg.com/scrollreveal"></script>
-
-        <!--===== MAIN JS =====-->
-        <script src="assets/js/main.js"></script>
-    </body>
+  <script src="vendor/ffmpeg.js"></script>
+  <script src="vendor/ffmpeg-util.js"></script>
+  <script src="app.js"></script>
+</body>
 </html>
