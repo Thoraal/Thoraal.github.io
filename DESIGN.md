@@ -129,38 +129,38 @@ THORAL frames creative engineering as a precision-machined industrial artifact s
 
 **The Self-Hosted Zero-CLS Rule.** Urbanist Variable, Hanken Grotesk Variable, and Azeret Mono Variable ship from local `@fontsource-variable` `.woff2` bundles with `tabular-nums` enforced on indices and metrics.
 
-- **Display:** Urbanist Variable (`clamp(2.35rem, 5.2vw, 5.2rem)`), tight `-0.025em` tracking on bold lines and `+0.08em` on hairline lines.
-- **Headline & Title:** Urbanist Variable (`clamp(1.9rem, 3.6vw, 3.45rem)` and `clamp(1.35rem, 2.1vw, 2.05rem)`), `text-wrap: balance`.
+- **Display:** Urbanist Variable (`clamp(2.5rem, 5.2vw, 5.25rem)`), tight `-0.025em` tracking on bold lines and `+0.08em` on hairline lines.
+- **Headline & Title:** Urbanist Variable (`clamp(2rem, 3.6vw, 3.5rem)` and `clamp(1.25rem, 2.1vw, 2rem)`), `text-wrap: balance`.
 - **Body:** Hanken Grotesk Variable (`1rem`, `1.65` line-height, `45–62ch` measure, `text-wrap: pretty`).
-- **Label / Index:** Azeret Mono Variable (`0.78rem`, `font-variant-numeric: tabular-nums`) reserved strictly for coordinates, chapter numbers, and technical metadata.
+- **Label / Index:** Azeret Mono Variable (`0.75rem`, `font-variant-numeric: tabular-nums`) reserved strictly for coordinates, chapter numbers, and technical metadata.
 
 ## Layout
 
 **The Asymmetric Studio Grid Rule.** Desktop viewports (`≥ 960px`) use a 12-column architectural grid with a persistent left vertical depth rail (`01–05` at `≥ 1120px`), split background planes, and staggered 12 / 7 / 5 / 11-column project compositions rather than uniform card rows.
 
-- **Responsive Adaptation:** Mobile viewports (`320px–767px`) recompose into a dedicated vertical totem with full-width tactile actions (`min-height: 48px`), safe-area insets (`env(safe-area-inset-*)`), `touch-action: pan-y` on the 3D stage so vertical scrolling never snags, and a full-screen navigation drawer.
+- **Responsive Adaptation:** Mobile viewports (`320px–767px`) preserve the split obsidian/slate plane while recomposing into a compact vertical totem that keeps the 3D anodized monolith and occluded thermal halo above the fold, with `min-height: 44px` tactile controls, safe-area insets (`env(safe-area-inset-*)`), `touch-action: pan-y` on the 3D stage, and a full-screen navigation drawer.
 - **Container Ceiling:** Maximum frame width of `96rem` (`1536px`) keeps ultrawide and 4K displays anchored while split background planes extend edge-to-edge.
 
 ## Elevation & Depth
 
-**The Physical Occlusion Rule.** Spatial hierarchy comes first from tonal plane steps (`1px` `rgba(238, 232, 223, 0.08)` hairline seams) and real 3D occlusion in the WebGL stage, supported by directional Y-offset studio shadows (`0 24px 56px rgba(4, 6, 9, 0.56)`) on floating slabs and `-20px 0 64px rgba(3, 5, 8, 0.72)` on slide-over inspection sheets. Zero-offset neon glow shadows are prohibited.
+**The Physical Occlusion Rule.** Spatial hierarchy comes first from tonal plane steps (`1px` `rgba(238, 232, 223, 0.08)` hairline seams), subtle anodized micro-grain (`#atelier-grain`) on floating architectural slabs, and real 3D occlusion in the WebGL stage, supported by directional Y-offset studio shadows (`0 24px 56px rgba(4, 6, 9, 0.56)`) on floating slabs and `-20px 0 64px rgba(3, 5, 8, 0.72)` on slide-over inspection sheets. Zero-offset neon glow shadows are prohibited.
 
 ## Shapes
 
 - **Sharp Architectural Corners:** Controls and plaques use crisp `2px` (`{rounded.xs}`) chamfers, echoing CNC-milled anodized hardware.
-- **Circular Contrast Accents:** Only the orbital 3D halo and the radial studio play trigger use pure `50%` circular geometry, creating deliberate tension against rectilinear slabs.
+- **Circular Contrast Accents:** Only the incandescent orbital 3D halo and the radial studio play trigger use pure `50%` circular geometry, creating deliberate tension against rectilinear slabs.
 
 ## Components
 
 ### Buttons
-- **Signal Button (`button-signal`):** Solid Signal Orange fill with Void Carbon ink, uppercase tracked Urbanist (`800`), `48px` minimum touch height, `-1px` vertical translate on pointer hover.
+- **Signal Button (`button-signal`):** Solid Signal Orange fill with Void Carbon ink, uppercase tracked Urbanist (`800`), `48px` desktop (`44px` compact mobile) minimum touch height, `-1px` vertical translate on pointer hover.
 - **Architectural Button (`button-architectural`):** Floating Slab fill with `1px` warm-bone seam (`rgba(238, 232, 223, 0.18)`), Bone Ivory label, elevating to Slab Hover on pointer devices.
 
 ### Navigation
 - **Perimeter Header & Depth Rail:** Fixed `4.5rem` translucent obsidian header (`backdrop-filter: blur(12px)`) paired with a left `01–05` depth rail whose active chapter expands a `20px × 2px` Signal Orange bar. Collapses cleanly into a full-screen accessible modal drawer below `960px`.
 
 ### Case Study Inspection Sheet
-- **Slide-Over Architectural Drawer:** Full-height right-docked inspection panel (`max-width: 44rem`) with keyboard Escape/Arrow navigation, focus restoration, and live Studio Render vs. Technical Wireframe SVG plate switching.
+- **Slide-Over Architectural Drawer:** Full-height right-docked inspection panel (`max-width: 44rem`) with keyboard Escape/Arrow navigation, focus restoration, and non-overlapping live Studio Render vs. Technical Wireframe HTML5 `<canvas>` plate switching.
 
 ## Do's and Don'ts
 

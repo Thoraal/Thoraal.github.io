@@ -54,10 +54,10 @@ export const PORTFOLIO_CONFIG = {
 
   hero: {
     headlineBold: 'THORAL',
-    headlineLight: 'DARK STUDIO',
+    headlineLight: 'ATELIER',
     lead: 'Dirección creativa digital, experiencias interactivas en tres dimensiones e ingeniería frontend de precisión.',
     ctaPrimary: 'Explorar obras',
-    ctaSecondary: 'Iniciar contacto',
+    ctaSecondary: 'Contacto',
     leftSpecTitle: 'Arquitectura espacial.',
     leftSpecBody:
       'Composición editorial sobre planos de obsidiana mate, iluminación de estudio y profundidad WebGL en tiempo real.',
@@ -125,7 +125,7 @@ export const PORTFOLIO_CONFIG = {
         titleLight: 'CHRONOGRAPH',
         category: 'Experiencia 3D de Producto · WebGL',
         year: '2026',
-        statusLabel: 'PROYECTO CONCEPTUAL',
+        statusLabel: 'CONCEPTUAL',
         layoutVariant: 'flagship',
         artworkId: 'monolith-chrono',
         summary:
@@ -148,7 +148,7 @@ export const PORTFOLIO_CONFIG = {
         titleLight: 'ACOUSTICS',
         category: 'Dirección Editorial · Audio Espacial UI',
         year: '2026',
-        statusLabel: 'PROYECTO CONCEPTUAL',
+        statusLabel: 'CONCEPTUAL',
         layoutVariant: 'offset-left',
         artworkId: 'acoustic-field',
         summary:
@@ -157,7 +157,7 @@ export const PORTFOLIO_CONFIG = {
           'Sistema tipográfico de alto contraste de pesos con retícula asimétrica de doce columnas y paneles flotantes de especificación.',
         interactionNote:
           'Respuesta progresiva vinculada al desplazamiento y controles táctiles de calibración armónica.',
-        stack: ['React', 'Web Audio Visuals', 'CSS Grid', 'SVG Geométrico'],
+        stack: ['React', 'Web Audio Visuals', 'CSS Grid', 'Canvas PBR'],
         metrics: [
           { label: 'Naturaleza', value: 'Estudio Conceptual' },
           { label: 'Escala', value: '320 px — 3840 px' },
@@ -171,7 +171,7 @@ export const PORTFOLIO_CONFIG = {
         titleLight: 'INSTRUMENT',
         category: 'Sistema de Diseño · Hardware Óptico',
         year: '2026',
-        statusLabel: 'PROYECTO CONCEPTUAL',
+        statusLabel: 'CONCEPTUAL',
         layoutVariant: 'offset-right',
         artworkId: 'aero-shutter',
         summary:
@@ -194,7 +194,7 @@ export const PORTFOLIO_CONFIG = {
         titleLight: 'ARCHITECTURE',
         category: 'Instalación Web Inmersiva · Shaders',
         year: '2026',
-        statusLabel: 'PROYECTO CONCEPTUAL',
+        statusLabel: 'CONCEPTUAL',
         layoutVariant: 'wide-strip',
         artworkId: 'solar-aperture',
         summary:
@@ -268,7 +268,7 @@ export const PORTFOLIO_CONFIG = {
           'Coreografía de movimiento con aceleración y desaceleración física natural, transiciones de continuidad espacial y respeto total por prefers-reduced-motion.',
         capabilities: [
           'GSAP & ScrollTrigger',
-          ' Seguimiento Inercial de Cursor',
+          'Seguimiento Inercial de Cursor',
           'Transiciones de Estado e Inspección',
           'Accesibilidad por Teclado y Foco Visible',
         ],
@@ -306,7 +306,6 @@ export const PORTFOLIO_CONFIG = {
     headingBold: 'INICIAR',
     headingLight: 'CONVERSACIÓN',
     lead: 'Abierto a colaboraciones creativas, proyectos digitales a medida y dirección técnica frontend.',
-    // Dejar en null hasta configurar tu correo real en src/config/portfolio.ts (no se inventan correos)
     email: null as string | null,
     emailPlaceholderDisplay: 'correo@configurable-en-config.ts',
     configurableHint:
@@ -322,21 +321,21 @@ export const PORTFOLIO_CONFIG = {
       {
         id: 'linkedin',
         label: 'LinkedIn',
-        handle: '[Configurable en portfolio.ts]',
+        handle: 'Configurable',
         url: null,
         configurableNote: 'Añade tu URL real de LinkedIn en src/config/portfolio.ts',
       },
       {
         id: 'x',
         label: 'X / Social',
-        handle: '[Configurable en portfolio.ts]',
+        handle: 'Configurable',
         url: null,
         configurableNote: 'Añade tu perfil social real en src/config/portfolio.ts',
       },
       {
         id: 'dribbble',
-        label: ' Showcase / Red',
-        handle: '[Configurable en portfolio.ts]',
+        label: 'Showcase / Red',
+        handle: 'Configurable',
         url: null,
         configurableNote: 'Añade tu enlace creativo real en src/config/portfolio.ts',
       },

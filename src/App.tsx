@@ -35,6 +35,7 @@ const PRESET_OPTIONS: { id: MaterialPreset; label: string; code: string }[] = [
 
 export const App: React.FC = () => {
   const [activeSection, setActiveSection] = useState<string>('hero');
+  const [scrollPercent, setScrollPercent] = useState<number>(20);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const [materialPreset, setMaterialPreset] = useState<MaterialPreset>('anodized');
   const [selectedProject, setSelectedProject] = useState<ConceptualProject | null>(null);
@@ -51,7 +52,6 @@ export const App: React.FC = () => {
   const scrollProgressRef = useRef<number>(0);
   const appRootRef = useRef<HTMLDivElement | null>(null);
 
-  // Escucha dinámica de prefers-reduced-motion
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
     const onChange = (event: MediaQueryListEvent) => setReducedMotion(event.matches);
@@ -59,7 +59,6 @@ export const App: React.FC = () => {
     return () => mq.removeEventListener('change', onChange);
   }, []);
 
-  // Reloj discreto en footer
   useEffect(() => {
     const updateClock = () => {
       try {
@@ -80,14 +79,15 @@ export const App: React.FC = () => {
     return () => window.clearInterval(timer);
   }, []);
 
-  // Seguimiento de progreso global de scroll para la escultura 3D y detección de sección activa
   useEffect(() => {
     const handleScroll = () => {
       const maxScroll = Math.max(
         document.documentElement.scrollHeight - window.innerHeight,
         1
       );
-      scrollProgressRef.current = Math.min(1, Math.max(0, window.scrollY / maxScroll));
+      const ratio = Math.min(1, Math.max(0, window.scrollY / maxScroll));
+      scrollProgressRef.current = ratio;
+      setScrollPercent(Math.round(20 + ratio * 80));
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -120,57 +120,33 @@ export const App: React.FC = () => {
     };
   }, []);
 
-  // Coreografía cinematográfica con GSAP + ScrollTrigger (contenida y respetuosa con reduced-motion)
+  // Una única secuencia focal de autor en el escenario Hero + parallax del haz de luz con ScrollTrigger
   useEffect(() => {
     if (reducedMotion || !appRootRef.current) return;
 
     const ctx = gsap.context(() => {
-      // Secuencia focal de entrada del Hero (el contenido es visible por defecto si JS no corre)
       gsap.fromTo(
         '.js-hero-item',
-        { y: 22, opacity: 0.01 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.78,
-          stagger: 0.08,
-          ease: 'expo.out',
-          clearProps: 'transform,opacity',
-        }
-      );
-
-      gsap.fromTo(
-        '.js-hero-slab',
         { y: 18, opacity: 0.01 },
         {
           y: 0,
           opacity: 1,
-          duration: 0.85,
-          delay: 0.22,
-          stagger: 0.1,
+          duration: 0.72,
+          stagger: 0.07,
           ease: 'expo.out',
           clearProps: 'transform,opacity',
         }
       );
 
-      // Parallax sutil del plano arquitectónico diagonal y bloques de proyecto
-      gsap.utils.toArray<HTMLElement>('.js-reveal-section').forEach((section) => {
-        gsap.fromTo(
-          section,
-          { y: 28, opacity: 0.15 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.72,
-            ease: 'power3.out',
-            clearProps: 'transform,opacity',
-            scrollTrigger: {
-              trigger: section,
-              start: 'top 86%',
-              once: true,
-            },
-          }
-        );
+      gsap.to('.hero-plane--beam', {
+        xPercent: -14,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '#hero',
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 0.6,
+        },
       });
     }, appRootRef);
 
@@ -230,10 +206,27 @@ export const App: React.FC = () => {
     }
   };
 
+  const activeChapterObj =
+    NAV_CHAPTERS.find((c) => c.id === activeSection) ?? NAV_CHAPTERS[0];
   const activeDomain = PORTFOLIO_CONFIG.expertise.domains[activeExpertiseIndex];
 
   return (
     <div ref={appRootRef} className="thoral-shell">
+      {/* Filtro SVG global sutil para grano superficial anodizado en placas arquitectónicas */}
+      <svg className="sr-svg-defs" width="0" height="0" aria-hidden="true">
+        <defs>
+          <filter id="atelier-grain">
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.82"
+              numOctaves="2"
+              stitchTiles="stitch"
+            />
+            <feColorMatrix type="saturate" values="0" />
+          </filter>
+        </defs>
+      </svg>
+
       <HeaderNav
         activeSection={activeSection}
         mobileOpen={mobileMenuOpen}
@@ -247,11 +240,9 @@ export const App: React.FC = () => {
             01. HERO — ESCENARIO ARQUITECTÓNICO DIVIDIDO + ESCULTURA 3D
             ============================================================ */}
         <section id="hero" className="hero-stage" aria-labelledby="hero-heading">
-          {/* Planos arquitectónicos de fondo inspirados en Blvck Tumbler + LUMIER DARK */}
           <div className="hero-stage__planes" aria-hidden="true">
             <div className="hero-plane hero-plane--obsidian" />
             <div className="hero-plane hero-plane--slate">
-              {/* Marca tipográfica grabada a bajo contraste en el plano derecho */}
               <svg
                 className="hero-watermark"
                 viewBox="0 0 920 340"
@@ -284,7 +275,6 @@ export const App: React.FC = () => {
           </div>
 
           <div className="hero-stage__grid container-frame">
-            {/* Bloque editorial principal (izquierda superior) */}
             <div className="hero-editorial">
               <h1 id="hero-heading" className="hero-title js-hero-item">
                 <span className="hero-title__bold">{PORTFOLIO_CONFIG.hero.headlineBold}</span>
@@ -311,32 +301,6 @@ export const App: React.FC = () => {
                   <span>{PORTFOLIO_CONFIG.hero.ctaSecondary}</span>
                 </button>
               </div>
-
-              {/* Selector interactivo de acabado 3D en tiempo real */}
-              <div
-                className="material-switcher js-hero-item"
-                role="group"
-                aria-label="Acabado superficial de la escultura 3D"
-              >
-                <span className="material-switcher__icon" aria-hidden="true">
-                  <Sliders size={14} strokeWidth={1.6} />
-                </span>
-                {PRESET_OPTIONS.map((opt) => {
-                  const active = materialPreset === opt.id;
-                  return (
-                    <button
-                      key={opt.id}
-                      type="button"
-                      className={`material-chip ${active ? 'is-active' : ''}`.trim()}
-                      aria-pressed={active}
-                      onClick={() => setMaterialPreset(opt.id)}
-                    >
-                      <span className="material-chip__code">{opt.code}</span>
-                      <span>{opt.label}</span>
-                    </button>
-                  );
-                })}
-              </div>
             </div>
 
             {/* Centro / Derecha: Protagonista Tridimensional THORAL */}
@@ -350,13 +314,39 @@ export const App: React.FC = () => {
               </Suspense>
             </div>
 
-            {/* Placas flotantes asimétricas de especificación (inspiradas en Blvck Tumbler) */}
-            <div className="hero-slab hero-slab--left js-hero-slab">
+            {/* Selector interactivo de acabado 3D (ubicado bajo la escultura en móvil y bajo el editorial en escritorio) */}
+            <div
+              className="material-switcher js-hero-item"
+              role="group"
+              aria-label="Acabado superficial de la escultura 3D"
+            >
+              <span className="material-switcher__icon" aria-hidden="true">
+                <Sliders size={14} strokeWidth={1.6} />
+              </span>
+              {PRESET_OPTIONS.map((opt) => {
+                const active = materialPreset === opt.id;
+                return (
+                  <button
+                    key={opt.id}
+                    type="button"
+                    className={`material-chip ${active ? 'is-active' : ''}`.trim()}
+                    aria-pressed={active}
+                    onClick={() => setMaterialPreset(opt.id)}
+                  >
+                    <span className="material-chip__code">{opt.code}</span>
+                    <span>{opt.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Placas flotantes asimétricas de especificación */}
+            <div className="hero-slab hero-slab--left surface-grained">
               <p className="hero-slab__title">{PORTFOLIO_CONFIG.hero.leftSpecTitle}</p>
               <p className="hero-slab__body">{PORTFOLIO_CONFIG.hero.leftSpecBody}</p>
             </div>
 
-            <div className="hero-slab hero-slab--right js-hero-slab">
+            <div className="hero-slab hero-slab--right surface-grained">
               <div className="hero-slab__copy">
                 <p className="hero-slab__title">{PORTFOLIO_CONFIG.hero.rightSpecTitle}</p>
                 <p className="hero-slab__body">{PORTFOLIO_CONFIG.hero.rightSpecBody}</p>
@@ -372,11 +362,26 @@ export const App: React.FC = () => {
             </div>
           </div>
 
-          {/* Barra inferior del escenario Hero con progreso e indicador de scroll */}
+          {/* Barra inferior con escala vernier calibrada en vivo e indicador de scroll */}
           <div className="hero-footer-bar container-frame">
-            <div className="hero-progress" aria-hidden="true">
-              <span className="hero-progress__fill" />
-              <span className="hero-progress__code">01 / 05</span>
+            <div className="hero-vernier" aria-label={`Capítulo activo ${activeChapterObj.num} de 05`}>
+              <div className="hero-vernier__track" aria-hidden="true">
+                <span
+                  className="hero-vernier__fill"
+                  style={{ width: `${scrollPercent}%` }}
+                />
+              </div>
+              <div className="hero-vernier__ticks" aria-hidden="true">
+                {Array.from({ length: 11 }).map((_, idx) => (
+                  <span
+                    key={idx}
+                    className={`vernier-tick ${idx % 5 === 0 ? 'is-major' : ''}`.trim()}
+                  />
+                ))}
+              </div>
+              <span className="hero-vernier__code">
+                {activeChapterObj.num} / 05 · {scrollPercent.toString().padStart(3, '0')}%
+              </span>
             </div>
 
             <button
@@ -400,7 +405,7 @@ export const App: React.FC = () => {
             ============================================================ */}
         <section
           id="about"
-          className="section-block section-about js-reveal-section"
+          className="section-block section-about"
           aria-labelledby="about-heading"
         >
           <div className="container-frame">
@@ -413,7 +418,7 @@ export const App: React.FC = () => {
 
                 <p className="about-manifesto">{PORTFOLIO_CONFIG.about.statement}</p>
 
-                <div className="provisional-callout" role="note">
+                <div className="provisional-callout surface-grained" role="note">
                   <span className="provisional-callout__tag">
                     {PORTFOLIO_CONFIG.about.provisionalBadge}
                   </span>
@@ -435,13 +440,10 @@ export const App: React.FC = () => {
                 </dl>
 
                 <div className="principles-strip">
-                  {PORTFOLIO_CONFIG.about.principles.map((item, idx) => (
+                  {PORTFOLIO_CONFIG.about.principles.map((item) => (
                     <article key={item.title} className="principle-item">
                       <h3 className="principle-item__title">{item.title}</h3>
                       <p className="principle-item__body">{item.body}</p>
-                      <span className="principle-item__idx" aria-hidden="true">
-                        0{idx + 1}
-                      </span>
                     </article>
                   ))}
                 </div>
@@ -455,7 +457,7 @@ export const App: React.FC = () => {
             ============================================================ */}
         <section
           id="work"
-          className="section-block section-work js-reveal-section"
+          className="section-block section-work"
           aria-labelledby="work-heading"
         >
           <div className="container-frame">
@@ -491,9 +493,8 @@ export const App: React.FC = () => {
                     <ConceptualArtwork artworkId={project.artworkId} />
                     <div className="work-piece__overlay">
                       <span className="work-piece__status">{project.statusLabel}</span>
-                      <span className="work-piece__explore">
-                        <span>Inspeccionar</span>
-                        <ArrowUpRight size={16} strokeWidth={1.8} aria-hidden="true" />
+                      <span className="work-piece__reticle" aria-hidden="true">
+                        <ArrowUpRight size={16} strokeWidth={1.7} />
                       </span>
                     </div>
                   </div>
@@ -534,7 +535,7 @@ export const App: React.FC = () => {
             ============================================================ */}
         <section
           id="expertise"
-          className="section-block section-expertise js-reveal-section"
+          className="section-block section-expertise"
           aria-labelledby="expertise-heading"
         >
           <div className="container-frame">
@@ -548,7 +549,7 @@ export const App: React.FC = () => {
               </p>
             </div>
 
-            <div className="expertise-matrix">
+            <div className="expertise-matrix surface-grained">
               <div
                 className="expertise-selector"
                 role="tablist"
@@ -627,11 +628,11 @@ export const App: React.FC = () => {
             ============================================================ */}
         <section
           id="contact"
-          className="section-block section-contact js-reveal-section"
+          className="section-block section-contact"
           aria-labelledby="contact-heading"
         >
           <div className="container-frame">
-            <div className="contact-stage">
+            <div className="contact-stage surface-grained">
               <div className="contact-stage__ring" aria-hidden="true" />
 
               <div className="contact-stage__main">
@@ -731,7 +732,7 @@ export const App: React.FC = () => {
                       </span>
                       <span className="social-row__right">
                         <span className="social-row__handle">
-                          {copiedState === soc.id ? 'Clave copiada' : soc.handle}
+                          {copiedState === soc.id ? 'Copiado' : soc.handle}
                         </span>
                         <Copy size={14} strokeWidth={1.6} aria-hidden="true" />
                       </span>
@@ -744,9 +745,6 @@ export const App: React.FC = () => {
         </section>
       </main>
 
-      {/* ============================================================
-          FOOTER MINIMALISTA DE ESTUDIO
-          ============================================================ */}
       <footer className="site-footer">
         <div className="container-frame site-footer__inner">
           <div className="site-footer__brand">

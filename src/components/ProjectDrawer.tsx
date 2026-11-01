@@ -78,9 +78,11 @@ export const ProjectDrawer: React.FC<ProjectDrawerProps> = ({
         </header>
 
         <div className="project-sheet__body">
-          <div className="project-sheet__stage">
-            <ConceptualArtwork artworkId={project.artworkId} wireframe={wireframeMode} />
-            <div className="project-sheet__stage-controls">
+          <div className="project-sheet__stage-wrap">
+            <div className="project-sheet__stage">
+              <ConceptualArtwork artworkId={project.artworkId} wireframe={wireframeMode} />
+            </div>
+            <div className="project-sheet__stage-controls" role="group" aria-label="Modo de visualización">
               <button
                 type="button"
                 className={`stage-pill ${!wireframeMode ? 'is-active' : ''}`.trim()}

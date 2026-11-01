@@ -11,11 +11,10 @@ interface MonolithStageProps {
 }
 
 /**
- * Genera una textura procedural micro-granallada y cepillada en un canvas 2D
- * para dotar al metal negro anodizado de micro-relieve realista sin descargas externas.
+ * Textura micro-granallada anodizada de 512x512 para acabado negro mate aterciopelado.
  */
-function createAnodizedGrainTexture(): THREE.CanvasTexture {
-  const size = 256;
+function createSandblastedTexture(): THREE.CanvasTexture {
+  const size = 512;
   const canvas = document.createElement('canvas');
   canvas.width = size;
   canvas.height = size;
@@ -28,12 +27,12 @@ function createAnodizedGrainTexture(): THREE.CanvasTexture {
     const data = imgData.data;
 
     for (let y = 0; y < size; y++) {
-      const rowStreak = Math.sin(y * 0.7) * 10 + Math.cos(y * 2.1) * 5;
+      const latheLine = Math.sin(y * 0.85) * 4;
       for (let x = 0; x < size; x++) {
         const idx = (y * size + x) * 4;
         const hash = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453;
-        const grain = (hash - Math.floor(hash) - 0.5) * 32;
-        const val = Math.max(0, Math.min(255, 128 + rowStreak + grain));
+        const grain = (hash - Math.floor(hash) - 0.5) * 28;
+        const val = Math.max(0, Math.min(255, 132 + latheLine + grain));
         data[idx] = val;
         data[idx + 1] = val;
         data[idx + 2] = val;
@@ -46,15 +45,38 @@ function createAnodizedGrainTexture(): THREE.CanvasTexture {
   const texture = new THREE.CanvasTexture(canvas);
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.set(3, 5);
+  texture.repeat.set(4, 6);
   return texture;
+}
+
+/**
+ * Construye un perfil torneado CNC con biseles de 45 grados para segmentos monolíticos suaves.
+ */
+function createBeveledDrumGeometry(
+  radiusTop: number,
+  radiusBottom: number,
+  height: number,
+  bevel: number
+): THREE.LatheGeometry {
+  const halfH = height / 2;
+  const pts = [
+    new THREE.Vector2(0.001, -halfH),
+    new THREE.Vector2(Math.max(0.05, radiusBottom - bevel), -halfH),
+    new THREE.Vector2(radiusBottom, -halfH + bevel),
+    new THREE.Vector2(radiusTop, halfH - bevel),
+    new THREE.Vector2(Math.max(0.05, radiusTop - bevel), halfH),
+    new THREE.Vector2(0.001, halfH),
+  ];
+  return new THREE.LatheGeometry(pts, 96);
 }
 
 const HALO_VERTEX_SHADER = /* glsl */ `
   varying vec3 vNormal;
   varying vec3 vViewPosition;
+  varying vec3 vLocalPos;
 
   void main() {
+    vLocalPos = position;
     vNormal = normalize(normalMatrix * normal);
     vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
     vViewPosition = -mvPosition.xyz;
@@ -64,18 +86,47 @@ const HALO_VERTEX_SHADER = /* glsl */ `
 
 const HALO_FRAGMENT_SHADER = /* glsl */ `
   uniform float uTime;
-  uniform vec3 uCoreColor;
-  uniform vec3 uRimColor;
   varying vec3 vNormal;
   varying vec3 vViewPosition;
+  varying vec3 vLocalPos;
 
   void main() {
     vec3 normal = normalize(vNormal);
     vec3 viewDir = normalize(vViewPosition);
-    float fresnel = pow(1.0 - abs(dot(normal, viewDir)), 1.85);
-    float pulse = 0.95 + 0.05 * sin(uTime * 1.6);
-    vec3 col = mix(uCoreColor, uRimColor, fresnel * 0.75) * pulse;
-    gl_FragColor = vec4(col, 1.0);
+    float facing = clamp(abs(dot(normal, viewDir)), 0.0, 1.0);
+    float fresnel = pow(1.0 - facing, 1.7);
+
+    // Gradiente térmico incandescente: núcleo cálido -> naranja señal -> cobre brasa
+    vec3 emberDeep = vec3(0.52, 0.15, 0.04);
+    vec3 signalOrange = vec3(0.91, 0.365, 0.141);
+    vec3 hotCore = vec3(1.0, 0.78, 0.56);
+
+    float diag = clamp((vLocalPos.x + vLocalPos.y) * 0.65 + 0.5, 0.0, 1.0);
+    vec3 baseGrad = mix(emberDeep, signalOrange, smoothstep(0.05, 0.65, diag));
+    vec3 col = mix(baseGrad, hotCore, pow(facing, 2.6) * 0.55 + fresnel * 0.22);
+
+    float pulse = 0.96 + 0.04 * sin(uTime * 1.5);
+    gl_FragColor = vec4(col * pulse, 1.0);
+  }
+`;
+
+const SHADOW_VERTEX_SHADER = /* glsl */ `
+  varying vec2 vUv;
+  void main() {
+    vUv = uv;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }
+`;
+
+const SHADOW_FRAGMENT_SHADER = /* glsl */ `
+  varying vec2 vUv;
+  void main() {
+    float dist = length(vUv - vec2(0.5)) * 2.0;
+    float alpha = pow(clamp(1.0 - dist, 0.0, 1.0), 2.4) * 0.58;
+    // Dithering sutil para evitar cualquier bandeado en la costura de planos oscuros
+    float noise = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898, 78.233))) * 43758.5453);
+    alpha = clamp(alpha + (noise - 0.5) * 0.012, 0.0, 1.0);
+    gl_FragColor = vec4(0.02, 0.025, 0.035, alpha);
   }
 `;
 
@@ -87,11 +138,11 @@ const DUST_VERTEX_SHADER = /* glsl */ `
 
   void main() {
     vec3 pos = position;
-    pos.y += sin(uTime * 0.35 + position.x * 2.1) * 0.08;
-    pos.x += cos(uTime * 0.28 + position.z * 1.7) * 0.05;
+    pos.y += sin(uTime * 0.32 + position.x * 2.1) * 0.07;
+    pos.x += cos(uTime * 0.25 + position.z * 1.7) * 0.04;
     vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
-    gl_PointSize = aScale * uPixelRatio * (18.0 / -mvPosition.z);
-    vAlpha = smoothstep(7.5, 2.2, -mvPosition.z) * 0.38;
+    gl_PointSize = aScale * uPixelRatio * (16.0 / -mvPosition.z);
+    vAlpha = smoothstep(7.5, 2.2, -mvPosition.z) * 0.32;
     gl_Position = projectionMatrix * mvPosition;
   }
 `;
@@ -131,28 +182,29 @@ export const MonolithStage: React.FC<MonolithStageProps> = ({
     if (preset === 'wireframe') {
       core.wireframe = true;
       core.color.set('#E85D24');
-      core.roughness = 0.25;
-      core.metalness = 0.5;
+      core.roughness = 0.35;
+      core.metalness = 0.45;
       collar.wireframe = true;
       collar.color.set('#EEE8DF');
     } else if (preset === 'brushed') {
       core.wireframe = false;
-      core.color.set('#28303E');
-      core.roughness = 0.22;
-      core.metalness = 0.9;
-      core.clearcoat = 0.52;
+      core.color.set('#232934');
+      core.roughness = 0.42;
+      core.metalness = 0.68;
+      core.clearcoat = 0.14;
       collar.wireframe = false;
-      collar.color.set('#333C4D');
-      collar.roughness = 0.18;
+      collar.color.set('#2D3544');
+      collar.roughness = 0.34;
     } else {
+      // Negro obsidiana granallado mate cohesivo (sin reflejos cromados quemados)
       core.wireframe = false;
-      core.color.set('#1B2029');
-      core.roughness = 0.34;
-      core.metalness = 0.78;
-      core.clearcoat = 0.28;
+      core.color.set('#181C24');
+      core.roughness = 0.62;
+      core.metalness = 0.44;
+      core.clearcoat = 0.06;
       collar.wireframe = false;
-      collar.color.set('#252C38');
-      collar.roughness = 0.25;
+      collar.color.set('#212732');
+      collar.roughness = 0.48;
     }
   }, [preset]);
 
@@ -166,9 +218,8 @@ export const MonolithStage: React.FC<MonolithStageProps> = ({
 
     let renderer: THREE.WebGLRenderer;
     try {
-      const isCompact = window.innerWidth < 768;
       renderer = new THREE.WebGLRenderer({
-        antialias: !isCompact,
+        antialias: true, // Antialiasing activo en escritorio y móvil para aristas limpias
         alpha: true,
         powerPreference: 'high-performance',
       });
@@ -177,11 +228,12 @@ export const MonolithStage: React.FC<MonolithStageProps> = ({
       return;
     }
 
-    const getDpr = () => Math.min(window.devicePixelRatio || 1, window.innerWidth < 768 ? 1.5 : 2);
+    const getDpr = () =>
+      Math.min(window.devicePixelRatio || 1, window.innerWidth < 768 ? 1.75 : 2);
     renderer.setPixelRatio(getDpr());
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.24;
+    renderer.toneMappingExposure = 1.08;
     renderer.domElement.className = 'monolith-canvas';
     renderer.domElement.setAttribute('aria-hidden', 'true');
     container.appendChild(renderer.domElement);
@@ -189,50 +241,51 @@ export const MonolithStage: React.FC<MonolithStageProps> = ({
     const scene = new THREE.Scene();
 
     const pmremGenerator = new THREE.PMREMGenerator(renderer);
-    const envRT = pmremGenerator.fromScene(new RoomEnvironment(), 0.04);
+    const envRT = pmremGenerator.fromScene(new RoomEnvironment(), 0.055);
     scene.environment = envRT.texture;
-    scene.environmentIntensity = 0.58;
+    // Intensidad ambiental controlada para evitar brillos especulares blancos en el cono inferior
+    scene.environmentIntensity = 0.22;
 
     const camera = new THREE.PerspectiveCamera(
-      34,
+      33,
       container.clientWidth / Math.max(container.clientHeight, 1),
       0.1,
       30
     );
-    camera.position.set(0, 0.08, 6.4);
+    camera.position.set(0, 0.08, 6.2);
 
     const disposables: Array<{ dispose: () => void }> = [envRT, pmremGenerator];
 
-    const grainTex = createAnodizedGrainTexture();
+    const grainTex = createSandblastedTexture();
     disposables.push(grainTex);
 
     const coreMaterial = new THREE.MeshPhysicalMaterial({
-      color: new THREE.Color('#1B2029'),
-      metalness: 0.78,
-      roughness: 0.34,
+      color: new THREE.Color('#181C24'),
+      metalness: 0.44,
+      roughness: 0.62,
       bumpMap: grainTex,
-      bumpScale: 0.015,
+      bumpScale: 0.011,
       roughnessMap: grainTex,
-      clearcoat: 0.28,
-      clearcoatRoughness: 0.32,
+      clearcoat: 0.06,
+      clearcoatRoughness: 0.55,
     });
 
     const collarMaterial = new THREE.MeshPhysicalMaterial({
-      color: new THREE.Color('#252C38'),
-      metalness: 0.88,
-      roughness: 0.25,
+      color: new THREE.Color('#212732'),
+      metalness: 0.58,
+      roughness: 0.48,
       bumpMap: grainTex,
-      bumpScale: 0.008,
-      clearcoat: 0.38,
-      clearcoatRoughness: 0.22,
+      bumpScale: 0.007,
+      clearcoat: 0.1,
+      clearcoatRoughness: 0.45,
     });
 
     const copperCoreMaterial = new THREE.MeshStandardMaterial({
       color: new THREE.Color('#E85D24'),
-      emissive: new THREE.Color('#D14A15'),
-      emissiveIntensity: 0.9,
-      roughness: 0.24,
-      metalness: 0.62,
+      emissive: new THREE.Color('#D94E18'),
+      emissiveIntensity: 0.95,
+      roughness: 0.3,
+      metalness: 0.55,
     });
 
     materialsRef.current = { core: coreMaterial, collar: collarMaterial };
@@ -244,156 +297,128 @@ export const MonolithStage: React.FC<MonolithStageProps> = ({
     const monolithGroup = new THREE.Group();
     rigGroup.add(monolithGroup);
 
-    // Escultura arquitectónica original THORAL: Monolito octogonal biselado en tres bloques + corona flotante
-    const upperGeo = new THREE.CylinderGeometry(0.62, 0.66, 0.96, 8, 1, false);
-    const midGeo = new THREE.CylinderGeometry(0.66, 0.66, 1.24, 8, 1, false);
-    const lowerGeo = new THREE.CylinderGeometry(0.66, 0.56, 0.96, 8, 1, false);
-    const crownPrismGeo = new THREE.OctahedronGeometry(0.34, 0);
-    const innerSpineGeo = new THREE.CylinderGeometry(0.46, 0.46, 3.18, 24);
-    const copperSeamTopGeo = new THREE.TorusGeometry(0.54, 0.019, 16, 64);
-    const copperSeamBotGeo = new THREE.TorusGeometry(0.54, 0.016, 16, 64);
+    // Silueta monolítica cohesiva de alta resolución (96 segmentos torneados con biseles suaves)
+    const capCrownGeo = createBeveledDrumGeometry(0.67, 0.71, 0.16, 0.03);
+    const upperGeo = createBeveledDrumGeometry(0.69, 0.65, 1.08, 0.035);
+    const midGeo = createBeveledDrumGeometry(0.645, 0.61, 1.18, 0.03);
+    const lowerGeo = createBeveledDrumGeometry(0.605, 0.54, 1.02, 0.035);
+    const innerSpineGeo = new THREE.CylinderGeometry(0.51, 0.49, 3.3, 64);
+    const copperSeamTopGeo = new THREE.TorusGeometry(0.57, 0.016, 24, 96);
+    const copperSeamBotGeo = new THREE.TorusGeometry(0.545, 0.014, 24, 96);
+    const topGrooveRingGeo = new THREE.TorusGeometry(0.68, 0.008, 16, 96);
 
     disposables.push(
+      capCrownGeo,
       upperGeo,
       midGeo,
       lowerGeo,
-      crownPrismGeo,
       innerSpineGeo,
       copperSeamTopGeo,
-      copperSeamBotGeo
+      copperSeamBotGeo,
+      topGrooveRingGeo
     );
 
-    const upperMesh = new THREE.Mesh(upperGeo, coreMaterial);
-    upperMesh.position.y = 1.08;
-    upperMesh.rotation.y = Math.PI / 8;
+    const capCrownMesh = new THREE.Mesh(capCrownGeo, collarMaterial);
+    capCrownMesh.position.y = 1.66;
 
-    const crownMesh = new THREE.Mesh(crownPrismGeo, collarMaterial);
-    crownMesh.position.y = 1.88;
-    crownMesh.scale.set(1.15, 0.68, 1.15);
+    const topGrooveRing = new THREE.Mesh(topGrooveRingGeo, copperCoreMaterial);
+    topGrooveRing.rotation.x = Math.PI / 2;
+    topGrooveRing.position.y = 1.56;
+
+    const upperMesh = new THREE.Mesh(upperGeo, coreMaterial);
+    upperMesh.position.y = 1.01;
 
     const midMesh = new THREE.Mesh(midGeo, coreMaterial);
-    midMesh.position.y = -0.08;
+    midMesh.position.y = -0.16;
 
     const lowerMesh = new THREE.Mesh(lowerGeo, coreMaterial);
-    lowerMesh.position.y = -1.24;
-    lowerMesh.rotation.y = Math.PI / 8;
+    lowerMesh.position.y = -1.3;
 
     const spineMesh = new THREE.Mesh(innerSpineGeo, collarMaterial);
-    spineMesh.position.y = -0.06;
+    spineMesh.position.y = -0.04;
 
     const seamTop = new THREE.Mesh(copperSeamTopGeo, copperCoreMaterial);
     seamTop.rotation.x = Math.PI / 2;
-    seamTop.position.y = 0.57;
+    seamTop.position.y = 0.45;
 
     const seamBot = new THREE.Mesh(copperSeamBotGeo, copperCoreMaterial);
     seamBot.rotation.x = Math.PI / 2;
-    seamBot.position.y = -0.73;
-
-    // Costillas arquitectónicas fresadas CNC en el núcleo central
-    const finGeo = new THREE.BoxGeometry(0.055, 1.12, 1.38);
-    disposables.push(finGeo);
-    for (let i = 0; i < 4; i++) {
-      const fin = new THREE.Mesh(finGeo, collarMaterial);
-      fin.position.y = -0.08;
-      fin.rotation.y = (i * Math.PI) / 4;
-      monolithGroup.add(fin);
-    }
+    seamBot.position.y = -0.77;
 
     monolithGroup.add(
       spineMesh,
+      capCrownMesh,
+      topGrooveRing,
       upperMesh,
-      crownMesh,
       midMesh,
       lowerMesh,
       seamTop,
       seamBot
     );
 
-    // Anillos giroscópicos orbitales calibrados
+    // Anillo orbital ecuatorial minimalista de alta precisión
     const outerCollarGroup = new THREE.Group();
-    const outerRingGeo = new THREE.TorusGeometry(1.06, 0.026, 20, 96);
-    const innerRingGeo = new THREE.TorusGeometry(0.9, 0.015, 16, 84);
-    const notchGeo = new THREE.BoxGeometry(0.09, 0.028, 0.045);
-    disposables.push(outerRingGeo, innerRingGeo, notchGeo);
+    const outerRingGeo = new THREE.TorusGeometry(0.96, 0.02, 24, 128);
+    const innerRingGeo = new THREE.TorusGeometry(0.84, 0.011, 20, 112);
+    disposables.push(outerRingGeo, innerRingGeo);
 
     const outerRingMesh = new THREE.Mesh(outerRingGeo, collarMaterial);
-    outerRingMesh.rotation.x = Math.PI * 0.41;
-    outerRingMesh.rotation.y = -0.26;
+    outerRingMesh.rotation.x = Math.PI * 0.43;
+    outerRingMesh.rotation.y = -0.22;
     outerCollarGroup.add(outerRingMesh);
 
     const innerRingMesh = new THREE.Mesh(innerRingGeo, copperCoreMaterial);
-    innerRingMesh.rotation.x = Math.PI * 0.57;
-    innerRingMesh.rotation.y = 0.34;
+    innerRingMesh.rotation.x = Math.PI * 0.55;
+    innerRingMesh.rotation.y = 0.28;
     outerCollarGroup.add(innerRingMesh);
 
-    for (let i = 0; i < 6; i++) {
-      const angle = (i / 6) * Math.PI * 2;
-      const notch = new THREE.Mesh(notchGeo, i === 0 ? copperCoreMaterial : collarMaterial);
-      notch.position.set(Math.cos(angle) * 1.06, Math.sin(angle) * 0.26, Math.sin(angle) * 1.01);
-      notch.lookAt(0, 0, 0);
-      outerCollarGroup.add(notch);
-    }
-
+    outerCollarGroup.position.y = -0.08;
     monolithGroup.add(outerCollarGroup);
-    monolithGroup.rotation.z = 0.03;
-    monolithGroup.rotation.x = 0.08;
+    monolithGroup.rotation.z = 0.025;
+    monolithGroup.rotation.x = 0.06;
 
-    // Anillo luminoso naranja señal OCLUIDO detrás del hombro superior derecho
+    // Halo térmico naranja señal OCLUIDO detrás del hombro superior derecho
     const haloUniforms = {
       uTime: { value: 0 },
-      uCoreColor: { value: new THREE.Color('#E85D24') },
-      uRimColor: { value: new THREE.Color('#FFA273') },
     };
     const haloMaterial = new THREE.ShaderMaterial({
       uniforms: haloUniforms,
       vertexShader: HALO_VERTEX_SHADER,
       fragmentShader: HALO_FRAGMENT_SHADER,
     });
-    const haloGeo = new THREE.TorusGeometry(0.72, 0.092, 32, 96);
+    const haloGeo = new THREE.TorusGeometry(0.7, 0.092, 40, 128);
     disposables.push(haloGeo, haloMaterial);
 
     const haloMesh = new THREE.Mesh(haloGeo, haloMaterial);
-    haloMesh.position.set(0.68, 0.96, -0.88);
+    haloMesh.position.set(0.68, 0.96, -0.86);
     rigGroup.add(haloMesh);
 
-    // Sombra de contacto suave bajo la escultura
-    const shadowCanvas = document.createElement('canvas');
-    shadowCanvas.width = 128;
-    shadowCanvas.height = 128;
-    const sCtx = shadowCanvas.getContext('2d');
-    if (sCtx) {
-      const grad = sCtx.createRadialGradient(64, 64, 6, 64, 64, 62);
-      grad.addColorStop(0, 'rgba(4, 5, 8, 0.85)');
-      grad.addColorStop(0.55, 'rgba(4, 5, 8, 0.35)');
-      grad.addColorStop(1, 'rgba(4, 5, 8, 0)');
-      sCtx.fillStyle = grad;
-      sCtx.fillRect(0, 0, 128, 128);
-    }
-    const shadowTex = new THREE.CanvasTexture(shadowCanvas);
-    const shadowGeo = new THREE.PlaneGeometry(3.4, 3.4);
-    const shadowMat = new THREE.MeshBasicMaterial({
-      map: shadowTex,
+    // Sombra de contacto GLSL con dithering sin bandas visibles
+    const shadowGeo = new THREE.PlaneGeometry(3.2, 3.2);
+    const shadowMat = new THREE.ShaderMaterial({
+      vertexShader: SHADOW_VERTEX_SHADER,
+      fragmentShader: SHADOW_FRAGMENT_SHADER,
       transparent: true,
       depthWrite: false,
     });
-    disposables.push(shadowTex, shadowGeo, shadowMat);
+    disposables.push(shadowGeo, shadowMat);
     const shadowPlane = new THREE.Mesh(shadowGeo, shadowMat);
     shadowPlane.rotation.x = -Math.PI / 2;
-    shadowPlane.position.y = -1.94;
+    shadowPlane.position.y = -1.92;
     rigGroup.add(shadowPlane);
 
     // Partículas atmosféricas sutiles
-    const particleCount = 42;
+    const particleCount = 36;
     const positions = new Float32Array(particleCount * 3);
     const scales = new Float32Array(particleCount);
     for (let i = 0; i < particleCount; i++) {
       const seedA = Math.sin(i * 19.31) * 0.5 + 0.5;
       const seedB = Math.cos(i * 41.17) * 0.5 + 0.5;
       const seedC = Math.sin(i * 73.93) * 0.5 + 0.5;
-      positions[i * 3] = (seedA - 0.5) * 4.8;
-      positions[i * 3 + 1] = (seedB - 0.5) * 4.2;
-      positions[i * 3 + 2] = (seedC - 0.5) * 3.4 - 0.4;
-      scales[i] = 0.6 + seedA * 1.4;
+      positions[i * 3] = (seedA - 0.5) * 4.6;
+      positions[i * 3 + 1] = (seedB - 0.5) * 4.0;
+      positions[i * 3 + 2] = (seedC - 0.5) * 3.2 - 0.4;
+      scales[i] = 0.55 + seedA * 1.25;
     }
     const dustGeo = new THREE.BufferGeometry();
     dustGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
@@ -413,18 +438,20 @@ export const MonolithStage: React.FC<MonolithStageProps> = ({
     const dustPoints = new THREE.Points(dustGeo, dustMat);
     scene.add(dustPoints);
 
-    // Iluminación cinematográfica reforzada para esculpir las aristas del octógono negro
-    const keyLight = new THREE.DirectionalLight('#E6EEF9', 3.1);
-    keyLight.position.set(-3.8, 3.4, 4.2);
-    scene.add(keyLight);
+    // Iluminación de estudio equilibrada para negro mate (levanta hombros superiores sin quemar la base)
+    const hemiLight = new THREE.HemisphereLight('#2C3545', '#0D1016', 1.15);
+    scene.add(hemiLight);
 
-    const rimCoolLight = new THREE.DirectionalLight('#9AB2D4', 1.65);
-    rimCoolLight.position.set(-3.2, -1.2, -2.2);
-    scene.add(rimCoolLight);
+    const upperKeyLight = new THREE.DirectionalLight('#DCE7F7', 2.35);
+    upperKeyLight.position.set(-3.4, 4.2, 3.1);
+    scene.add(upperKeyLight);
 
-    const orangeRimLight = new THREE.PointLight('#E85D24', 13.0, 6.5, 1.65);
-    orangeRimLight.position.copy(haloMesh.position);
-    orangeRimLight.position.z += 0.42;
+    const leftRimLight = new THREE.DirectionalLight('#9AB2D4', 1.45);
+    leftRimLight.position.set(-4.2, 1.2, -1.8);
+    scene.add(leftRimLight);
+
+    const orangeRimLight = new THREE.PointLight('#F06428', 11.5, 5.8, 1.75);
+    orangeRimLight.position.set(0.75, 1.05, -0.35);
     rigGroup.add(orangeRimLight);
 
     const pointerTarget = { x: 0, y: 0 };
@@ -473,17 +500,17 @@ export const MonolithStage: React.FC<MonolithStageProps> = ({
       camera.aspect = w / h;
 
       if (w < 480) {
-        camera.position.z = 7.15;
-        rigGroup.scale.setScalar(0.9);
-        rigGroup.position.set(0, 0.02, 0);
-      } else if (w < 900) {
-        camera.position.z = 6.75;
+        camera.position.z = 6.7;
         rigGroup.scale.setScalar(0.95);
-        rigGroup.position.set(0, 0.04, 0);
+        rigGroup.position.set(-0.04, 0.04, 0);
+      } else if (w < 900) {
+        camera.position.z = 6.5;
+        rigGroup.scale.setScalar(0.98);
+        rigGroup.position.set(0, 0.05, 0);
       } else {
-        camera.position.z = 6.3;
-        rigGroup.scale.setScalar(1.03);
-        rigGroup.position.set(0.05, 0.03, 0);
+        camera.position.z = 6.15;
+        rigGroup.scale.setScalar(1.04);
+        rigGroup.position.set(0.04, 0.04, 0);
       }
       camera.updateProjectionMatrix();
     };
@@ -532,34 +559,33 @@ export const MonolithStage: React.FC<MonolithStageProps> = ({
         haloUniforms.uTime.value = elapsed;
         dustUniforms.uTime.value = elapsed;
 
-        const breatheY = Math.sin(elapsed * 0.9) * 0.05;
+        const breatheY = Math.sin(elapsed * 0.85) * 0.045;
         monolithGroup.position.y = breatheY;
 
-        const spread = Math.min(scrollP * 1.4, 0.28);
-        upperMesh.position.y = 1.08 + spread * 0.42;
-        crownMesh.position.y = 1.88 + spread * 0.62 + Math.sin(elapsed * 1.4) * 0.035;
-        crownMesh.rotation.y = -elapsed * 0.35;
-        lowerMesh.position.y = -1.24 - spread * 0.36;
+        const spread = Math.min(scrollP * 1.35, 0.24);
+        upperMesh.position.y = 1.01 + spread * 0.36;
+        capCrownMesh.position.y = 1.66 + spread * 0.44;
+        topGrooveRing.position.y = 1.56 + spread * 0.4;
+        lowerMesh.position.y = -1.3 - spread * 0.32;
 
         monolithGroup.rotation.y =
-          0.32 + elapsed * 0.14 + scrollP * Math.PI * 0.85 + pointerCurrent.x * 0.34 + userYawOffset;
-        monolithGroup.rotation.x = 0.08 + pointerCurrent.y * 0.14;
+          0.28 + elapsed * 0.12 + scrollP * Math.PI * 0.75 + pointerCurrent.x * 0.32 + userYawOffset;
+        monolithGroup.rotation.x = 0.06 + pointerCurrent.y * 0.12;
 
-        outerCollarGroup.rotation.z = -elapsed * 0.22 - scrollP * 1.1;
-        outerCollarGroup.rotation.y = elapsed * 0.18;
+        outerCollarGroup.rotation.z = -elapsed * 0.2 - scrollP * 1.0;
+        outerCollarGroup.rotation.y = elapsed * 0.16;
 
-        haloMesh.position.x = 0.68 - pointerCurrent.x * 0.19 - scrollP * 0.22;
-        haloMesh.position.y = 0.96 + pointerCurrent.y * 0.14 - scrollP * 0.35;
+        haloMesh.position.x = 0.68 - pointerCurrent.x * 0.18 - scrollP * 0.2;
+        haloMesh.position.y = 0.96 + pointerCurrent.y * 0.13 - scrollP * 0.3;
         orangeRimLight.position.set(
-          haloMesh.position.x,
-          haloMesh.position.y,
-          haloMesh.position.z + 0.42
+          haloMesh.position.x + 0.06,
+          haloMesh.position.y + 0.06,
+          haloMesh.position.z + 0.5
         );
       } else {
         monolithGroup.position.y = 0;
-        monolithGroup.rotation.y = 0.42 + userYawOffset;
-        monolithGroup.rotation.x = 0.08;
-        crownMesh.rotation.y = 0.4;
+        monolithGroup.rotation.y = 0.32 + userYawOffset;
+        monolithGroup.rotation.x = 0.06;
       }
 
       renderer.render(scene, camera);
@@ -597,7 +623,7 @@ export const MonolithStage: React.FC<MonolithStageProps> = ({
       ref={containerRef}
       className="monolith-stage"
       role="img"
-      aria-label="Escultura interactiva 3D THORAL en obsidiana anodizada y halo lumínico naranja. Arrastra horizontalmente o mueve el cursor para inspeccionar."
+      aria-label="Escultura interactiva 3D THORAL en obsidiana anodizada mate y halo lumínico naranja. Arrastra horizontalmente o mueve el cursor para inspeccionar."
     />
   );
 };
