@@ -1,0 +1,118 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-01T17:11:00Z",
+  "title": "Design System: THORAL Digital Atelier",
+  "extensions": {
+    "colorMeta": {
+      "signal-orange": {
+        "role": "primary",
+        "displayName": "Signal Orange",
+        "canonical": "#e85d24",
+        "tonalRamp": ["#3a1305", "#5c2009", "#87300f", "#b84315", "#e85d24", "#f36e38", "#f89c74", "#fde0d2"]
+      },
+      "void-carbon": {
+        "role": "neutral",
+        "displayName": "Void Carbon",
+        "canonical": "#0b0d11",
+        "tonalRamp": ["#0b0d11", "#12151b", "#191e26", "#202630", "#384150", "#646d7c", "#9fa6b2", "#e4e7ec"]
+      },
+      "bone-ivory": {
+        "role": "neutral",
+        "displayName": "Bone Ivory",
+        "canonical": "#eee8df",
+        "tonalRamp": ["#1f1d1a", "#3b3732", "#5c564e", "#7d766d", "#948d83", "#b8b1a7", "#d8d2c9", "#eee8df"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display Monument", "purpose": "Hero headline pairing ExtraBold and ExtraLight." },
+      "display-mobile": { "displayName": "Display Mobile Floor", "purpose": "Compact viewport display floor." },
+      "headline": { "displayName": "Section Headline", "purpose": "Primary chapter headings without kickers." },
+      "title": { "displayName": "Artifact Title", "purpose": "Selected work and capability titles." },
+      "lead": { "displayName": "Lead Editorial", "purpose": "Opening hero and manifesto lead copy." },
+      "body": { "displayName": "Editorial Body", "purpose": "Long-form studio copy tuned for dark surfaces." },
+      "body-sm": { "displayName": "Compact UI & Supporting Copy", "purpose": "Buttons, navigation links, and supporting descriptions." },
+      "label": { "displayName": "Tabular Coordinate", "purpose": "Indices, timestamps, and technical metadata." }
+    },
+    "shadows": [
+      { "name": "elevated-slab", "value": "0 24px 56px rgba(4, 6, 9, 0.56)", "purpose": "Floating studio specification plaques." },
+      { "name": "inspection-sheet", "value": "-20px 0 64px rgba(3, 5, 8, 0.72)", "purpose": "Slide-over project inspection drawer." }
+    ],
+    "motion": [
+      { "name": "ease-atelier", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Natural exponential deceleration across UI and 3D." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "600px" },
+      { "name": "md", "value": "960px" },
+      { "name": "lg", "value": "1120px" },
+      { "name": "xl", "value": "1536px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Signal Primary Button",
+      "kind": "button",
+      "refersTo": "button-signal",
+      "description": "High-contrast forged-orange primary conversion trigger.",
+      "html": "<button class=\"ds-btn-signal\">EXPLORAR OBRAS <svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M7 17L17 7M7 7h10v10\"/></svg></button>",
+      "css": ".ds-btn-signal { display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 12px 23px; background: #e85d24; color: #0b0d11; border: 1px solid #e85d24; border-radius: 2px; font-weight: 800; font-size: 13px; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: background 150ms cubic-bezier(0.16, 1, 0.3, 1), transform 150ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-btn-signal:hover { background: #f36e38; transform: translateY(-1px); } .ds-btn-signal:focus-visible { outline: 2px solid #eee8df; outline-offset: 3px; }"
+    },
+    {
+      "name": "Architectural Secondary Button",
+      "kind": "button",
+      "refersTo": "button-architectural",
+      "description": "Anodized dark-slab secondary action with 1px warm-bone seam.",
+      "html": "<button class=\"ds-btn-arch\">INICIAR CONTACTO</button>",
+      "css": ".ds-btn-arch { display: inline-flex; align-items: center; min-height: 48px; padding: 12px 22px; background: #202630; color: #eee8df; border: 1px solid rgba(238, 232, 223, 0.18); border-radius: 2px; font-weight: 700; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer; transition: background 150ms ease, border-color 150ms ease; } .ds-btn-arch:hover { background: #262d39; border-color: #b8b1a7; } .ds-btn-arch:focus-visible { outline: 2px solid #e85d24; outline-offset: 3px; }"
+    },
+    {
+      "name": "Material Preset Chip",
+      "kind": "chip",
+      "refersTo": "chip-material",
+      "description": "Interactive 3D surface finish selector chip.",
+      "html": "<button class=\"ds-chip is-active\"><span class=\"ds-chip-code\">M-01</span><span>Obsidiana Mate</span></button>",
+      "css": ".ds-chip { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 7px 12px; background: #202630; border: 1px solid #e85d24; border-radius: 2px; color: #eee8df; font-size: 12px; font-weight: 600; cursor: pointer; } .ds-chip-code { font-family: monospace; font-size: 11px; color: #e85d24; } .ds-chip:focus-visible { outline: 2px solid #e85d24; outline-offset: 2px; }"
+    },
+    {
+      "name": "Depth Rail Item",
+      "kind": "nav",
+      "refersTo": "nav-depth-rail",
+      "description": "Vertical chapter registration indicator inspired by LUMIER DARK.",
+      "html": "<a href=\"#work\" class=\"ds-rail-item\"><span class=\"ds-rail-tick\"></span><span>03</span></a>",
+      "css": ".ds-rail-item { display: inline-flex; align-items: center; gap: 9px; min-height: 36px; text-decoration: none; font-family: monospace; font-size: 13px; font-weight: 700; color: #eee8df; } .ds-rail-tick { width: 20px; height: 2px; background: #e85d24; display: inline-block; } .ds-rail-item:focus-visible { outline: 2px solid #e85d24; outline-offset: 3px; }"
+    },
+    {
+      "name": "Specification Slab",
+      "kind": "card",
+      "refersTo": "slab-spec",
+      "description": "Floating dark-slate architectural plaque with studio offset shadow.",
+      "html": "<div class=\"ds-slab\"><div class=\"ds-slab-title\">Arquitectura espacial.</div><div class=\"ds-slab-body\">Composición editorial sobre planos de obsidiana mate e iluminación de estudio.</div></div>",
+      "css": ".ds-slab { max-width: 340px; padding: 18px 20px; background: rgba(32, 38, 48, 0.92); border: 1px solid rgba(238, 232, 223, 0.08); box-shadow: 0 24px 56px rgba(4, 6, 9, 0.56); color: #eee8df; } .ds-slab-title { font-weight: 700; font-size: 15px; margin-bottom: 5px; } .ds-slab-body { font-size: 13px; line-height: 1.5; color: #b8b1a7; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Anodized Monolith Atelier",
+    "overview": "THORAL frames creative engineering as a precision-machined industrial artifact suspended between split obsidian and smoked-slate studio planes. Rather than relying on decorative gradients, glowing neon borders, or uniform SaaS card rows, the interface uses stepped dark architectural volumes, 1px warm-bone seams, weight-contrasted geometric display type, and a real-time WebGL anodized monolith occluding an incandescent forged-orange orbital halo.",
+    "keyCharacteristics": [
+      "Calibrated four-zone dark architectural planes separating sections and hero volumes without heavy borders.",
+      "Extreme weight-contrast display typography pairing ExtraBold (800) architectural stems directly against ExtraLight (200) hairline uppercase counterpoints.",
+      "Real-time Three.js PBR anodized metal surfaces with procedural sandblasted grain and occluded Fresnel thermal rim light.",
+      "100% custom geometric SVG emblem, technical plates, and stroke iconography with zero emojis."
+    ],
+    "rules": [
+      { "name": "The Four-Zone Plane Rule", "body": "Dark grounds never collapse into flat #000000 or muddy gray; every structural layer steps intentionally across Abyssal Void, Matte Obsidian, Smoked Slate, and Floating Slab.", "section": "colors" },
+      { "name": "The Surgical Signal Rule", "body": "Signal Orange reserves its presence for the occluded 3D orbital halo, the primary conversion trigger, and active depth-rail or tab registration.", "section": "colors" },
+      { "name": "The Weight-Counterpoint Rule", "body": "Every major heading pairs an ExtraBold (800) primary word with an ExtraLight (200) uppercase companion instead of relying on decorative eyebrows or kickers above headings.", "section": "typography" },
+      { "name": "The Physical Occlusion Rule", "body": "Spatial hierarchy comes first from tonal plane steps and real 3D occlusion in the WebGL stage, supported by directional Y-offset studio shadows.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do separate adjacent structural regions using the four calibrated dark plane tokens and 1px warm-bone seams (rgba(238, 232, 223, 0.08)).",
+      "Do lead every section directly with bold/hairline weight-contrasted Urbanist Variable headings without placing small kicker labels above them.",
+      "Do maintain min-height: 44px on all interactive controls and preserve prefers-reduced-motion state transitions without spatial motion."
+    ],
+    "donts": [
+      "Don't introduce emojis or Unicode symbols anywhere in UI or metadata; author 1.6px stroke SVGs or geometric marks.",
+      "Don't apply gradient fills to typography or zero-offset colored glow shadows to containers.",
+      "Don't arrange projects or capabilities into uniform three-column icon-heading-paragraph card grids."
+    ]
+  }
+}

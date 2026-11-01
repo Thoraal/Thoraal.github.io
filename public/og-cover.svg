@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" fill="none">
+  <rect width="600" height="630" fill="#12151B"/>
+  <rect x="600" width="600" height="630" fill="#191E26"/>
+  <polygon points="480,0 860,0 640,630 260,630" fill="#151920" opacity="0.75"/>
+  <line x1="600" y1="0" x2="600" y2="630" stroke="#EEE8DF" stroke-opacity="0.08"/>
+  <circle cx="815" cy="225" r="86" stroke="#E85D24" stroke-width="18"/>
+  <rect x="690" y="150" width="150" height="330" rx="8" fill="#14171D" stroke="#EEE8DF" stroke-opacity="0.14"/>
+  <line x1="690" y1="260" x2="840" y2="260" stroke="#E85D24" stroke-width="2"/>
+  <g transform="translate(96, 92)">
+    <circle cx="28" cy="14" r="9" stroke="#E85D24" stroke-width="2.5"/>
+    <path d="M4 10H26V15H18V34H12V15H4V10Z" fill="#EEE8DF"/>
+  </g>
+  <text x="96" y="300" fill="#EEE8DF" font-family="sans-serif" font-size="92" font-weight="800" letter-spacing="4">THORAL</text>
+  <text x="96" y="378" fill="#B4ADA3" font-family="sans-serif" font-size="64" font-weight="200" letter-spacing="10">ATELIER</text>
+  <rect x="96" y="432" width="164" height="44" fill="#E85D24"/>
+  <text x="126" y="460" fill="#0B0D11" font-family="sans-serif" font-size="14" font-weight="700" letter-spacing="3">PORTFOLIO</text>
+</svg>

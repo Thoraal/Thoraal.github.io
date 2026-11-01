@@ -1,3 +1,11 @@
 .DS_Store
+Thumbs.db
+*.tmp
+*.tsbuildinfo
 node_modules/
-.context-memory/.backups/
+dist/
+default/
+.impeccable/review/
+.impeccable/mocks/
+.impeccable/config.local.json
+*.local
