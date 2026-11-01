@@ -513,6 +513,9 @@ export const MonolithStage: React.FC<MonolithStageProps> = ({
         rigGroup.position.set(0.04, 0.04, 0);
       }
       camera.updateProjectionMatrix();
+      // setSize() limpia el búfer de dibujo: se re-renderiza en el acto para no dejar
+      // un fotograma vacío entre el redimensionado y el siguiente requestAnimationFrame.
+      renderer.render(scene, camera);
     };
 
     applyResponsiveFraming();
