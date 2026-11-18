@@ -87,9 +87,58 @@ function importes(total: number, cajas: number, minimo: number, maximo: number, 
   return valores.reverse();
 }
 
-export function plan(monto: number, cajas: number, tasa: number, maximo: number, distancia = 5, semilla = 0) {
+export function saltoMinimo(orden: number[]) {
+  if (orden.length < 2) return 0;
+  let menor = Infinity;
+  for (let i=1; i<orden.length; i++) menor = Math.min(menor, Math.abs(orden[i]-orden[i-1]));
+  return menor;
+}
+
+// Evaluamos la secuencia en orden de lectura, incluyendo la unión entre cajas.
+// Sólo aceptamos candidatos que mantengan distintos también los subtotales de caja.
+export function ordenarConsecutivos(grupos: number[][]) {
+  const valores = grupos.flat().sort((a,b)=>a-b);
+  if (valores.length < 3) return grupos;
+  let mejor = grupos;
+  let salto = saltoMinimo(grupos.flat());
+  function considerar(orden: number[]) {
+    const puntaje = saltoMinimo(orden);
+    if (puntaje <= salto) return;
+    let inicio = 0;
+    const candidato = grupos.map(grupo => {
+      const tramo = orden.slice(inicio,inicio+grupo.length);
+      inicio += grupo.length;
+      return tramo;
+    });
+    const sumas = candidato.map(grupo=>grupo.reduce((a,b)=>a+b,0));
+    if (new Set(sumas).size !== grupos.length) return;
+    mejor = candidato;
+    salto = puntaje;
+  }
+  // Alternamos las dos mitades. En cada recorrido circular cortamos en
+  // su pareja más cercana para que esos dos importes queden en los extremos.
+  for (const lista of [valores,[...valores].reverse()]) {
+    const mitad = Math.ceil(lista.length/2);
+    const ciclo: number[] = [];
+    for (let i=0;i<mitad;i++) {
+      ciclo.push(lista[i]);
+      if (i+mitad<lista.length) ciclo.push(lista[i+mitad]);
+    }
+    let corte=0;
+    for (let i=1;i<ciclo.length;i++) {
+      const anterior=(i+ciclo.length-1)%ciclo.length;
+      const previoCorte=(corte+ciclo.length-1)%ciclo.length;
+      if (Math.abs(ciclo[i]-ciclo[anterior]) < Math.abs(ciclo[corte]-ciclo[previoCorte])) corte=i;
+    }
+    const abierto=ciclo.slice(corte).concat(ciclo.slice(0,corte));
+    for (const orden of [abierto,[...abierto].reverse(),ciclo,[...ciclo].reverse()]) considerar(orden);
+  }
+  return mejor;
+}
+
+export function plan(monto: number, cajas: number, tasa: number, maximo: number, distancia = 5, semilla = 0, automatico = false) {
   validar(monto, cajas, tasa);
-  const partes = importes(monto, cajas, minimoParte(monto), maximo, distancia, semilla);
+  const partes = importes(monto, cajas, minimoParte(monto), maximo, automatico ? 5 : distancia, semilla);
   const grupos = Array.from({ length: cajas }, () => [] as number[]);
   // Orden descendente y asignación circular: cada caja anterior recibe
   // partidas mayores que su vecina y, en la última vuelta, nunca menos filas.
@@ -97,7 +146,8 @@ export function plan(monto: number, cajas: number, tasa: number, maximo: number,
   if (cajas === 3) [grupos[1], grupos[2]] = [grupos[2], grupos[1]];
   if (cajas === 1 && partes.length === 3) [grupos[0][1], grupos[0][2]] = [grupos[0][2], grupos[0][1]];
   let desde = 0;
-  return grupos.map(grupo => {
+  const orden = automatico ? ordenarConsecutivos(grupos) : grupos;
+  return orden.map(grupo => {
     const inicio = desde;
     const filas = grupo.map(unidades => {
       const anterior = desde;

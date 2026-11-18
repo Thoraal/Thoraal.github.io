@@ -1,4 +1,4 @@
-export type Operacion = { monto:string; tasa:string; cajas:string; moneda:string; otra:string; fecha:string; distancia?:string; semilla?:string };
+export type Operacion = { monto:string; tasa:string; cajas:string; moneda:string; otra:string; fecha:string; distancia?:string; semilla?:string; orden?:string };
 export function codificar(datos: Operacion) {
   return 'F2.' + new URLSearchParams(Object.entries(datos)).toString();
 }
@@ -9,6 +9,7 @@ export function decodificar(raw: string): Operacion {
   if (s.startsWith('F2.')) {
     const q = new URLSearchParams(s.slice(3));
     d = { monto:q.get('monto')??'', tasa:q.get('tasa')??'', cajas:q.get('cajas')??'', moneda:q.get('moneda')??'', otra:q.get('otra')??'', fecha:q.get('fecha')??'' };
+    if(q.get('orden')==='consecutivo') d.orden='consecutivo';
     if(q.has('distancia') || q.has('semilla')) {
       d.distancia=q.get('distancia')??''; d.semilla=q.get('semilla')??'';
       if (!/^\d{1,7}$/.test(d.distancia) || +d.distancia<5 || +d.distancia>1000000 || +d.distancia%5 ||

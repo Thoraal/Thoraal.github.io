@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { capacidad, plan, minimoParte, maximoParte, tasaDecimal, pesosEnCentavos } from '../src/calculo.ts';
+import { ordenarConsecutivos, saltoMinimo, capacidad, plan, minimoParte, maximoParte, tasaDecimal, pesosEnCentavos } from '../src/calculo.ts';
 import { codificar, decodificar } from '../src/codigo.ts';
 
 test('ejemplo de Alejandro en tres cajas y en el detalle de una caja',()=>{
@@ -60,4 +60,23 @@ test('capacidad de 35,000 y distancia global en distintas variantes',()=>{
     resultados.add(montos.join(','));
   }
   assert.ok(resultados.size>1);
+});
+
+test('880 y 870 pueden aparecer separados por 700, incluso al cambiar de caja',()=>{
+  for(const grupos of [[[880,870,700]],[[880],[870],[700]],[[880,870],[700]]]){
+    const orden=ordenarConsecutivos(grupos).flat();
+    assert.equal(orden[1],700);
+    assert.equal(saltoMinimo(orden),170);
+  }
+});
+test('35,000 admite múltiplos cercanos globalmente y los separa en pantalla',()=>{
+  for(const cajas of [1,3,8,40,48]){
+    const p=plan(35000,cajas,185000,990,60,2026,true);
+    const filas=p.flatMap(c=>c.filas.map(f=>f.unidades));
+    assert.equal(filas.reduce((a,b)=>a+b),35000);
+    assert.equal(new Set(filas).size,filas.length);
+    assert.ok(filas.every(n=>n%5===0 && n>=600 && n<=990));
+    assert.equal(new Set(p.map(c=>c.unidades)).size,cajas);
+    if(cajas===1)assert.ok(saltoMinimo(filas)>10);
+  }
 });
