@@ -1,0 +1,21 @@
+{
+    "name": "Fraccionador",
+    "short_name": "Fraccionador",
+    "start_url": "./",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#0d9a73",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "/fraccionador/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/fraccionador/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
