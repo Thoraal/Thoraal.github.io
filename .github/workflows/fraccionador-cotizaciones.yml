@@ -26,15 +26,15 @@ jobs:
             echo "::notice::Configura BANXICO_TOKEN para activar las actualizaciones."
             exit 0
           fi
-          node scripts/fraccionador/cotizaciones.mjs public/fraccionador/cotizaciones.json
+          node scripts/cotizaciones.mjs public/cotizaciones.json
       - name: Publicar si hay cambios
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if git diff --quiet -- public/fraccionador/cotizaciones.json; then exit 0; fi
+          if git diff --quiet -- public/cotizaciones.json; then exit 0; fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add public/fraccionador/cotizaciones.json
+          git add public/cotizaciones.json
           git commit -m 'Actualizar cotizaciones oficiales del fraccionador'
           git push origin HEAD:main
           gh workflow run deploy.yml --ref main

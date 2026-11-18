@@ -1,38 +1,17 @@
-# THORAL — Digital Atelier & Interactive 3D Portfolio
+# Fraccionador de divisas
 
-Portfolio digital inmersivo y tridimensional desarrollado para **THORAL** (`https://thoraal.github.io/`), concebido bajo una dirección de arte **Dark Luxury + Futuristic Editorial + Interactive 3D**.
+Aplicación TypeScript publicada en https://thoraal.github.io/. La dirección anterior /fraccionador/ conserva los parámetros y el código de la operación al abrir la portada.
 
-## Arquitectura y Tecnologías
+## Cómo explicar una operación
 
-- **Frontend:** React 19 + TypeScript + Vite 6
-- **Escena 3D & Shaders:** Three.js + Shaders GLSL personalizados (Fresnel térmico, grano anodizado procedural, iluminación de estudio y carga diferida con respaldo vectorial sin WebGL)
-- **Motion & Coreografía:** GSAP + ScrollTrigger con soporte nativo para `prefers-reduced-motion`
-- **Tipografía Autoalojada:** Urbanist Variable + Hanken Grotesk Variable + Azeret Mono Variable (`@fontsource-variable`, cero bloqueo externo y cero CLS)
-- **Iconografía:** 100% vectorial en SVG (emblema geométrico original THORAL, láminas técnicas e iconos Lucide)
-- **CI/CD:** Despliegue automático en GitHub Pages mediante GitHub Actions (`.github/workflows/deploy.yml`)
+Con 100 USD, tres cajas y una tasa aplicada de 18.50 MXN por USD, el total es 1,850.00 MXN. Al dividir 100 entre tres quedan 33 unidades por caja y sobra una. La primera caja recibe esa unidad: 34, 33 y 33 USD. Sus equivalentes son 629.00, 610.50 y 610.50 MXN.
 
-## Personalización de Contenidos
+El límite interno por parte es la parte entera de 1,000 × la referencia Banxico / tasa aplicada. Para dólares se conserva la regla histórica de 990 cuando el resultado entero supera 1,000. Se elige el mínimo número de partes que permite respetar el máximo. Cada parte recibe el cociente entero y las primeras reciben una unidad sobrante. Es un reparto determinista. Los códigos históricos recuperan los datos de entrada y los importes se recalculan con el método actual.
 
-Toda la información personal, biografía provisional, proyectos demostrativos, áreas de especialidad y canales de contacto se gestionan desde un único archivo tipado:
+Los cálculos usan unidades enteras y tasas de hasta cuatro decimales. Los centavos de cada fila se obtienen restando dos totales acumulados redondeados. Así cada subtotal y el total general coinciden incluso cuando la tasa produce fracciones de centavo. El reporte corresponde a la caja seleccionada. Por encima de 5,000 partes se imprime un resumen y se conserva el detalle paginado en pantalla.
 
-- [`src/config/portfolio.ts`](src/config/portfolio.ts)
+## Datos y desarrollo
 
-## Comandos de Desarrollo
+El campo de referencia consulta el historial de la serie SF60653 en public/cotizaciones.json. Una fecha sin dato permite calcular totales y cajas, pero deja pendiente el desglose por partes. El workflow de actualización requiere el secreto de Actions BANXICO_TOKEN. Los visitantes sólo reciben el historial.
 
-```bash
-# Instalar dependencias
-npm install
-
-# Iniciar servidor de desarrollo
-npm run dev
-
-# Compilar versión de producción
-npm run build
-
-# Previsualizar compilación de producción
-npm run preview
-```
-
-## Licencia
-
-MIT — Ver [LICENSE](LICENSE).
+Con Node 22.13 o superior, ejecuta npm ci, npm test y npm run build. npm run dev inicia la aplicación local. src/calculo.ts contiene la lógica independiente de la interfaz. GitHub Actions compila con TypeScript y Vite y publica dist/ en Pages.
