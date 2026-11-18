@@ -1,5 +1,5 @@
 import './estilo.css';
-import { detalle, maximoParte, pesosEnCentavos, plan, tasaDecimal } from './calculo';
+import { validar, minimoParte, maximoParte, pesosEnCentavos, plan, tasaDecimal } from './calculo';
 import { codificar, decodificar, type Operacion } from './codigo';
 
 const byId = (id:string) => document.getElementById(id)!;
@@ -37,24 +37,31 @@ function render() {
   byId('otraLabel').hidden=d.moneda!=='OTRA';
   texto('oficial',ref?'$'+ref:fallo?'Historial no disponible':!historial?'Consultando…':!d.fecha?'Selecciona una fecha':d.fecha>historial.hasta?'Pendiente de actualización':d.fecha<historial.desde?'Fuera del historial':'Sin cotización');
   texto('cobertura',historial?'Historial hasta el '+historial.hasta.split('-').reverse().join('/'):'');
-  actual=[];limite=0;texto('error','');
+  actual=[];limite=0;texto('error','');texto('limites','');
+  let convertible=false;
   if(d.tasa && d.monto) try {
     tasa=tasaDecimal(d.tasa);
     if(d.moneda==='OTRA'&&!d.otra) throw Error('Indica el nombre de la moneda.');
-    actual=plan(Number(d.monto),Number(d.cajas),tasa);
-    if(ref) limite=maximoParte(tasaDecimal(ref),tasa,d.moneda);
+    validar(Number(d.monto),Number(d.cajas),tasa);
+    convertible=true;
+    if(ref) {
+      limite=5*Math.floor(maximoParte(tasaDecimal(ref),tasa,d.moneda)/5);
+      texto('limites','Por parte: mínimo '+num.format(minimoParte(Number(d.monto)))+' · máximo '+num.format(limite)+' '+moneda()+' · múltiplos de 5');
+      actual=plan(Number(d.monto),Number(d.cajas),tasa,limite);
+    }
   } catch(e) { texto('error',(e as Error).message); }
   const listo=actual.length>0;
-  texto('mxn',listo?dinero(pesosEnCentavos(Number(d.monto),tasa)):'—');
-  texto('divisa',listo?num.format(Number(d.monto))+' '+moneda():'—');
-  texto('tc',listo?d.tasa:'—');texto('nc',listo?String(actual.length):'—');
+  texto('mxn',convertible?dinero(pesosEnCentavos(Number(d.monto),tasa)):'—');
+  texto('divisa',convertible?num.format(Number(d.monto))+' '+moneda():'—');
+  texto('tc',convertible?d.tasa:'—');texto('nc',convertible?d.cajas:'—');
   btn('imprimir').disabled=!listo;btn('copiar').disabled=!listo||!d.fecha;
   byId('selector').hidden=actual.length<2;
   const select=campo('caja') as HTMLSelectElement;select.replaceChildren();
-  actual.forEach((_,i)=>select.add(new Option(String(i+1),String(i))));
+  actual.forEach((_,i)=>select.add(new Option((i+1)+' · '+num.format(actual[i].unidades)+' '+moneda(),String(i))));
   indice=Math.min(indice,Math.max(0,actual.length-1));select.value=String(indice);
   texto('estado',listo?'':'Ingresa datos válidos para ver el reparto.');
-  if(listo && !limite) texto('estado','El reparto entre cajas está disponible. El detalle por partes requiere una referencia válida para la fecha.');
+  if(convertible && !ref) texto('estado','Se necesita la referencia de la fecha para verificar el máximo antes de repartir.');
+  if(convertible && ref && !listo) texto('estado','Sin reparto válido. Revisa los límites indicados arriba.');
   byId('estado').hidden=listo && limite>0;
   byId('resultado').hidden=!listo;
   const tabla=byId('filas');tabla.replaceChildren();byId('paginador').hidden=true;
@@ -63,16 +70,16 @@ function render() {
   const caja=actual[indice];
   texto('subtotal','Caja '+(indice+1)+' · '+num.format(caja.unidades)+' '+moneda()+' · '+dinero(caja.centavos)+' MXN');
   if(!limite) return;
-  const partes=detalle(caja,tasa,limite);
-  pagina=Math.min(pagina,Math.ceil(partes.cantidad/porPagina)-1);
-  for(let i=pagina*porPagina;i<Math.min(partes.cantidad,(pagina+1)*porPagina);i++){
-    const fila=partes.fila(i);const tr=document.createElement('tr');
+  const partes=caja.filas;
+  pagina=Math.min(pagina,Math.ceil(partes.length/porPagina)-1);
+  for(let i=pagina*porPagina;i<Math.min(partes.length,(pagina+1)*porPagina);i++){
+    const fila=partes[i];const tr=document.createElement('tr');
     for(const valor of [String(i+1),num.format(fila.unidades),dinero(fila.centavos),num.format(fila.restante)]) { const td=document.createElement('td');td.textContent=valor;tr.append(td); }
     tabla.append(tr);
   }
-  byId('paginador').hidden=partes.cantidad<=porPagina;
-  texto('pagina',(pagina+1)+' de '+Math.ceil(partes.cantidad/porPagina));
-  btn('anterior').disabled=pagina===0;btn('siguiente').disabled=(pagina+1)*porPagina>=partes.cantidad;
+  byId('paginador').hidden=partes.length<=porPagina;
+  texto('pagina',(pagina+1)+' de '+Math.ceil(partes.length/porPagina));
+  btn('anterior').disabled=pagina===0;btn('siguiente').disabled=(pagina+1)*porPagina>=partes.length;
 }
 campo('fecha').value=hoy();
 for(const id of ['monto','cajas','tasa','moneda','otra','fecha']) {
@@ -85,7 +92,7 @@ btn('reiniciar').onclick=()=>{aplicar({monto:'',tasa:'',cajas:'1',moneda:'USD',o
 btn('copiar').onclick=async()=>{const s=codificar(datos());campo('codigo').value=s;
   try{await navigator.clipboard.writeText(s);texto('aviso','Código copiado.');}catch{(campo('codigo') as HTMLInputElement).select();texto('aviso','Selecciona Copiar para guardar el código.');}};
 function cargar(s:string) {
-  try{const d=decodificar(s);plan(Number(d.monto),Number(d.cajas),tasaDecimal(d.tasa));aplicar(d);texto('aviso','Operación recuperada.');}
+  try{const d=decodificar(s);validar(Number(d.monto),Number(d.cajas),tasaDecimal(d.tasa));aplicar(d);texto('aviso','Operación recuperada.');}
   catch{texto('aviso','El código no es válido. Revisa que esté completo.');}
 }
 byId('cargar').onsubmit=e=>{e.preventDefault();cargar(campo('codigo').value);};
@@ -95,12 +102,12 @@ btn('imprimir').onclick=()=>{
   agregar('h1','Fraccionador de divisas');agregar('p','Fecha de referencia: '+campo('fecha').value+' · Banxico: '+byId('oficial').textContent+' · Tipo aplicado: '+campo('tasa').value);
   agregar('p','Total: '+byId('divisa').textContent+' · '+byId('mxn').textContent+' MXN');
   const caja=actual[indice];agregar('h2',byId('subtotal').textContent!);
-  if(limite){const detalleCaja=detalle(caja,tasa,limite),tabla=document.createElement('table');report.append(tabla);
+  if(limite){const detalleCaja=caja.filas,tabla=document.createElement('table');report.append(tabla);
     const cab=tabla.createTHead().insertRow();for(const v of ['Parte','Divisa','Pesos (MXN)','Restante']) agregar('th',v,cab);
     const cuerpo=tabla.createTBody();
     // Para informes excepcionalmente extensos se imprime el resumen exacto en lugar de agotar el navegador.
-    if(detalleCaja.cantidad<=5000){for(let i=0;i<detalleCaja.cantidad;i++){const r=detalleCaja.fila(i),row=cuerpo.insertRow();for(const v of [String(i+1),num.format(r.unidades),dinero(r.centavos),num.format(r.restante)]) agregar('td',v,row);}}
-    else{tabla.remove();agregar('p',num.format(detalleCaja.cantidad)+' partes. Reporte resumido para distribuciones superiores a 5,000 partes.');}
+    if(detalleCaja.length<=5000){for(let i=0;i<detalleCaja.length;i++){const r=detalleCaja[i],row=cuerpo.insertRow();for(const v of [String(i+1),num.format(r.unidades),dinero(r.centavos),num.format(r.restante)]) agregar('td',v,row);}}
+    else{tabla.remove();agregar('p',num.format(detalleCaja.length)+' partes. Reporte resumido para distribuciones superiores a 5,000 partes.');}
   }else agregar('p','Detalle por partes pendiente de referencia.');
   document.body.append(report);window.print();
 };
