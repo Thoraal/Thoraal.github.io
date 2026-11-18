@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { plan, minimoParte, maximoParte, tasaDecimal, pesosEnCentavos } from '../src/calculo.ts';
+import { capacidad, plan, minimoParte, maximoParte, tasaDecimal, pesosEnCentavos } from '../src/calculo.ts';
 import { codificar, decodificar } from '../src/codigo.ts';
 
 test('ejemplo de Alejandro en tres cajas y en el detalle de una caja',()=>{
@@ -44,4 +44,20 @@ test('restaura el código antiguo y conserva cuatro decimales en el nuevo',()=>{
   assert.equal(decodificar('2S.1FE.0.AL.1').fecha,'2025-01-16');
   const d={monto:'100',cajas:'2',moneda:'OTRA',otra:'Libra £',tasa:'24.1825',fecha:'2025-01-16'};
   assert.deepEqual(decodificar(codificar(d)),d);
+});
+
+test('capacidad de 35,000 y distancia global en distintas variantes',()=>{
+  const rango=capacidad(35000,1,600,990,5);
+  assert.deepEqual([rango.cantidades[0],rango.cantidades.at(-1)],[40,48]);
+  assert.deepEqual(capacidad(35000,1,600,990,60),{cantidades:[],cupo:7,techo:5670});
+  const resultados=new Set();
+  for(const semilla of [1,45,99999,2147483647]){
+    const p=plan(1500,3,185000,990,60,semilla);
+    const montos=p.flatMap(c=>c.filas.map(f=>f.unidades)).sort((a,b)=>a-b);
+    assert.equal(montos.reduce((a,b)=>a+b),1500);
+    assert.ok(montos.every((n,i)=>n%5===0 && (!i || n-montos[i-1]>=60)));
+    assert.deepEqual(plan(1500,3,185000,990,60,semilla),p);
+    resultados.add(montos.join(','));
+  }
+  assert.ok(resultados.size>1);
 });

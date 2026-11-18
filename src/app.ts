@@ -1,5 +1,5 @@
 import './estilo.css';
-import { validar, minimoParte, maximoParte, pesosEnCentavos, plan, tasaDecimal } from './calculo';
+import { capacidad, validar, minimoParte, maximoParte, pesosEnCentavos, plan, tasaDecimal } from './calculo';
 import { codificar, decodificar, type Operacion } from './codigo';
 
 const byId = (id:string) => document.getElementById(id)!;
@@ -29,15 +29,17 @@ let fallo=false, indice=0, pagina=0;
 let actual:ReturnType<typeof plan> = [], tasa=0, limite=0;
 const porPagina=25;
 const hoy = () => new Intl.DateTimeFormat('en-CA',{year:'numeric',month:'2-digit',day:'2-digit',timeZone:'America/Cancun'}).format(new Date());
-const datos = ():Operacion => ({monto:campo('monto').value,tasa:campo('tasa').value.trim(),cajas:campo('cajas').value,moneda:campo('moneda').value,otra:campo('otra').value.trim(),fecha:campo('fecha').value});
-function aplicar(d:Operacion) { for(const [k,v] of Object.entries(d)) campo(k).value=v; indice=pagina=0; render(); }
+const nuevaSemilla = () => String(crypto.getRandomValues(new Uint32Array(1))[0] || 1);
+campo('semilla').value=nuevaSemilla();
+const datos = ():Operacion => ({monto:campo('monto').value,tasa:campo('tasa').value.trim(),cajas:campo('cajas').value,moneda:campo('moneda').value,otra:campo('otra').value.trim(),fecha:campo('fecha').value,distancia:campo('distancia').value,semilla:campo('semilla').value});
+function aplicar(d:Operacion) { campo('distancia').value=d.distancia??'5'; campo('semilla').value=d.semilla??'0'; for(const [k,v] of Object.entries(d)) campo(k).value=v; indice=pagina=0; render(); }
 const moneda = () => campo('moneda').value==='OTRA'?campo('otra').value.trim():campo('moneda').value;
 function render() {
   const d=datos(), ref=historial?.tasas[d.fecha];
   byId('otraLabel').hidden=d.moneda!=='OTRA';
   texto('oficial',ref?'$'+ref:fallo?'Historial no disponible':!historial?'Consultando…':!d.fecha?'Selecciona una fecha':d.fecha>historial.hasta?'Pendiente de actualización':d.fecha<historial.desde?'Fuera del historial':'Sin cotización');
   texto('cobertura',historial?'Historial hasta el '+historial.hasta.split('-').reverse().join('/'):'');
-  actual=[];limite=0;texto('error','');texto('limites','');
+  actual=[];limite=0;texto('error','');texto('limites','');texto('capacidad','');
   let convertible=false;
   if(d.tasa && d.monto) try {
     tasa=tasaDecimal(d.tasa);
@@ -47,7 +49,14 @@ function render() {
     if(ref) {
       limite=5*Math.floor(maximoParte(tasaDecimal(ref),tasa,d.moneda)/5);
       texto('limites','Por parte: mínimo '+num.format(minimoParte(Number(d.monto)))+' · máximo '+num.format(limite)+' '+moneda()+' · múltiplos de 5');
-      actual=plan(Number(d.monto),Number(d.cajas),tasa,limite);
+      const total=Number(d.monto), cajas=Number(d.cajas), paso=Number(d.distancia);
+      const rango=capacidad(total,cajas,minimoParte(total),limite,paso);
+      const cantidades=rango.cantidades;
+      texto('capacidad',cantidades.length
+        ? 'Para este total: de '+cantidades[0]+' a '+cantidades[cantidades.length-1]+' partes posibles.'
+        : 'Con separación de '+num.format(paso)+' caben hasta '+rango.cupo+' importes en el intervalo. Su suma máxima es '+num.format(rango.techo)+' '+moneda()+'.');
+      actual=plan(total,cajas,tasa,limite,paso,Number(d.semilla));
+      byId('capacidad').append(' Distribución actual: '+actual.reduce((n,c)=>n+c.filas.length,0)+' partes.');
     }
   } catch(e) { texto('error',(e as Error).message); }
   const listo=actual.length>0;
@@ -82,13 +91,14 @@ function render() {
   btn('anterior').disabled=pagina===0;btn('siguiente').disabled=(pagina+1)*porPagina>=partes.length;
 }
 campo('fecha').value=hoy();
-for(const id of ['monto','cajas','tasa','moneda','otra','fecha']) {
+for(const id of ['monto','cajas','tasa','moneda','otra','fecha','distancia']) {
   campo(id).addEventListener('input',()=>{pagina=0;texto('aviso','');render();});
 }
 campo('caja').addEventListener('change',()=>{indice=Number(campo('caja').value);pagina=0;render();});
 btn('anterior').onclick=()=>{pagina--;render();};btn('siguiente').onclick=()=>{pagina++;render();};
+btn('variar').onclick=()=>{campo('semilla').value=nuevaSemilla();pagina=0;campo('codigo').value='';texto('aviso','');render();};
 btn('ayuda').onclick=()=>(byId('guia') as HTMLDialogElement).showModal();
-btn('reiniciar').onclick=()=>{aplicar({monto:'',tasa:'',cajas:'1',moneda:'USD',otra:'',fecha:hoy()});campo('codigo').value='';texto('aviso','');history.replaceState(null,'',location.pathname);};
+btn('reiniciar').onclick=()=>{aplicar({monto:'',tasa:'',cajas:'1',moneda:'USD',otra:'',fecha:hoy(),distancia:'60',semilla:nuevaSemilla()});campo('codigo').value='';texto('aviso','');history.replaceState(null,'',location.pathname);};
 btn('copiar').onclick=async()=>{const s=codificar(datos());campo('codigo').value=s;
   try{await navigator.clipboard.writeText(s);texto('aviso','Código copiado.');}catch{(campo('codigo') as HTMLInputElement).select();texto('aviso','Selecciona Copiar para guardar el código.');}};
 function cargar(s:string) {
