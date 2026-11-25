@@ -1,6 +1,6 @@
 <!doctype html>
-<html lang="es-MX"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#163f37"><meta name="description" content="Distribuye un monto en divisa entre cajas, revisa su equivalencia en pesos e imprime cada caja."><title>Fraccionador de divisas · Alejandro Toral</title><link rel="icon" href="marca.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="iconos/apple-touch-icon.png"><link rel="manifest" href="manifest.webmanifest"><link rel="preload" href="cotizaciones-recientes.json" as="fetch" crossorigin><meta name="apple-mobile-web-app-title" content="Fraccionador">  <script type="module" crossorigin src="./assets/index-D7bHHUD2.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-2Djewuv5.css">
+<html lang="es-MX"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#163f37"><meta name="description" content="Distribuye un monto en divisa entre cajas, revisa su equivalencia en pesos e imprime cada caja."><title>Fraccionador de divisas · Alejandro Toral</title><link rel="icon" href="marca.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="iconos/apple-touch-icon.png"><link rel="manifest" href="manifest.webmanifest"><link rel="preload" href="cotizaciones-recientes.json" as="fetch" crossorigin><meta name="apple-mobile-web-app-title" content="Fraccionador">  <script type="module" crossorigin src="./assets/index-D1R4FDJE.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-C0lqgSye.css">
 </head>
 <body>
 <header><div class="wrap nav"><div class="marca"><img src="marca.svg" width="32" height="32" alt=""><b>Fraccionador <span>de divisas</span></b></div>
@@ -12,30 +12,28 @@
 </nav></div></header>
 <main class="wrap">
 <div id="actualizacion" class="aviso-version" role="status" hidden><span>Hay una versión nueva del Fraccionador. Tu captura se conserva al actualizar.</span><button type="button" id="actualizar">Actualizar</button></div>
-<ol class="pasos" aria-label="Pasos"><li id="paso1" class="activo"><b>1</b> Captura</li><li id="paso2"><b>2</b> Revisa</li><li id="paso3"><b>3</b> Imprime</li></ol>
 <div class="layout">
 <section class="panel captura" aria-labelledby="tDatos">
-<div class="panel-cab"><h2 id="tDatos"><i data-icon="editar"></i> Captura la operación</h2><button type="button" id="nuevaOperacion" class="sutil"><i data-icon="nueva"></i><span>Nueva operación</span></button></div>
+<div class="panel-cab"><h2 id="tDatos">Operación</h2><button type="button" id="nuevaOperacion" class="sutil"><i data-icon="nueva"></i><span>Nueva operación</span></button></div>
 <div class="fields">
 <label class="campo">Monto en divisa<input id="monto" type="number" min="1" max="1000000" step="1" inputmode="numeric" placeholder="Ej. 4566" autocomplete="off"></label>
 <label class="campo">Divisa<select id="moneda"><option>USD</option><option>EUR</option><option>CAD</option><option value="OTRA">Otra moneda</option></select></label>
 <label id="otraLabel" class="campo ancho" hidden>Nombre de la moneda<input id="otra" maxlength="24" placeholder="Ej. Libra esterlina" autocomplete="off"></label>
-<label class="campo ancho destacado">Tipo de cambio aplicado<span class="con-unidad"><input id="tasa" type="text" inputmode="decimal" placeholder="Ej. 19.20" autocomplete="off" aria-describedby="fuenteTasa"><span class="unidad" id="unidadTasa">MXN por USD</span></span><small id="fuenteTasa" class="ayuda-campo">Escribe el tipo de cambio que te dieron</small></label>
-<label class="campo">Fecha de la operación<input id="fecha" type="date" aria-describedby="avisoFecha conexion"><small id="avisoFecha" class="aviso-campo"></small><small id="conexion" class="aviso-campo" role="status"></small></label>
+<label class="campo ancho">Tipo de cambio aplicado<span class="con-unidad"><input id="tasa" type="text" inputmode="decimal" placeholder="Ej. 19.20" autocomplete="off" aria-describedby="fuenteTasa"><span class="unidad" id="unidadTasa">MXN por USD</span></span><small id="fuenteTasa" class="ayuda-campo">Escribe el tipo de cambio que te dieron</small></label>
+<label class="campo">Fecha<input id="fecha" type="date" aria-describedby="avisoFecha conexion"><small id="avisoFecha" class="aviso-campo"></small><small id="conexion" class="aviso-campo" role="status"></small></label>
 <label class="campo">Número de cajas<input id="cajas" type="number" min="1" max="50" value="1" inputmode="numeric"></label>
 </div><input type="hidden" id="semilla">
 <p class="note" id="error" role="alert"></p></section>
-<section class="panel resultado" aria-labelledby="tRes">
-<div class="panel-cab"><h2 id="tRes"><i data-icon="caja"></i> Reparto</h2></div>
+<section class="panel resultado" aria-label="Reparto">
 <div id="guiaPaso" class="indicacion" aria-live="polite"><i data-icon="flecha"></i><p id="estado">Escribe el monto en divisa para empezar.</p></div>
 <div id="resultado" hidden>
-<div class="totales"><div><span>Total en divisa</span><strong id="divisa">—</strong></div><div><span>Total en pesos</span><strong id="mxn">—</strong></div></div>
-<div id="bloqueCajas"><h3 class="subtitulo">Elige la caja que vas a revisar</h3>
-<div class="cajas" id="listaCajas" role="radiogroup" aria-label="Cajas de la operación"></div></div>
-<div class="detalle" id="detalleCaja" aria-labelledby="subtotal"><div class="bar"><h3 id="subtotal"></h3><span class="sello"><i data-icon="impresora"></i> Se imprime esta caja</span></div>
+<div class="totales" aria-label="Total de la operación"><div><span>Total en divisa</span><strong id="divisa">—</strong></div><div><span>Total en pesos</span><strong><span id="mxn">—</span> <small>MXN</small></strong></div></div>
+<div id="bloqueCajas"><h3 class="subtitulo" id="tCajas">Cajas</h3>
+<div class="cajas" id="listaCajas" role="radiogroup" aria-labelledby="tCajas"></div>
+<div class="salto" id="saltoCajas" hidden><button type="button" id="cajaAnterior" class="cuadrado" aria-label="Caja anterior"><i data-icon="izquierda"></i></button><label class="visual-oculto" for="cajaSelect">Caja que vas a revisar</label><select id="cajaSelect"></select><button type="button" id="cajaSiguiente" class="cuadrado" aria-label="Caja siguiente"><i data-icon="derecha"></i></button></div></div>
+<div class="detalle" id="detalleCaja" aria-labelledby="subtotal"><div class="bar"><h3 id="subtotal"></h3><button type="button" id="imprimir" class="primario" disabled><i data-icon="impresora"></i><span id="textoImprimir">Imprimir caja</span></button></div>
 <div class="scroll"><table><thead><tr><th scope="col">Parte</th><th scope="col">Divisa</th><th scope="col">Pesos (MXN)</th><th scope="col">Restante</th></tr></thead><tbody id="filas"></tbody></table></div>
 <div class="paginador" id="paginador" hidden><button type="button" id="anterior">Anterior</button><span id="pagina"></span><button type="button" id="siguiente">Siguiente</button></div></div>
-<div class="acciones"><button type="button" id="imprimir" class="primario" disabled><i data-icon="impresora"></i><span id="textoImprimir">Imprimir caja</span></button></div>
 <details class="referencia-interna" id="detalles"><summary>Referencia interna</summary><p><span>Referencia de Banxico utilizada:</span> <b id="refres">—</b></p><p id="cobertura"></p></details>
 </div>
 <small id="aviso" role="status"></small></section>
@@ -53,7 +51,7 @@
 <dialog id="guia" aria-labelledby="tGuia"><h2 id="tGuia"><i data-icon="ayuda"></i> Guía rápida</h2>
 <dl class="preguntas">
 <div><dt>¿Qué tipo de cambio escribo?</dt><dd>El que te dieron para esta operación, en pesos por unidad de la divisa. Escríbelo en <b>Tipo de cambio aplicado</b>; es el único que aparece impreso.</dd></div>
-<div><dt>¿Cómo reviso otra caja?</dt><dd>Toca la caja en <b>Elige la caja que vas a revisar</b>. Sus partidas aparecen debajo y queda marcada como <b>Seleccionada</b>.</dd></div>
-<div><dt>¿Cómo imprimo un ticket?</dt><dd>Pulsa <b>Imprimir caja</b>, elige <b>Ticket 80 mm</b> o <b>Ticket 58 mm</b> y después <b>Imprimir</b>. En el diálogo del sistema elige tu impresora de tickets.</dd></div>
+<div><dt>¿Cómo reviso otra caja?</dt><dd>Toca la caja en la lista <b>Cajas</b>; queda marcada y sus partidas aparecen debajo. Con muchas cajas, elígela en el selector o usa las flechas.</dd></div>
+<div><dt>¿Cómo imprimo un ticket?</dt><dd>Pulsa <b>Imprimir caja</b>, encima de las partidas, elige <b>Ticket 80 mm</b> o <b>Ticket 58 mm</b> y después <b>Imprimir</b>. En el diálogo del sistema elige tu impresora de tickets.</dd></div>
 <div><dt>¿Cómo vuelvo a abrir un reparto?</dt><dd>Antes de terminar, pulsa <b>Guardar</b> para copiar su código. Para abrirlo, pulsa <b>Recuperar</b>, pega el código y elige <b>Abrir reparto</b>.</dd></div>
 </dl><form method="dialog" class="cerrar"><button class="primario">Entendido</button></form></dialog></body></html>
