@@ -1,8 +1,8 @@
 {
   "id": "./",
-  "name": "Fraccionador de Divisas",
+  "name": "Fraccionador",
   "short_name": "Fraccionador",
-  "description": "Distribuye un monto en divisa entre cajas con la referencia oficial de Banxico y su equivalente en pesos.",
+  "description": "Distribuye un monto en divisa entre cajas, revisa su equivalencia en pesos e imprime cada caja.",
   "lang": "es-MX",
   "dir": "ltr",
   "start_url": "./",
