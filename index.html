@@ -1,6 +1,6 @@
 <!doctype html>
-<html lang="es-MX"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#163f37"><meta name="description" content="Distribuye un monto en divisa entre cajas, revisa su equivalencia en pesos e imprime cada caja."><title>Fraccionador · Alejandro Toral</title><link rel="icon" href="marca.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="iconos/apple-touch-icon.png"><link rel="manifest" href="manifest.webmanifest"><link rel="preload" href="cotizaciones-recientes.json" as="fetch" crossorigin><meta name="apple-mobile-web-app-title" content="Fraccionador">  <script type="module" crossorigin src="./assets/index-BwLnHc7l.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-C9t6kFh8.css">
+<html lang="es-MX"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#163f37"><meta name="description" content="Distribuye un monto en divisa entre cajas, revisa su equivalencia en pesos e imprime cada caja."><title>Fraccionador · Alejandro Toral</title><link rel="icon" href="marca.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="iconos/apple-touch-icon.png"><link rel="manifest" href="manifest.webmanifest"><link rel="preload" href="cotizaciones-recientes.json" as="fetch" crossorigin><meta name="apple-mobile-web-app-title" content="Fraccionador">  <script type="module" crossorigin src="./assets/index-C-7w8g_T.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-DlAxD2Oo.css">
 </head>
 <body>
 <div id="fallaNavegador" role="alert" hidden style="position:sticky;top:0;z-index:50;padding:12px 16px;background:#fbe9e3;color:#7a2e16;border-bottom:1px solid #e8b8a6;font:600 15px/1.45 'Segoe UI',system-ui,sans-serif"></div>
@@ -56,6 +56,12 @@
 </div>
 <!-- Datos internos para diagnóstico y pruebas; no se muestran en la pantalla operativa. -->
 <div id="diagnostico" hidden><span id="topres"></span><span id="topexacto"></span><span id="maxres"></span><span id="margenres"></span><span id="reglasres"></span><span id="semillares"></span><span id="limites"></span><span id="capacidad"></span><div id="resumencajas"><table><tbody id="cajasres"></tbody></table><span id="cajasnota"></span></div></div>
+<section class="panel comentarios" id="comentarios" aria-labelledby="tComentarios">
+<div class="panel-cab"><h2 id="tComentarios"><i data-icon="conversacion"></i> Comentarios</h2><button type="button" id="dejarComentario"><i data-icon="conversacion"></i><span>Dejar un comentario</span></button></div>
+<p id="comentariosEstado" class="comentarios-estado" role="status" hidden></p>
+<ul id="listaComentarios" class="lista-comentarios"></ul>
+<button type="button" id="verMasComentarios" class="sutil ver-mas" hidden>Ver más</button>
+</section>
 <footer>Alejandro Toral <span>Desarrollador de software</span></footer></main>
 <dialog id="operacion" aria-labelledby="tOperacion"><div class="titulo-ayuda"><h2 id="tOperacion"><i data-icon="recuperar"></i> Guardar o recuperar</h2><button type="button" class="ayuda-seccion" data-seccion="guardar" aria-label="Ayuda: guardar y recuperar" title="¿Cómo guardo y recupero?"><i data-icon="ayuda"></i></button></div><p>Copia el código de la operación y guárdalo: con él vuelves a abrir exactamente el mismo reparto.</p>
 <form id="cargar"><label for="codigo">Código de la operación</label><input id="codigo" placeholder="Pega aquí un código guardado" autocomplete="off"><div class="actions"><button class="primario"><i data-icon="recuperar"></i>Abrir reparto</button><button type="button" id="copiar" disabled><i data-icon="guardar"></i>Copiar código actual</button><button type="button" id="reiniciar"><i data-icon="nueva"></i>Nueva operación</button></div></form>
@@ -73,4 +79,11 @@
 <button type="button" data-seccion="cajas"><i data-icon="caja"></i>Revisar las cajas</button>
 <button type="button" data-seccion="imprimir"><i data-icon="impresora"></i>Imprimir</button>
 <button type="button" data-seccion="guardar"><i data-icon="recuperar"></i>Guardar y recuperar</button></div>
-<form method="dialog" class="cerrar"><button>Cerrar</button></form></dialog></body></html>
+<form method="dialog" class="cerrar"><button>Cerrar</button></form></dialog>
+<dialog id="dialogoComentario" aria-labelledby="tComentario"><h2 id="tComentario"><i data-icon="conversacion"></i> Dejar un comentario</h2>
+<p>¿Te sirvió el Fraccionador? Cuéntame cómo te ayudó o qué mejorarías.</p>
+<form id="formComentario" novalidate><label class="campo">Nombre (opcional)<input id="comNombre" maxlength="60" autocomplete="off" placeholder="Anónimo"></label>
+<label class="campo">Comentario<textarea id="comMensaje" maxlength="500" rows="5" required></textarea><small id="comContador" class="ayuda-campo">0 / 500</small></label>
+<input type="text" id="comWeb" name="web" class="trampa" tabindex="-1" autocomplete="off" aria-hidden="true">
+<p id="comAviso" class="com-aviso" role="status"></p>
+<div class="actions"><button type="button" id="comCancelar">Cerrar</button><button type="submit" id="comEnviar" class="primario"><i data-icon="conversacion"></i> Enviar comentario</button></div></form></dialog></body></html>
