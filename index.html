@@ -1,8 +1,24 @@
 <!doctype html>
-<html lang="es-MX"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#163f37"><meta name="description" content="Distribuye un monto en divisa entre cajas, revisa su equivalencia en pesos e imprime cada caja."><title>Fraccionador · Alejandro Toral</title><link rel="icon" href="marca.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="iconos/apple-touch-icon.png"><link rel="manifest" href="manifest.webmanifest"><link rel="preload" href="cotizaciones-recientes.json" as="fetch" crossorigin><meta name="apple-mobile-web-app-title" content="Fraccionador">  <script type="module" crossorigin src="./assets/index-rIs2uRaW.js"></script>
+<html lang="es-MX"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#163f37"><meta name="description" content="Distribuye un monto en divisa entre cajas, revisa su equivalencia en pesos e imprime cada caja."><title>Fraccionador · Alejandro Toral</title><link rel="icon" href="marca.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="iconos/apple-touch-icon.png"><link rel="manifest" href="manifest.webmanifest"><link rel="preload" href="cotizaciones-recientes.json" as="fetch" crossorigin><meta name="apple-mobile-web-app-title" content="Fraccionador">  <script type="module" crossorigin src="./assets/index-Do4sPWC5.js"></script>
   <link rel="stylesheet" crossorigin href="./assets/index-DCpTkSJn.css">
 </head>
 <body>
+<div id="fallaNavegador" role="alert" hidden style="position:sticky;top:0;z-index:50;padding:12px 16px;background:#fbe9e3;color:#7a2e16;border-bottom:1px solid #e8b8a6;font:600 15px/1.45 'Segoe UI',system-ui,sans-serif"></div>
+<script>
+/* Diagnóstico visible (JavaScript clásico, corre aun en navegadores antiguos): si el navegador no
+   puede ejecutar la app o algo falla, lo dice en pantalla con la versión detectada, para reportarlo. */
+(function(){
+  var caja=document.getElementById('fallaNavegador'), ua=navigator.userAgent;
+  function navegador(){var e=ua.match(/Edg\/([\d.]+)/),v=ua.match(/Edge\/([\d.]+)/),c=ua.match(/Chrome\/([\d.]+)/);
+    return e?'Microsoft Edge '+e[1]:v?'Microsoft Edge antiguo '+v[1]:c?'Chrome '+c[1]:ua;}
+  function mostrar(t){if(!caja.hidden)return;caja.textContent=t+' Navegador: '+navegador()+'.';caja.hidden=false;}
+  var compatible=typeof HTMLDialogElement==='function'&&'noModule' in document.createElement('script')&&typeof [].flat==='function';
+  try{new Function('var a={};return a?.b??1')();}catch(e){compatible=false;}
+  if(!compatible)mostrar('Este navegador no puede ejecutar el Fraccionador. Actualiza Microsoft Edge (menú ··· › Ayuda y comentarios › Acerca de Microsoft Edge) o ábrelo en Google Chrome.');
+  window.addEventListener('error',function(e){mostrar('Ocurrió un error en el Fraccionador: '+(e.message||'desconocido')+'. Recarga la página; si se repite, avisa con este mensaje.');});
+  window.addEventListener('load',function(){setTimeout(function(){if(!window.fraccionador)mostrar('El Fraccionador no terminó de cargar. Recarga la página; si se repite, avisa con este mensaje.');},5000);});
+})();
+</script>
 <header><div class="wrap nav"><div class="marca"><img src="marca.svg" width="32" height="32" alt=""><b>Fraccionador</b></div>
 <nav class="navacciones" aria-label="Acciones generales">
 <button id="instalar" class="navbtn" hidden><i data-icon="instalar"></i><span>Instalar aplicación</span></button>
