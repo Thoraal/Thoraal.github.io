@@ -1,6 +1,6 @@
 <!doctype html>
-<html lang="es-MX"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#163f37"><meta name="description" content="Distribuye un monto en divisa entre cajas, revisa su equivalencia en pesos e imprime cada caja."><title>Fraccionador de divisas · Alejandro Toral</title><link rel="icon" href="marca.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="iconos/apple-touch-icon.png"><link rel="manifest" href="manifest.webmanifest"><link rel="preload" href="cotizaciones-recientes.json" as="fetch" crossorigin><meta name="apple-mobile-web-app-title" content="Fraccionador">  <script type="module" crossorigin src="./assets/index-DugMPcz6.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-CVkzWDlz.css">
+<html lang="es-MX"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#163f37"><meta name="description" content="Distribuye un monto en divisa entre cajas, revisa su equivalencia en pesos e imprime cada caja."><title>Fraccionador de divisas · Alejandro Toral</title><link rel="icon" href="marca.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="iconos/apple-touch-icon.png"><link rel="manifest" href="manifest.webmanifest"><link rel="preload" href="cotizaciones-recientes.json" as="fetch" crossorigin><meta name="apple-mobile-web-app-title" content="Fraccionador">  <script type="module" crossorigin src="./assets/index-AI3Y_URt.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-D5o1mytv.css">
 </head>
 <body>
 <header><div class="wrap nav"><div class="marca"><img src="marca.svg" width="32" height="32" alt=""><b>Fraccionador <span>de divisas</span></b></div>
@@ -31,7 +31,7 @@
 <div id="bloqueCajas"><h3 class="subtitulo" id="tCajas">Cajas</h3>
 <div class="cajas" id="listaCajas" role="radiogroup" aria-labelledby="tCajas"></div>
 <div class="salto" id="saltoCajas" hidden><button type="button" id="cajaAnterior" class="cuadrado" aria-label="Caja anterior"><i data-icon="izquierda"></i></button><label class="visual-oculto" for="cajaSelect">Caja que vas a revisar</label><select id="cajaSelect"></select><button type="button" id="cajaSiguiente" class="cuadrado" aria-label="Caja siguiente"><i data-icon="derecha"></i></button></div></div>
-<div class="detalle" id="detalleCaja" aria-labelledby="subtotal"><div class="bar"><h3 id="subtotal"></h3><button type="button" id="imprimir" class="primario" disabled><i data-icon="impresora"></i><span id="textoImprimir">Imprimir caja</span></button></div>
+<div class="detalle" id="detalleCaja" aria-labelledby="subtotal"><div class="bar"><h3 id="subtotal"></h3><span class="bar-acciones"><button type="button" id="cambiarFormato" class="sutil" hidden title="Cambiar el formato de impresión"><span id="formatoActual"></span></button><button type="button" id="imprimir" class="primario" disabled><i data-icon="impresora"></i><span id="textoImprimir">Imprimir caja</span></button></span></div>
 <div class="scroll"><table><thead><tr><th scope="col">Parte</th><th scope="col">Divisa</th><th scope="col">Pesos (MXN)</th><th scope="col">Restante</th></tr></thead><tbody id="filas"></tbody></table></div>
 <div class="paginador" id="paginador" hidden><button type="button" id="anterior">Anterior</button><span id="pagina"></span><button type="button" id="siguiente">Siguiente</button></div></div>
 <details class="referencia-interna" id="detalles"><summary>Referencia interna</summary><p><span>Referencia de Banxico utilizada:</span> <b id="refres">—</b></p><p id="cobertura"></p></details>
@@ -48,11 +48,11 @@
 <fieldset><legend>Elige el formato</legend><label class="opcion"><input type="radio" name="formato" value="ticket"><span><b>Ticket</b><small id="rolloTexto">Rollo de 80 mm</small></span></label><label class="opcion"><input type="radio" name="formato" value="a4"><span><b>Hoja A4</b><small>Impresora normal</small></span></label></fieldset>
 <details class="ajuste" id="ajusteRollo"><summary>Ancho del rollo</summary><label for="anchoRollo">Ancho del rollo en este equipo</label><select id="anchoRollo"><option value="80">80 mm (Epson TM-T20II y similares)</option><option value="58">58 mm</option></select><small>Se guarda en este equipo; no hace falta elegirlo cada vez.</small></details>
 <small id="impNota"></small>
-<form method="dialog" class="actions"><button value="cancelar">Cancelar</button><button value="imprimir" id="confirmarImprimir" class="primario"><i data-icon="impresora"></i> Imprimir</button></form></dialog>
+<form method="dialog" class="actions"><button value="cancelar">Cancelar</button><button value="imprimir" id="confirmarImprimir" class="primario" autofocus><i data-icon="impresora"></i> Imprimir</button></form></dialog>
 <dialog id="guia" aria-labelledby="tGuia"><h2 id="tGuia"><i data-icon="ayuda"></i> Guía rápida</h2>
 <dl class="preguntas">
 <div><dt>¿Qué tipo de cambio escribo?</dt><dd>El que te dieron para esta operación, en pesos por unidad de la divisa. Escríbelo en <b>Tipo de cambio aplicado</b>; es el único que aparece impreso.</dd></div>
 <div><dt>¿Cómo reviso otra caja?</dt><dd>Toca la caja en la lista <b>Cajas</b>; queda marcada y sus partidas aparecen debajo. Con muchas cajas, elígela en el selector o usa las flechas.</dd></div>
-<div><dt>¿Cómo imprimo un ticket?</dt><dd>Pulsa <b>Imprimir caja</b>, encima de las partidas, elige <b>Ticket 80 mm</b> o <b>Ticket 58 mm</b> y después <b>Imprimir</b>. En el diálogo del sistema elige tu impresora de tickets.</dd></div>
+<div><dt>¿Cómo imprimo un ticket?</dt><dd>Pulsa <b>Imprimir caja</b>, encima de las partidas. La primera vez elige <b>Ticket</b> u <b>Hoja A4</b> y después <b>Imprimir</b>; las siguientes se imprime directo con ese formato. Para cambiarlo, pulsa el formato que aparece junto al botón. En el diálogo del sistema elige tu impresora.</dd></div>
 <div><dt>¿Cómo vuelvo a abrir un reparto?</dt><dd>Antes de terminar, pulsa <b>Guardar</b> para copiar su código. Para abrirlo, pulsa <b>Recuperar</b>, pega el código y elige <b>Abrir reparto</b>.</dd></div>
 </dl><form method="dialog" class="cerrar"><button class="primario">Entendido</button></form></dialog></body></html>
