@@ -1,0 +1,27 @@
+TÉRMINOS DE USO DEL FRACCIONADOR
+
+Autoría y derechos
+© 2026 Alejandro Toral. Todos los derechos reservados sobre el código, el diseño y los contenidos originales de esta aplicación. Los componentes y materiales de terceros se rigen por sus propias licencias y condiciones.
+
+Uso autorizado
+Se autoriza el acceso, la instalación y el uso de la aplicación desde su sitio oficial. La reproducción, modificación, redistribución o publicación de copias del software, su diseño o sus contenidos originales requiere autorización previa por escrito del titular, salvo en los casos permitidos por la ley o por una licencia aplicable.
+
+Responsabilidad y uso indebido
+La aplicación se proporciona tal cual. Cada persona usuaria es responsable de los datos que ingresa, de revisar los resultados antes de utilizarlos y de cumplir las obligaciones aplicables a su actividad. Queda prohibido utilizar la aplicación o distribuir copias de ella con fines ilícitos, engañosos o dañinos.
+En la medida permitida por la ley, Alejandro Toral no asume responsabilidad por daños derivados del uso indebido de la aplicación, de decisiones tomadas con base en sus resultados o de copias modificadas o redistribuidas sin su autorización.
+
+Desarrollado por Alejandro Toral · Developer
+Sitio oficial: https://thoraal.github.io/
+
+Esquema de licencia: Uso público con derechos reservados.
+
+Versiones anteriores
+Las versiones publicadas entre el 27/10/2026 y el 25/11/2026 en el repositorio entonces público
+Thoraal/Thoraal.github.io incluían la licencia MIT (Copyright (c) 2026 Alejandro Toral Chuc).
+Quien obtuvo esas versiones conserva los permisos de la licencia MIT para ellas. Las versiones
+posteriores se distribuyen con el esquema indicado arriba.
+
+Componentes y materiales de terceros
+- Datos de tipo de cambio: publicaciones oficiales del Banco de México (serie SF60653), usados
+  como referencia interna.
+- La aplicación compilada no incluye código de terceros.
